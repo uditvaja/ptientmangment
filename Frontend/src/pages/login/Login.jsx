@@ -112,7 +112,7 @@ const Login = () => {
                         </label>
                       </div>
                       <div className="mb-3 d-flex justify-content-between">
-                        <Link to={""} className="main-link">
+                        <Link to={"/forgot-password"} className="main-link">
                           Forgot password?
                         </Link>
                       </div>
@@ -134,28 +134,6 @@ const Login = () => {
           </div>
 
           <div className="col-md-6 d-none d-md-block position-relative">
-            <img
-              src="./assets/images/shape-1.png"
-              alt="shape-1"
-              className="img-fluid shape_1_img"
-            />
-            <img
-              src="./assets/images/shape-2.png"
-              alt="shape-2"
-              className="img-fluid shape_2_img"
-            />
-            <img
-              src="./assets/images/shape-3.png"
-              alt="shape-3"
-              className="img-fluid shape_3_img"
-            />
-            <div className="text-center logo_img">
-              <img
-                src="./assets/images/logo.png"
-                alt="logo"
-                className="img-fluid"
-              />
-            </div>
             <AuthSlider />
           </div>
         </div>
