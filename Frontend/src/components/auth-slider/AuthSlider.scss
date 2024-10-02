@@ -1,0 +1,40 @@
+@import "../../css/variables.scss";
+
+.auth-slider-area {
+  padding-bottom: 112px;
+  .swiper-slide {
+    .auth-slider-heading {
+      margin-top: 49px;
+      font-weight: 800;
+      font-size: 44px;
+      color: $color15;
+    }
+    .auth-sub-heading {
+      display: inline-block;
+      width: 336px;
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 18px;
+      color: $color5;
+      padding-bottom: 40px;
+    }
+  }
+  .swiper-pagination {
+    bottom: 0px !important;
+
+    .swiper-pagination-bullet {
+      width: 35px;
+      height: 10px;
+      background: $linear-gradient-bg;
+      border-radius: 30px;
+      opacity: 1;
+
+      &.swiper-pagination-bullet-active {
+        width: 10px;
+        height: 10px;
+        background: $linear-gradient-bg;
+        border-radius: 30px;
+      }
+    }
+  }
+}
