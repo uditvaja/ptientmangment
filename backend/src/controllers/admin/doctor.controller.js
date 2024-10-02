@@ -4,13 +4,10 @@ const fs = require("fs");
 
 // const deleteFiles =require("../../../helpers/deletefile");
 const Admin = require("../../models/admin.model");
+const Doctor = require("../../models/doctor.model");
 
 /* ------------------ NOTE : ALL DETAILS ABOUT DOCTOR  ------------------ */
 /* ----------------------------- update Doctor profile ----------------------------- */
-const path = require('path');
-const fs = require('fs');
-const Doctor = require('../models/Doctor'); // Import your Doctor model
-const Admin = require('../models/Admin'); // Import your Admin model
 
 const addDoctorByAdmin = async (req, res) => {
   try {
@@ -33,22 +30,25 @@ const addDoctorByAdmin = async (req, res) => {
       return res.status(404).json({ status: 404, success: false, message: `adminId ${adminId} not found` });
     }
 
-    // If there's a file uploaded, remove any existing images first
+    // Handle doctor's image upload
     if (req.file) {
-      // Handle admin image removal if it exists
-      if (admin.image) {
-        const imagePath = path.join(__dirname, '/../../../public/adminImg', admin.image);
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
+      // Check if the doctor already exists and remove the old image if it does
+      const existingDoctor = await Doctor.findOne({ adminId, name }); // Adjust the query as necessary
+      if (existingDoctor && existingDoctor.image) {
+        const doctorImagePath = path.join(__dirname, '/../../../public/doctorImg', existingDoctor.image);
+        if (fs.existsSync(doctorImagePath)) {
+          fs.unlinkSync(doctorImagePath);
         }
       }
-      reqbody.image = req.file.filename; // Save the new image name
+      reqbody.image = req.file.filename; // Save the new doctor's image name
     }
 
     // Handle signature image
     if (req.files && req.files.signatureImage) {
-      if (admin.signatureImage) {
-        const signaturePath = path.join(__dirname, '/../../../public/adminImg', admin.signatureImage);
+      // Check if the doctor already exists and remove the old signature image if it does
+      const existingDoctor = await Doctor.findOne({ adminId, name }); // Adjust the query as necessary
+      if (existingDoctor && existingDoctor.signatureImage) {
+        const signaturePath = path.join(__dirname, '/../../../public/doctorImg', existingDoctor.signatureImage); // Change to doctor's image directory
         if (fs.existsSync(signaturePath)) {
           fs.unlinkSync(signaturePath);
         }
@@ -102,6 +102,7 @@ const addDoctorByAdmin = async (req, res) => {
   }
 };
 
+module.exports = addDoctorByAdmin;
 
 
 
