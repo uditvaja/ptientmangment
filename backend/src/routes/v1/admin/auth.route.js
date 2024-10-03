@@ -5,7 +5,7 @@ const router = express.Router();
 const { authAdminController, adminController, doctorController } = require("../../../controllers");
 const { accessToken } = require("../../../middlewares/adminAuth");
 const { singleFileUpload, multiDiffFileUpload } = require("../../../helpers/upload");
-
+const multer = require('multer');
 /* ------------------------------- DOCTOR AUTH ------------------------------ */
 
 /* -------------------------- CREATE/SIGNUP DOCTOR ----------- */
@@ -29,14 +29,19 @@ router.put("/reset-password", authAdminController.resetPassword);
 router.post("/change-password", accessToken(), authAdminController.changePassword);
 
 // /* -------------------------- UPDATE DOCTOR PROFILE DOCTOR ----------- */
+// router.put(
+//   "/update-admin-profile",
+//   accessToken(),
+//   singleFileUpload("/adminImg", "image"),
+//   adminController.updateAdminProfile
+// );
+
 router.put(
-  "/update-admin-profile",
-  accessToken(),
-  singleFileUpload("/adminImg", "image"),
-  adminController.updateAdminProfile
+  '/update-admin-profile',
+  accessToken(), // Middleware to authenticate the admin using access token
+  singleFileUpload('/adminImg', 'image'), // Middleware to handle image upload (folder name and field name for the file)
+  adminController.updateAdminProfile // Controller function to handle the request
 );
-
-
 // router.post(
   //   "/add-docor-by-admin",
   //   // accessToken(),
@@ -68,6 +73,20 @@ router.post(
   doctorController.addDoctorByAdmin
 );
 
+
+const storage = multer.memoryStorage(); // Use memory storage for direct upload to Cloudinary
+const upload = multer({ storage: storage });
+
+router.put(
+  '/update-doctor-by-admin', 
+  accessToken(),
+  upload.fields([
+    { name: 'image', maxCount: 1 }, // Field name for doctor's image
+    { name: 'signatureImage', maxCount: 1 }, // Field name for doctor's signature image
+  ]),
+  doctorController.updateDoctorByAdmin // Controller function to handle the update
+);
+
 router.get("/list-docotr/:adminId",
   accessToken(),
   doctorController.listDoctorAdmin);
@@ -81,29 +100,12 @@ router.get("/list-all-docotr-by-admin",
   doctorController.listAllDoctorByAdmin);
 
 
-
-// router.post(
-//   "/addBeautician",
-//   authenticAdmin,
-//   multiDiffFileUpload("public/images/beautician", [
-//     { name: "banner", maxCount: 1, allowedMimes: ["image/png", "image/jpeg", "image/jpg"] },
-//     { name: "image", maxCount: 1, allowedMimes: ["image/png", "image/jpeg", "image/jpg"] },
-//   ]),
-//   addBeautician
-// );
-
-
 // /* -------------------------- DELTE DOCTOR PROFILE DOCTOR ----------- */
-// router.delete(
-//   "/delete-doc/:doctorId",
-//   accessToken(),
-//   doctorController.deleteDoctor
-// );
+router.delete(
+  "/delete-doc-by-admin",
+  accessToken(),
+  doctorController.deleteDoctorByAdmin
+);
 
-// router.post("/social-login", 
-// // accessToken(),
-//  authController.socialLogin);
-
-// router.get("/country-list", accessToken(), doctorController.allCountryList);
 
 module.exports = router;

@@ -1,7 +1,8 @@
 
 const dotenv = require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const Admin = require("../models/admin.model");
+
+const Doctor = require("../models/doctor.model");
 // const refreshSecret = process.env.JWT_REFRESH_SECRET_KEY;
 const refreshSecret = "cdccsvavsvfssbtybnjnukiradhe";
 
@@ -24,12 +25,12 @@ const accessToken = () => async (req, res, next) => {
     if (!decoded) {
       return next(new Error("Please enter valid token!"));
     }
-    const admin = await Admin.findOne({ email: decoded.email });
+    const doctor = await Doctor.findOne({ email: decoded.email });
 
-    if (!admin) {
+    if (!doctor) {
       return next(new Error("Please authenticate!"));
     }
-    req.admin = admin;
+    req.doctor = doctor;
     req.token = token;
 
     next();

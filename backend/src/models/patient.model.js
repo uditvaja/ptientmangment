@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const adminSchema = new mongoose.Schema({
+const patientSchema = new mongoose.Schema({
  first_name:{
     type:String,
  },
@@ -23,10 +23,6 @@ const adminSchema = new mongoose.Schema({
  city:{
     type:String,
  },
- hospitalId: { type: mongoose.Schema.Types.ObjectId, ref: "hospital" },
-//  hospital:{
-//     type:String,
-//  },
  password:{
     type:String,
  },
@@ -40,6 +36,24 @@ const adminSchema = new mongoose.Schema({
  is_active:{
     type:Boolean,
  },
+ age:{
+    type:Number,
+ },
+ height:{
+    type:String,
+ },
+ weight:{
+    type:String,
+ },
+ blood_group:{
+    type:String,
+ },
+ dob:{
+    type:Date.now()
+ },
+address:{
+    type:String,
+},
  gender:{
     type:String,
  },
@@ -50,5 +64,5 @@ const adminSchema = new mongoose.Schema({
 
 });
 
-const Admin = mongoose.model('admin', adminSchema);
-module.exports = Admin;
+const Patient = mongoose.model('patient', patientSchema);
+module.exports = Patient;
