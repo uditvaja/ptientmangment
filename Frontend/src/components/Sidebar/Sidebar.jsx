@@ -1,22 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Sidebar.scss";
+import { Link } from "react-router-dom";
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
+const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
   return (
     <>
-      <nav className="breadcrumb-container d-block d-lg-none p-3">
-        <button className="btn btn-primary" onClick={toggleSidebar}>
-          <i className="bi bi-list"></i>
-        </button>
-      </nav>
-
-      <div className={`sidebar d-flex flex-column ${isOpen ? "open" : ""}`}>
+      <div
+        ref={sidebarRef}
+        className={`sidebar d-flex flex-column ${isOpen ? "open" : "closed"}`}
+      >
         <div className="logo-section">
           <img
             src="./assets/images/logo.png"
@@ -26,23 +18,23 @@ const Sidebar = () => {
         </div>
         <ul className="nav flex-column">
           <li className="nav-item">
-            <a href="#dashboard" className="nav-link nav-link-1">
+            <Link to={"/"}  className={`nav-link nav-links-1 ${activeLink === '/' || activeLink === '/dashboard' ? 'active' : ''}`}>
               Dashboard
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="#doctor-management" className="nav-link nav-link-2">
+            <Link to={"/doctor-management"} className={`nav-link nav-links-2 ${activeLink === '/doctor-management' ? 'active' : ''}`}>
               Doctor Management
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="#patient-management" className="nav-link nav-link-3">
+            <Link to={"/patient-management"} className={`nav-link nav-links-3 ${activeLink === '/patient-management' ? 'active' : ''}`}>
               Patient Management
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
             <a
-              className="nav-link nav-link-4 collapsed"
+              className={`nav-link nav-links-4 collapsed ${activeLink === '/billing' ? 'active' : ''}`}
               href="#billing"
               data-bs-toggle="collapse"
               aria-expanded="false"
@@ -62,13 +54,13 @@ const Sidebar = () => {
             </ul>
           </li>
           <li className="nav-item">
-            <a href="#analytics" className="nav-link nav-link-5">
+            <Link to={"/analytics"} className={`nav-link nav-links-5 ${activeLink === '/analytics' ? 'active' : ''}`}>
               Reporting and Analytics
-            </a>
+            </Link>
           </li>
         </ul>
         <div className="logout-section">
-          <a href="#logout" className="nav-link nav-link-6">
+          <a href="#logout" className="nav-link nav-links-6">
             Logout
           </a>
         </div>
