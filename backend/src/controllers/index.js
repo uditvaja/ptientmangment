@@ -4,6 +4,12 @@ module.exports.hospitalController = require("./hospital/hospital.controller");
 module.exports.adminController = require("./admin/admin.controller");
 module.exports.doctorController = require("./admin/doctor.controller");
 
+module.exports.doctorAuthController = require("./doctor/doctor.auth.controller");
+
+module.exports.doctorOwnController = require("./doctor/controller.doctor");
+
+
+
 
 
 

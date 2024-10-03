@@ -13,7 +13,7 @@ const express = require("express");
 
 const authRoute = require("./admin/auth.route");
 const hospitalRoute = require("./hospital/hospital.route");
-// const faqRoute = require("./doctor/app/faq.route");
+const authDoctorRoute = require("./doctor/doctor.route");
 // const faqPatientRoute = require("./patient/web/faq.route");
 
 // const helpRoute = require("./doctor/web/help.route");
@@ -26,7 +26,7 @@ const router = express.Router();
 /* -------------------------- ROUTE DEFINE -------------------------- */
 router.use("/admin", authRoute);
 router.use("/hospital", hospitalRoute);
-// router.use("/favoriteDoctor", favoriteRoute);
+router.use("/doctor", authDoctorRoute);
 // router.use("/appointment", appointmentRoute);
 // router.use("/help-doctor", helpDoctorRoute);
 // router.use("/notification", notificationRoute);

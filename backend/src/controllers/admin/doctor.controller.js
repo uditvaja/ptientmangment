@@ -128,6 +128,7 @@ const Doctor = require("../../models/doctor.model");
 
 
 const cloudinary = require('../../config/cloudinaryConfig'); // Adjust the path as needed
+const deletefile = require("../../helpers/deletefile");
 
 const addDoctorByAdmin = async (req, res) => {
   try {
@@ -164,19 +165,25 @@ const addDoctorByAdmin = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 8);
 
     // Upload images to Cloudinary
-    let imageUrl = null;
-    let signatureImageUrl = null;
+    let image = null;
+    let signatureImage = null;
 
     if (req.files && req.files.image) {
-      const imageFile = req.files.image[0].path; // Use the path of the uploaded file
+      const imageFile = req.files.image[0].path;
       const uploadResponse = await cloudinary.uploader.upload(imageFile);
-      imageUrl = uploadResponse.secure_url; // Get the secure URL for the uploaded image
+      image = {
+        public_id: uploadResponse.public_id,
+        url: uploadResponse.secure_url,
+      };
     }
 
     if (req.files && req.files.signatureImage) {
-      const signatureFile = req.files.signatureImage[0].path; // Use the path of the uploaded file
+      const signatureFile = req.files.signatureImage[0].path;
       const signatureUploadResponse = await cloudinary.uploader.upload(signatureFile);
-      signatureImageUrl = signatureUploadResponse.secure_url; // Get the secure URL for the uploaded signature
+      signatureImage = {
+        public_id: signatureUploadResponse.public_id,
+        url: signatureUploadResponse.secure_url,
+      };
     }
 
     // Create a new doctor
@@ -184,8 +191,8 @@ const addDoctorByAdmin = async (req, res) => {
       name,
       specialistType,
       adminId,
-      image: imageUrl,
-      signatureImage: signatureImageUrl,
+      image,  // Use the object here
+      signatureImage,  // Use the object here
       country,
       state,
       email,
@@ -224,6 +231,7 @@ const addDoctorByAdmin = async (req, res) => {
     });
   }
 };
+
 
 // list api of doctor
 const listDoctorAdmin = async (req, res) => {
@@ -371,38 +379,156 @@ const listAllDoctorByAdmin = async (req, res) => {
 };
 
 
+const updateDoctorByAdmin = async (req, res) => {
+  try {
+    const reqbody = req.body;
+
+    // Check if adminId is present in the request body
+    if (!reqbody.adminId) {
+      return res.status(400).json({ status: 400, success: false, message: "Admin ID not found!" });
+    }
+
+    // Find the admin by ID
+    const admin = await Admin.findById(reqbody.adminId);
+    if (!admin) {
+      return res.status(401).json({ status: 401, success: false, message: "Admin not found!" });
+    }
+
+    // Find the doctor by ID
+    const doctor = await Doctor.findById(reqbody.doctorId); // Assuming you're updating a doctor's profile
+    if (!doctor) {
+      return res.status(404).json({ status: 404, success: false, message: "Doctor not found!" });
+    }
+
+    // Function to handle image uploads
+    const uploadImage = async (file, folder) => {
+      if (file) {
+        // If the doctor has an existing image, delete it from Cloudinary
+        if (doctor[folder] && doctor[folder].public_id) {
+          await cloudinary.uploader.destroy(doctor[folder].public_id);
+        }
+
+        // Upload the new image to Cloudinary
+        const uploadResponse = await cloudinary.uploader.upload(file.path, {
+          folder: folder, // Define the Cloudinary folder for the image
+        });
+
+        // Return the new image details
+        return {
+          public_id: uploadResponse.public_id,
+          url: uploadResponse.secure_url,
+        };
+      }
+      return null; // Return null if no file is provided
+    };
+
+    // Upload the doctor image if it exists
+    const newImage = await uploadImage(req.file, 'doctorImg');
+    if (newImage) {
+      reqbody.image = newImage; // Update reqbody with new image details
+    }
+
+    // Upload the signature image if it exists
+    const newSignatureImage = await uploadImage(req.signatureFile, 'doctorSignatures');
+    if (newSignatureImage) {
+      reqbody.signatureImage = newSignatureImage; // Update reqbody with new signature image details
+    }
+
+    // Update the doctor profile in the database
+    const updatedDoctor = await Doctor.findByIdAndUpdate(
+      reqbody.doctorId,
+      { $set: reqbody },
+      { new: true }
+    );
+
+    // Respond with success
+    return res.status(200).json({
+      status: 200,
+      success: true,
+      updateData: updatedDoctor,
+      message: "Doctor profile updated successfully",
+    });
+
+  } catch (err) {
+    // Handle errors
+    return res.status(400).json({ success: false, error: err.message });
+  }
+};
+
+
+
 
 
 
 /* -------------------------- DELETE DOCTOR PROFILE WITH IMAGE------------------------- */
-// const deleteDoctor = async (req, res) => {
-//   try {
-//     const userData = await Doctor.findById(req.params.doctorId);
+const deleteDoctorByAdmin = async (req, res) => {
+  try {
+    const { adminid, doctorId } = req.body;
 
-//     if (!userData) {
-//       return res.status(404).json({status:404,success:false, message: "Doctor Data not found" });
-//     }
-//     const DeletedData = await Doctor.findByIdAndDelete(req.params.doctorId, req.body, {
-//       new: true,
-//     });
+    // Check if adminid is passed in the request body
+    if (!adminid) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "adminid is required",
+      });
+    }
 
-//     deleteFiles("doctorImg/" + userData.image);
+    // Check if admin exists
+    const admin = await Admin.findById(adminid);
+    if (!admin) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: "Admin not found",
+      });
+    }
 
-//     res.status(200).json({
-//       status: 200,
-//       success: true,
-//       message: "List of Doctor Data successfully ",
-//       user: DeletedData,
-//     });
+    // Check if doctor exists
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: "Doctor data not found",
+      });
+    }
 
-//   } catch (error) {
-//     res.status(400).json({
-//       status: 400,
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
+    // Delete image from Cloudinary if exists
+    if (doctor.image && doctor.image.public_id) {
+      await cloudinary.uploader.destroy(doctor.image.public_id);
+      console.log('Doctor image deleted from Cloudinary');
+    }
+
+    // Delete signatureImage from Cloudinary if exists
+    if (doctor.signatureImage && doctor.signatureImage.public_id) {
+      await cloudinary.uploader.destroy(doctor.signatureImage.public_id);
+      console.log('Doctor signatureImage deleted from Cloudinary');
+    }
+
+    // Delete doctor data from the database
+    const deletedDoctor = await Doctor.findByIdAndDelete(doctorId);
+
+    // Return response
+    return res.status(200).json({
+      status: 200,
+      success: true,
+      message: "Doctor data, image, and signatureImage deleted successfully",
+      doctor: deletedDoctor,
+    });
+
+  } catch (error) {
+    console.error("Error while deleting doctor:", error);
+    return res.status(400).json({
+      status: 400,
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
 
 // const allCountryList = async (req, res) => {
 //   try {
@@ -430,6 +556,6 @@ const listAllDoctorByAdmin = async (req, res) => {
 
 
 module.exports = {
-  addDoctorByAdmin,listDoctorAdmin,searchDoctorByAdmin,listAllDoctorByAdmin
-//   deleteDoctor,allCountryList
+  addDoctorByAdmin,listDoctorAdmin,searchDoctorByAdmin,listAllDoctorByAdmin,deleteDoctorByAdmin,updateDoctorByAdmin
+
 };

@@ -43,9 +43,11 @@ const adminSchema = new mongoose.Schema({
  gender:{
     type:String,
  },
- image:{
-    type:String,
- }
+ image: {
+   public_id: { type: String },
+   url: { type: String },
+ },
+
 });
 
 const Admin = mongoose.model('admin', adminSchema);
