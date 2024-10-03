@@ -8,18 +8,17 @@ import Login from "./pages/login/Login";
 import Forgot_Password from "./pages/ForgotPassword/Forgot_Password";
 import Otp_screen from "./pages/OtpScreen/Otp_screen";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
-import Layout from "./components/Layout/Layout";
 import AdminProfile from "./pages/AdminProfile/AdminProfile";
 import Register from "./pages/Register/Register";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<AdminProfile />} />
-        </Route>
+        <Route path="/" element={<AdminProfile />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<Forgot_Password />} />
         <Route path="/otp-verification" element={<Otp_screen />} />

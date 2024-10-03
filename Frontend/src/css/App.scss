@@ -41,6 +41,16 @@ button {
   width: 85%;
 }
 
+@media (max-width: 992px) {
+  .w-md-0 {
+    width: 0;
+  }
+
+  .w-md-100 {
+    width: 100%;
+  }
+}
+
 .cursor-pointer {
   cursor: pointer;
 }

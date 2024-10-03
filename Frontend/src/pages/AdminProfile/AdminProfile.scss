@@ -90,10 +90,59 @@
     color: $color5;
   }
 
+  .dropdown {
+    .dropdown-menu {
+      background-color: $color1;
+      box-shadow: 0px 0px 40px 0px #00000026;
+      border: none;
+      padding-top: 0;
+      padding-bottom: 0;
+      .dropdown-item {
+        padding: 8px 10px;
+        background-color: $color1;
+        color: $color6;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        &.active,
+        &:active,
+        &:focus {
+          background-color: $color2;
+          color: $color1;
+        }
+        
+        &:hover {
+          background-color: $color2;
+          color: $color1;
+        }
+      }
+    }
+  }
+
   .dropdown-toggle {
     &::after {
       display: none;
     }
+  }
+}
+
+.breadcrumb-container {
+  .btn {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: $color10;
+    padding: 10px;
+    &:first-child {
+      &:active {
+        background-color: transparent;
+        border-color: transparent;
+        color: $color10;
+      }
+    }
+  }
+
+  i.bi-list {
+    font-size: 30px;
   }
 }
 
@@ -404,6 +453,32 @@
     font-size: 20px;
     color: $color1;
   }
+
+  .close-btn {
+    width: 160px;
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid #d3d3d3;
+    background-color: $color1;
+    color: $color10;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .edit-admin-btn {
+    width: 160px;
+    height: 48px;
+    border-radius: 10px;
+    background-color: $color2;
+    color: $color1;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .img-upload {
+    width: 192px;
+    margin: 0 auto;
+  }
 }
 
 /* Responsive Styles */
@@ -411,10 +486,6 @@
   .profile-header {
     .breadcrumb {
       margin-bottom: 10px;
-    }
-
-    .search-container {
-      flex-grow: 1;
     }
   }
 }
@@ -428,7 +499,7 @@
 
     .search-container {
       width: 100%;
-      margin-bottom: 15px;
+      margin-bottom: 0px;
     }
 
     .dropdown-toggle {
@@ -450,13 +521,13 @@
       width: 100%;
     }
     .page-title {
-        font-size: 34px;
-        padding-top: 31px;
-        padding-left: 10px;
+      font-size: 34px;
+      padding-top: 31px;
+      padding-left: 10px;
     }
     .admin-spacing {
-        padding-left: 0;
-        padding-right: 0;
-      }
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 }
