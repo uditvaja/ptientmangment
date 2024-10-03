@@ -2,9 +2,9 @@
 /* ------------------------------- DEFINE AREA ------------------------------ */
 const express = require("express");
 const router = express.Router();
-const { authAdminController, adminController } = require("../../../controllers");
+const { authAdminController, adminController, doctorController } = require("../../../controllers");
 const { accessToken } = require("../../../middlewares/adminAuth");
-const { singleFileUpload } = require("../../../helpers/upload");
+const { singleFileUpload, multiDiffFileUpload } = require("../../../helpers/upload");
 
 /* ------------------------------- DOCTOR AUTH ------------------------------ */
 
@@ -35,6 +35,63 @@ router.put(
   singleFileUpload("/adminImg", "image"),
   adminController.updateAdminProfile
 );
+
+
+// router.post(
+  //   "/add-docor-by-admin",
+  //   // accessToken(),
+//   multiDiffFileUpload("/doctorImg", [
+//     { name: "signatureImage", maxCount: 1, allowedMimes: ["image/png", "image/jpeg", "image/jpg"] },
+//     { name: "image", maxCount: 1, allowedMimes: ["image/png", "image/jpeg", "image/jpg"] },
+//   ]),
+//   // singleFileUpload("/doctorImg", "signatureImage"),
+//   doctorController.addDoctorByAdmin
+// );
+
+const uploadMiddleware = multiDiffFileUpload("/doctorImg", [
+  {
+    name: "image",
+    maxCount: 1,
+    allowedMimes: ["image/jpeg", "image/png", "image/gif"], // Add allowed types
+  },
+  {
+    name: "signatureImage",
+    maxCount: 1,
+    allowedMimes: ["image/jpeg", "image/png", "image/gif"], // Add allowed types
+  },
+]);
+
+router.post(
+  "/add-doctor-by-admin",
+  accessToken(),
+  uploadMiddleware,
+  doctorController.addDoctorByAdmin
+);
+
+router.get("/list-docotr/:adminId",
+  accessToken(),
+  doctorController.listDoctorAdmin);
+
+router.get("/search-docotr-by-admin",
+  accessToken(),
+  doctorController.searchDoctorByAdmin);
+
+router.get("/list-all-docotr-by-admin",
+  accessToken(), 
+  doctorController.listAllDoctorByAdmin);
+
+
+
+// router.post(
+//   "/addBeautician",
+//   authenticAdmin,
+//   multiDiffFileUpload("public/images/beautician", [
+//     { name: "banner", maxCount: 1, allowedMimes: ["image/png", "image/jpeg", "image/jpg"] },
+//     { name: "image", maxCount: 1, allowedMimes: ["image/png", "image/jpeg", "image/jpg"] },
+//   ]),
+//   addBeautician
+// );
+
 
 // /* -------------------------- DELTE DOCTOR PROFILE DOCTOR ----------- */
 // router.delete(

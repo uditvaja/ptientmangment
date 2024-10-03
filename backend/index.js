@@ -29,6 +29,11 @@ app.use(
   express.static(path.join(__dirname, "./src/public/adminImg"))
 );
 
+// app.use(
+//   "/public/adminImg",
+//   express.static(path.join(__dirname, "./src/public/doctorImg"))
+// );
+
 app.use(errorHandler);
 connectDB();
 
