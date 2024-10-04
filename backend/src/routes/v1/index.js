@@ -14,7 +14,9 @@ const express = require("express");
 const authRoute = require("./admin/auth.route");
 const hospitalRoute = require("./hospital/hospital.route");
 const authDoctorRoute = require("./doctor/doctor.route");
-// const faqPatientRoute = require("./patient/web/faq.route");
+const authPatientRoute = require("./patient/auth.route");
+
+const dashboardAdminRoute = require("./dashboard/dashboard.route");
 
 // const helpRoute = require("./doctor/web/help.route");
 // const homeScreenDoctorRoute = require("./doctor/app/homescreen.route");
@@ -27,7 +29,9 @@ const router = express.Router();
 router.use("/admin", authRoute);
 router.use("/hospital", hospitalRoute);
 router.use("/doctor", authDoctorRoute);
-// router.use("/appointment", appointmentRoute);
+router.use("/patient", authPatientRoute);
+
+router.use("/dashboard-admin", dashboardAdminRoute);
 // router.use("/help-doctor", helpDoctorRoute);
 // router.use("/notification", notificationRoute);
 

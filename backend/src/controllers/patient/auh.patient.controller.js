@@ -6,26 +6,33 @@ const jwt = require("jsonwebtoken");
 // const { Admin } = require("../../models/admin.model");
 const ejs = require("ejs");
 const path = require("path");
-const { adminService, emailService } = require("../../services");
-const Admin = require("../../models/admin.model");
+const {  emailService, patientService } = require("../../services");
+
+const Patient = require("../../models/patient.model");
 
 /* -------------------------- REGISTER/CREATE DOCTOR -------------------------- */
 const register = async (req, res) => {
   try {
     const {
       first_name,
-      password,
-      email,
       last_name,
-      phone_number,
+      password,
       confirmPassword,
+      email,
+      phone_number,
       country,
       state,
       city,
-      hospitalId,
-
-    
+      age,
+      patient_address,
+      gender,
+      dob,
+      blood_group,
+      weight,
+      height,
     } = req.body;
+  // Convert dob to a Date object and ensure it's in UTC
+  const dobUTC = new Date(new Date(dob).toISOString().split('T')[0]);
 
     // Check if required fields are missing
     if (
@@ -37,30 +44,18 @@ const register = async (req, res) => {
       !city ||
       !last_name ||
       !country ||
-      !state || !hospitalId
+      !state ||
+      !age ||
+      !patient_address ||
+      !gender ||
+      !dob ||
+      !blood_group ||
+      !weight ||
+      !height
     ) {
       return res.status(400).json({
         success: false,
         message: "Missing Required Fields.",
-      });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Email Format.",
-      });
-    }
-
-    // Validate password strength
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Password Must Be At Least 8 Characters Long and Contain At Least One Uppercase Letter, One Lowercase Letter, And One Number.",
       });
     }
 
@@ -73,11 +68,11 @@ const register = async (req, res) => {
     }
 
     // Check if user with the same email already exists
-    const existingAdmin = await adminService.findAdminByEmail(email);
-    if (existingAdmin) {
+    const existingPatient = await patientService.findPatientByEmail(email);
+    if (existingPatient) {
       return res.status(400).json({
         success: false,
-        message: "Admin With This Email Already Exists.",
+        message: "Patient With This Email Already Exists.",
       });
     }
 
@@ -97,31 +92,47 @@ const register = async (req, res) => {
       process.env.JWT_REFRESH_SECRET_KEY
     );
 
-    // Prepare data for creating doctor
+    // Prepare data for creating patient
     const filter = {
       email,
       first_name,
       phone_number,
       password: hashPassword,
       token,
-      refreshToken, // Include refresh token in the data
+      refreshToken,
       city,
       country,
       last_name,
       state,
-      hospitalId
+      age,
+      patient_address,
+      gender,
+      dob: dobUTC,  // Storing dob as a Date object
+      blood_group,
+      weight,
+      height,
     };
 
-    // Create doctor
-    const data = await adminService.createAdmin(filter);
+    // Create patient
+    const data = await patientService.createPatient(filter);
+
+    // Format dob in "2 Jan 2022" format
+    const formattedDob = new Date(data.dob).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
 
     // Respond with success message
     res.status(200).json({
       success: true,
-      message: "Admin Registered Successfully",
+      message: "Patient Registered Successfully",
       status: 200,
-      data: data,
-      adminId: data._id,
+      data: {
+        ...data._doc,  // Spread operator to keep the existing patient data
+        dob: formattedDob,  // Overwrite dob with formatted date
+      },
+      patientId: data._id,
       refreshToken: refreshToken, // Include refresh token in the response
     });
   } catch (err) {
@@ -129,6 +140,7 @@ const register = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 /* -------------------------- LOGIN/SIGNIN DOCTOR  0-new 1-already -------------------------- */
 const login = async (req, res) => {
@@ -145,21 +157,21 @@ const login = async (req, res) => {
     }
 
     // Find the admin by either email or phone number
-    const admin = await Admin.findOne({
+    const patient = await Patient.findOne({
       $or: [{ email: identifier }, { phone_number: identifier }],
     });
     
     // Check if admin exists
-    if (!admin) {
+    if (!patient) {
       return res.status(404).json({
         status: 404,
         success: false,
-        message: "Admin Not Found",
+        message: "patient Not Found",
       });
     }
 
     // Compare the password with the hashed password in the database
-    const successPassword = await bcrypt.compare(password, admin.password);
+    const successPassword = await bcrypt.compare(password, patient.password);
     if (!successPassword) {
       return res.status(400).json({
         status: 400,
@@ -170,17 +182,17 @@ const login = async (req, res) => {
 
     // Prepare the payload for JWT
     const payload = {
-      _id: admin._id,
-      email: admin.email,
+      _id: patient._id,
+      email: patient.email,
     };
 
     // Generate JWT token
     const token = await jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-      expiresIn: "15m", // Token expires in 1 minute
+      expiresIn: "5m", // Token expires in 1 minute
     });
 
     // Optionally store the token in the admin object
-    admin.token = token;
+    patient.token = token;
 
     // Generate refresh token
     const refreshToken = await jwt.sign(
@@ -189,7 +201,7 @@ const login = async (req, res) => {
     );
 
     // Save the admin document with the new token
-    const output = await admin.save();
+    const output = await patient.save();
 
     // Construct the base URL for profile path
     const baseUrl =
@@ -205,7 +217,7 @@ const login = async (req, res) => {
       refreshToken: refreshToken,
       baseUrl: baseUrl,
       message: "Login Successful",
-      adminId: output._id,
+      patientId: output._id,
       status: 200,
       success: true,
     });
@@ -220,48 +232,46 @@ const login = async (req, res) => {
 };
 
 
+
 // //   /* -------------------------- LOGIN WITH PHONE NUMBER WITH OTP  -------------------------- */
 const forgotPass = async (req, res) => {
   try {
     const { phone_number, first_name } = req.body;
-    let email = req.body.email;  // Change to let to allow reassignment
+    let email = req.body.email; // Use let to allow reassignment
 
-     // Ensure that only one field is provided
-     if (email && phone_number) {
+    // Ensure that only one field is provided
+    if (email && phone_number) {
       throw new Error("Please provide either email or phone number, not both");
     }
 
-    // Ensure that either email or phone number is provided
     if (!email && !phone_number) {
       throw new Error("Please provide either email or phone number");
     }
 
-    let findAdmin;
+    let findPatient;
 
-    // If phone number is provided, find the admin and retrieve the email
+    // If phone number is provided, find the patient and retrieve the email
     if (phone_number) {
-      findAdmin = await adminService.findAdminByPhoneNumber(phone_number);
-      if (!findAdmin) {
-        throw new Error("Admin Not Found");
+      findPatient = await patientService.findPatientByPhoneNumber(phone_number);
+      if (!findPatient) {
+        throw new Error("Patient Not Found");
       }
-      // Use the found admin's email for sending the OTP
-      email = findAdmin.email; // Retrieve the email from the admin object
-    } else {
-     // Get the email directly if it is provided
-      findAdmin = await adminService.findAdminByEmail(email);
-      if (!findAdmin) {
-        throw new Error("Admin Not Found");
+      email = findPatient.email; // Reassign email here
+    } else if (email) {
+      // If email is provided, find the patient by email
+      findPatient = await patientService.findPatientByEmail(email);
+      if (!findPatient) {
+        throw new Error("Patient Not Found");
       }
     }
 
     // Generate a random OTP (6 digits)
     const otp = ("0".repeat(6) + Math.floor(Math.random() * 10 ** 6)).slice(-6);
-    findAdmin.otp = otp;
-    await findAdmin.save();
+    findPatient.otp = otp;
+    await findPatient.save();
 
     // Send OTP via email
     if (email) {
-      // Render the OTP email template and send email
       ejs.renderFile(
         path.join(__dirname, "../../views/otp-template.ejs"),
         {
@@ -283,50 +293,47 @@ const forgotPass = async (req, res) => {
     res.status(200).json({
       success: true,
       message: `OTP has been sent via email`,
-      data: `Admin OTP is ${otp}`,
-      adminId: findAdmin._id,
+      data: `Patient OTP is ${otp}`,
+      patientId: findPatient._id,
       status: 200,
     });
   } catch (error) {
-    // Send error response
     res.status(400).json({ success: false, message: error.message });
   }
 };
 
 
+
 // /* ------------------------------- VERIFY OTP ------------------------------- */
 const verifyOtp = async (req, res) => {
   try {
-    const { otp, email, phone_number } = req.body;
+    const { otp, identifier } = req.body; // Assuming you pass either phone number or email as identifier
 
-    // Ensure that either email or phone_number is provided
-    if (!otp ) {
+    // Ensure that OTP and identifier (phone/email) are provided
+    if (!otp || !identifier) {
       return res.status(400).json({
         status: 400,
         success: false,
-        message: "Please provide otp to further verification",
+        message: "Please provide otp and identifier (phone or email)",
       });
     }
 
-    // Find the admin based on either email or phone_number
-    let admin;
-    if (email) {
-      admin = await Admin.findOne({ email });
-    } else if (phone_number) {
-      admin = await Admin.findOne({ phone_number });
-    }
+    // Find the patient by identifier (e.g., phone number or email)
+    const patient = await Patient.findOne({ 
+      $or: [{ phone_number: identifier }, { email: identifier }] 
+    });
 
-    // Check if admin exists
-    if (!admin) {
+    // Check if patient exists
+    if (!patient) {
       return res.status(404).json({
         status: 404,
         success: false,
-        message: "Admin Not Found",
+        message: "Patient not found",
       });
     }
 
-    // Check if the OTP is expired (5 seconds expiration)
-    const otpGeneratedAt = admin.otpGeneratedAt; // Timestamp when OTP was generated
+    // Check if OTP is expired (5 seconds expiration)
+    const otpGeneratedAt = patient.otpGeneratedAt; // Timestamp when OTP was generated
     const currentTime = Date.now();
     const otpExpiryTime = 5000; // 5 seconds in milliseconds
 
@@ -339,7 +346,7 @@ const verifyOtp = async (req, res) => {
     }
 
     // Compare OTP
-    if (admin.otp === otp) {
+    if (patient.otp === otp) {
       return res.status(200).json({
         status: 200,
         success: true,
@@ -358,12 +365,13 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-
 // /* ----------------------------- RESET PASSWORD ----------------------------- */
 const resetPassword = async (req, res) => {
   try {
-    const { newPassword, confirmPassword, adminId } = req.body;
-    
+    const { newPassword, confirmPassword, patientId } = req.body;
+
+    // console.log(id);
+
     if (newPassword !== confirmPassword) {
       return res.status(400).json({
         status: 400,
@@ -371,13 +379,13 @@ const resetPassword = async (req, res) => {
         message: "New Password And Confirm Password Do Not Match.",
       });
     }
-    let admin = await Admin.findById(adminId);
+    let patient = await Patient.findById(patientId);
     // Checking if the user is in the database or not
-    if (!admin) {
+    if (!patient) {
       return res.status(400).json({
         status: 400,
         success: false,
-        message: "admin Does Not Exist!",
+        message: "patient Does Not Exist!",
       });
     }
 
@@ -385,8 +393,8 @@ const resetPassword = async (req, res) => {
       status: 200,
       success: true,
       message: "Password Reset Successfully!",
-      data: admin,
-      adminId:admin._id,
+      data: patient,
+      patientId:patient._id,
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
@@ -395,20 +403,20 @@ const resetPassword = async (req, res) => {
 // /* ----------------------------- CHANGE PASSWORD ---------------------------- */
 const changePassword = async (req, res) => {
   try {
-    const { oldpass, newpass, confirmpass, adminId } = req.body; // assuming patientId is provided in the request body
+    const { oldpass, newpass, confirmpass, patientId } = req.body; // assuming patientId is provided in the request body
     // console.log(req.body, "++++++++++++++");
 
     // Find the patient by their ID
-    const admin = await Admin.findById(adminId);
+    const patient = await Patient.findById(patientId);
     // console.log(admin, "++++++++++++++++++++++++++++++++");
-    if (!admin) {
+    if (!patient) {
       return res
         .status(404)
         .json({ status: 404, success: false, error: "admin not found" });
     }
 
     // Verify the old password
-    const isPasswordCorrect = await bcrypt.compare(oldpass, admin.password);
+    const isPasswordCorrect = await bcrypt.compare(oldpass, patient.password);
     if (!isPasswordCorrect) {
       return res
         .status(401)
@@ -426,88 +434,28 @@ const changePassword = async (req, res) => {
 
     // Hash the new password and update it in the database
     const hashedPassword = await bcrypt.hash(newpass, 8);
-    admin.password = hashedPassword;
-    await admin.save();
+    patient.password = hashedPassword;
+    await patient.save();
 
     return res.status(200).json({
       success: true,
       status: 200,
       message: "Password updated successfully",
-      adminId:admin._id,
-      admin,
+      patientId:patient._id,
+      patient,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// const socialLogin = async (req, res) => {
-//   try {
-//     const { email, name, fcm_token } = req.body;
 
-//     // Check if required fields are missing
-//     if (!email || !name) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Missing required fields.",
-//       });
-//     }
-
-//     // Check if user with the same email already exists
-//     let existingUser = await doctorService.findDoctorByEmail(email);
-
-//     // Prepare data for updating or creating doctor
-//     const filter = {
-//       email,
-//       name,
-//       fcm_token,
-//     };
-
-//     let statussocial; // Variable to hold statussocial value
-
-//     if (existingUser) {
-//       // Update existing user's fcm_token and token
-//       filter.token = await jwt.sign({ email }, process.env.JWT_SECRET_KEY);
-//       filter.refreshToken = await jwt.sign(
-//         { email },
-//         process.env.JWT_REFRESH_SECRET_KEY
-//       );
-//       existingUser = await Doctor.findOne({ email });
-//       statussocial = 0; // Existing user
-//     } else {
-//       // Create new user
-//       filter.token = await jwt.sign({ email }, process.env.JWT_SECRET_KEY);
-//       filter.refreshToken = await jwt.sign(
-//         { email },
-//         process.env.JWT_REFRESH_SECRET_KEY
-//       );
-//       existingUser = await doctorService.createDoctor(filter);
-//       statussocial = 1; // New user
-//     }
-
-//     // Respond with success message
-//     res.status(200).json({
-//       success: true,
-//       message: existingUser
-//         ? "Doctor's details updated successfully"
-//         : "New doctor created successfully",
-//       status: 200,
-//       data: existingUser,
-//       refreshToken: filter.refreshToken, // Include refresh token in the response
-//       statussocial: statussocial, // Include statussocial in the response
-//     });
-//   } catch (err) {
-//     // Handle errors
-//     res.status(500).json({ error: err.message });
-//   }
-// };
 
 module.exports = {
   register,
+    login,
   forgotPass,
   verifyOtp,
-  login,
   resetPassword,
   changePassword,
-  // socialLogin,
 };

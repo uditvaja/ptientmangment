@@ -10,16 +10,17 @@ module.exports.doctorOwnController = require("./doctor/controller.doctor");
 
 
 
+module.exports.patientAuthController = require("./patient/auh.patient.controller");
 
 
 
-// module.exports.helpController = require("./Doctor/web/help.controller");
 
-// module.exports.homeScreenDoctorController = require("./Doctor/App/homeScreen.controller");
+
+module.exports.patientController = require("./patient/patient.controller");
 
 // /* --------------------------------- PATIRNT -------------------------------- */
 
-// module.exports.countryController = require("./Patient/web/country.controller");
+module.exports.dashboardController = require("./admin/dashboard.controller");
 
 // module.exports.authPatientController = require("./Patient/app/auth.controller");
 

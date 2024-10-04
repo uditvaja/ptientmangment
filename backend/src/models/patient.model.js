@@ -11,7 +11,7 @@ const patientSchema = new mongoose.Schema({
     type:String,
  },
  phone_number:{
-    type: Number
+    type: String,
  },
  otp: { type: String },
  country:{
@@ -49,9 +49,9 @@ const patientSchema = new mongoose.Schema({
     type:String,
  },
  dob:{
-    type:Date.now()
+    type:Date
  },
-address:{
+patient_address:{
     type:String,
 },
  gender:{
