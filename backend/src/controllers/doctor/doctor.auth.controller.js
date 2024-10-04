@@ -26,7 +26,7 @@ const login = async (req, res) => {
 
     // Find the admin by either email or phone number
     const doctor = await Doctor.findOne({
-      $or: [{ email: identifier }, { phone_number: identifier }],
+      $or: [{ email: identifier }, { phoneNumber: identifier }],
     });
     
     // Check if doctor exists
@@ -104,7 +104,12 @@ const login = async (req, res) => {
 const forgotPass = async (req, res) => {
   try {
     const { phoneNumber, first_name } = req.body;
-    let email; // Change to let to allow reassignment
+    let email = req.body.email;  // Change to let to allow reassignment
+
+     // Ensure that only one field is provided
+     if (email && phoneNumber) {
+      throw new Error("Please provide either email or phone number, not both");
+    }
 
     // Ensure that either email or phone number is provided
     if (!email && !phoneNumber) {
@@ -121,8 +126,8 @@ const forgotPass = async (req, res) => {
       }
       // Use the found admin's email for sending the OTP
       email = findDoctor.email; // Retrieve the email from the admin object
-    } else {
-      email = req.body.email; // Get the email directly if it is provided
+    } else if(email) {
+      // email = req.body.email; // Get the email directly if it is provided
       findDoctor = await doctorService.findDoctorByEmail(email);
       if (!findDoctor) {
         throw new Error("Admin Not Found");

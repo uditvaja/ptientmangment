@@ -3,7 +3,7 @@
 const express = require("express");
 const router = express.Router();
 const {  doctorAuthController, doctorOwnController } = require("../../../controllers");
-const { accessToken } = require("../../../middlewares/doctorAuth");
+const authenticDoctor = require("../../../middlewares/doctorAuth");
 const { singleFileUpload, multiDiffFileUpload } = require("../../../helpers/upload");
 const multer = require('multer');
 /* ------------------------------- DOCTOR AUTH ------------------------------ */
@@ -23,15 +23,15 @@ router.post("/verify-otp", doctorAuthController.verifyOtp);
 router.put("/reset-password", doctorAuthController.resetPassword);
 
 // // /* -------------------------- CHANGE PASSWORD DOCTOR ----------- */
-router.post("/change-password", accessToken(), doctorAuthController.changePassword);
+router.post("/change-password", authenticDoctor, doctorAuthController.changePassword);
 
  
 const storage = multer.memoryStorage(); // Use memory storage for direct upload to Cloudinary
 const upload = multer({ storage: storage });
 
 router.put(
-  '/update-doctor', 
-  accessToken(),
+  '/update-doctor',  
+  authenticDoctor,
   upload.fields([
     { name: 'image', maxCount: 1 }, // Field name for doctor's image
   ]),

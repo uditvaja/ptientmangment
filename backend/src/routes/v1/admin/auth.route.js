@@ -3,17 +3,19 @@
 const express = require("express");
 const router = express.Router();
 const { authAdminController, adminController, doctorController } = require("../../../controllers");
-const { accessToken } = require("../../../middlewares/adminAuth");
+const authenticAdmin = require("../../../middlewares/adminAuth");
 const { singleFileUpload, multiDiffFileUpload } = require("../../../helpers/upload");
 const multer = require('multer');
+const { adminAuthValidation } = require("../../../validations");
+const validate = require("../../../middlewares/validate");
 /* ------------------------------- DOCTOR AUTH ------------------------------ */
 
 /* -------------------------- CREATE/SIGNUP DOCTOR ----------- */
-router.post("/create-admin", authAdminController.register);
+router.post("/create-admin", validate(adminAuthValidation.createAdminRegister), authAdminController.register);
 
 /* -------------------------- LOGIN DOCTOR ----------- */
 router.post("/admin-login", 
-    // accessToken(),
+    // authenticAdmin,
  authAdminController.login);
 
 // /* -------------------------- FORGOT PASSWORD DOCTOR ----------- */
@@ -26,7 +28,7 @@ router.post("/verify-otp", authAdminController.verifyOtp);
 router.put("/reset-password", authAdminController.resetPassword);
 
 // /* -------------------------- CHANGE PASSWORD DOCTOR ----------- */
-router.post("/change-password", accessToken(), authAdminController.changePassword);
+router.post("/change-password", authenticAdmin, authAdminController.changePassword);
 
 // /* -------------------------- UPDATE DOCTOR PROFILE DOCTOR ----------- */
 // router.put(
@@ -38,7 +40,7 @@ router.post("/change-password", accessToken(), authAdminController.changePasswor
 
 router.put(
   '/update-admin-profile',
-  accessToken(), // Middleware to authenticate the admin using access token
+  authenticAdmin, // Middleware to authenticate the admin using access token
   singleFileUpload('/adminImg', 'image'), // Middleware to handle image upload (folder name and field name for the file)
   adminController.updateAdminProfile // Controller function to handle the request
 );
@@ -68,7 +70,7 @@ const uploadMiddleware = multiDiffFileUpload("/doctorImg", [
 
 router.post(
   "/add-doctor-by-admin",
-  accessToken(),
+  authenticAdmin,
   uploadMiddleware,
   doctorController.addDoctorByAdmin
 );
@@ -79,7 +81,7 @@ const upload = multer({ storage: storage });
 
 router.put(
   '/update-doctor-by-admin', 
-  accessToken(),
+  authenticAdmin,
   upload.fields([
     { name: 'image', maxCount: 1 }, // Field name for doctor's image
     { name: 'signatureImage', maxCount: 1 }, // Field name for doctor's signature image
@@ -88,22 +90,22 @@ router.put(
 );
 
 router.get("/list-docotr/:adminId",
-  accessToken(),
+  authenticAdmin,
   doctorController.listDoctorAdmin);
 
 router.get("/search-docotr-by-admin",
-  accessToken(),
+  authenticAdmin,
   doctorController.searchDoctorByAdmin);
 
 router.get("/list-all-docotr-by-admin",
-  accessToken(), 
+  authenticAdmin, 
   doctorController.listAllDoctorByAdmin);
 
 
 // /* -------------------------- DELTE DOCTOR PROFILE DOCTOR ----------- */
 router.delete(
   "/delete-doc-by-admin",
-  accessToken(),
+  authenticAdmin,
   doctorController.deleteDoctorByAdmin
 );
 
