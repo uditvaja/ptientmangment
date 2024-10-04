@@ -11,6 +11,15 @@ import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import AdminProfile from "./pages/AdminProfile/AdminProfile";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import DoctorLogin from "./pages/DoctorLogin/DoctorLogin";
+import DoctorForgotPassword from "./pages/DoctorForgotPassword/DoctorForgotPassword";
+import DoctorOtpScreen from "./pages/DoctorOtpScreen/DoctorOtpScreen";
+import DoctorResetPassword from "./pages/DoctorResetPassword/DoctorResetPassword";
+import PatientLogin from "./pages/PatientLogin/PatientLogin";
+import PatientForgotPassword from "./pages/PatientForgotPassword/PatientForgotPassword";
+import PatientOtpScreen from "./pages/PatientOtpScreen/PatientOtpScreen";
+import PatientResetPassword from "./pages/PatientResetPassword/PatientResetPassword";
+import PatientRegister from "./pages/PatientRegister/PatientRegister";
 
 function App() {
   return (
@@ -19,11 +28,23 @@ function App() {
       <Routes>
         <Route path="/" element={<AdminProfile />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        {/* Admin Auth */}
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<Forgot_Password />} />
         <Route path="/otp-verification" element={<Otp_screen />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/register" element={<Register />} />
+        {/* Doctor Auth */}
+        <Route path="/doctor-login" element={<DoctorLogin />} />
+        <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />
+        <Route path="/doctor-otp-verification" element={<DoctorOtpScreen />} />
+        <Route path="/doctor-reset-password" element={<DoctorResetPassword />} />
+        {/* Patient Auth */}
+        <Route path="/patient-register" element={<PatientRegister />} />
+        <Route path="/patient-login" element={<PatientLogin />} />
+        <Route path="/patient-forgot-password" element={<PatientForgotPassword />} />
+        <Route path="/patient-otp-verification" element={<PatientOtpScreen />} />
+        <Route path="/patient-reset-password" element={<PatientResetPassword />} />
       </Routes>
       <Toaster position="top-right" />
     </BrowserRouter>
