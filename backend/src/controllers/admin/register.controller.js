@@ -176,7 +176,7 @@ const login = async (req, res) => {
 
     // Generate JWT token
     const token = await jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1m", // Token expires in 1 minute
+      expiresIn: "15m", // Token expires in 1 minute
     });
 
     // Optionally store the token in the admin object
