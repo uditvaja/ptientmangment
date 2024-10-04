@@ -171,7 +171,7 @@ const AdminProfile = () => {
                   </nav>
                 </div>
                 <div className="col-md-6 col-12 d-lg-flex d-block justify-content-lg-end">
-                  <div className="search-container me-3">
+                  <div className="search-container me-3 mt-lg-0 mt-3">
                     <input
                       type="text"
                       className="form-control"

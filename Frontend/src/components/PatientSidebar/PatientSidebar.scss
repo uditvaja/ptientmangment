@@ -1,6 +1,6 @@
 @import "../../css/variables.scss";
 
-.sidebar {
+.patient-sidebar {
   width: 280px;
   height: 100vh;
   background-color: $color1;
@@ -101,11 +101,11 @@
     }
 
     &:first-child::before {
-      background-image: url("/assets/images/Dashboard.svg");
+      background-image: url("/assets/images/1-normal.svg");
     }
 
     &:hover::before {
-      background-image: url("/assets/images/Dashboard_Hover.svg");
+      background-image: url("/assets/images/1-normal-blue.svg");
     }
 
     &:hover {
@@ -145,11 +145,11 @@
     }
 
     &:first-child::before {
-      background-image: url("/assets/images/Doctor_Management.svg");
+      background-image: url("/assets/images/2-normal-gray.svg");
     }
 
     &:first-child:hover::before {
-      background-image: url("/assets/images/Doctor_Management_Hover.svg");
+      background-image: url("/assets/images/2-normal.svg");
     }
 
     &:hover {
@@ -189,11 +189,11 @@
     }
 
     &:first-child::before {
-      background-image: url("/assets/images/patient.svg");
+      background-image: url("/assets/images/3-normal.svg");
     }
 
     &:first-child:hover::before {
-      background-image: url("/assets/images/patient_Hover.svg");
+      background-image: url("/assets/images/3-normal-blue.svg");
     }
 
     &:hover {
@@ -233,11 +233,11 @@
     }
 
     &:first-child::before {
-      background-image: url("/assets/images/wallet_2.svg");
+      background-image: url("/assets/images/4-normal.svg");
     }
 
     &:first-child:hover::before {
-      background-image: url("/assets/images/wallet.svg");
+      background-image: url("/assets/images/4-normal-blue.svg");
     }
 
     &:hover {
@@ -277,11 +277,55 @@
     }
 
     &:first-child::before {
-      background-image: url("/assets/images/Reporting_And_Analytics.svg");
+      background-image: url("/assets/images/Chat.svg");
     }
 
     &:first-child:hover::before {
-      background-image: url("/assets/images/Reporting_And_Analytics_Hover.svg");
+      background-image: url("/assets/images/Chat-blue.svg");
+    }
+
+    &:hover {
+      background: $linear-gradient-bg-3;
+      color: $color2;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+    &.collapsed {
+      display: flex;
+      align-items: center;
+    }
+    img {
+      margin-right: 15px;
+    }
+  }
+
+  .nav-links-7 {
+    color: $color4;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      transition: background-image 0.3s ease;
+    }
+
+    &:first-child::before {
+      background-image: url("/assets/images/bills.svg");
+    }
+
+    &:first-child:hover::before {
+      background-image: url("/assets/images/bills-blue.svg");
     }
 
     &:hover {
@@ -315,6 +359,29 @@
           color: $color2;
         }
       }
+    }
+  }
+
+  .doctor-kit {
+    text-align: center;
+    h6 {
+        font-weight: 600;
+        font-size: 18px;
+        color: $color10;
+    }
+    p {
+        font-weight: 400;
+        font-size: 14px;
+        color: $color5;
+    }
+    .appontment-btn {
+        margin-top: 15px;
+        padding: 8px 14px;
+        background-color: $color2;
+        border-radius: 10px;
+        color: $color1;
+        font-weight: 600;
+        font-size: 18px;
     }
   }
 
@@ -358,7 +425,7 @@
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
-  .sidebar {
+  .patient-sidebar {
     position: fixed;
     width: 100%;
     height: 100vh;

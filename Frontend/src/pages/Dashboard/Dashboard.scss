@@ -410,21 +410,21 @@
     border-radius: 15px;
 
     @media (max-width: 992px) {
-        width: 300px; 
+      width: 300px;
     }
 
     &::-webkit-scrollbar {
-        width: 8px;
-      }
-  
-      &::-webkit-scrollbar-thumb {
-        background-color: #ccc;
-        border-radius: 4px;
-      }
-  
-      &::-webkit-scrollbar-track {
-        background-color: #f1f1f1;
-      }
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+    }
 
     .notification-header {
       padding: 20px 0;
@@ -483,6 +483,59 @@
       .notification-time {
         font-size: 14px;
         color: $color6;
+      }
+    }
+  }
+}
+
+.search-table {
+  h4 {
+    font-weight: 700;
+    font-size: 26px;
+    color: $color15;
+  }
+  .table {
+    thead {
+      th {
+        font-weight: 700;
+        font-size: 18px;
+        color: $color15;
+      }
+    }
+    tbody {
+      tr {
+        td {
+          font-weight: 600;
+          font-size: 14px;
+          color: $color5;
+        }
+        .appo-time {
+          font-weight: 600;
+          font-size: 14px;
+          color: $color3;
+        }
+        .appo-badge {
+          .badge-primary {
+            width: 82px;
+            height: 28px;
+            background: #5678e91a;
+            font-weight: 600;
+            font-size: 13px;
+            color: $color13;
+            border-radius: 30px;
+            text-align: center;
+          }
+          .badge-warning {
+            width: 82px;
+            height: 28px;
+            background: #ffc3131a;
+            font-weight: 600;
+            font-size: 13px;
+            color: $color14;
+            border-radius: 30px;
+            text-align: center;
+          }
+        }
       }
     }
   }

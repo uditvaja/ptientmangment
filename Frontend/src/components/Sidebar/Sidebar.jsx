@@ -11,14 +11,14 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
       >
         <div className="logo-section">
           <img
-            src="./assets/images/logo.png"
+            src="/assets/images/logo.png"
             alt="Hospital Logo"
             className="logo img-fluid"
           />
         </div>
         <ul className="nav flex-column">
           <li className="nav-item">
-            <Link to={"/"}  className={`nav-link nav-links-1 ${activeLink === '/' || activeLink === '/dashboard' ? 'active' : ''}`}>
+            <Link to={"/"}  className={`nav-link nav-links-1 ${activeLink === '/adminProfile' || activeLink === '/' ? 'active' : ''}`}>
               Dashboard
             </Link>
           </li>
@@ -33,23 +33,23 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
             </Link>
           </li>
           <li className="nav-item">
-            <a
-              className={`nav-link nav-links-4 collapsed ${activeLink === '/billing' ? 'active' : ''}`}
-              href="#billing"
+            <Link
+              className={`nav-link nav-links-4 collapsed ${activeLink.includes('/billing') ? 'active' : ''}`}
+              to={"#billing"}
               data-bs-toggle="collapse"
               aria-expanded="false"
             >
               Billing and Payments
-            </a>
+            </Link>
             <ul id="billing" className="collapse">
               <li>
-                <a href="#monitor-billing">Monitor Billing</a>
+              <Link to={"/billing/monitor-billing"} className="nav-link">Monitor Billing</Link>
               </li>
               <li>
-                <a href="#insurance-claims">Insurance Claims</a>
+              <Link to={"/billing/insurance-claims"} className="nav-link">Insurance Claims</Link>
               </li>
               <li>
-                <a href="#payment-process">Payment Process</a>
+              <Link to={"/billing/payment-process"} className="nav-link">Payment Process</Link>
               </li>
             </ul>
           </li>
