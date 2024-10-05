@@ -8,7 +8,7 @@ const hospitalSchema = new mongoose.Schema({
    type:String,
  },
  country:{
-   type:String,
+   type:String, 
  },
  state:{
    type:String,

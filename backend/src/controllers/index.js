@@ -22,7 +22,7 @@ module.exports.patientController = require("./patient/patient.controller");
 
 module.exports.dashboardController = require("./admin/dashboard.controller");
 
-// module.exports.authPatientController = require("./Patient/app/auth.controller");
+module.exports.bookapointmentPatientController = require("./bookapointment/bookApointment.controller");
 
 // module.exports.updatePatientController = require("./Patient/app/updatePatient.controller");
 
