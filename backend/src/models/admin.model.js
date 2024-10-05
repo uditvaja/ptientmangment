@@ -11,7 +11,7 @@ const adminSchema = new mongoose.Schema({
     type:String,
  },
  phone_number:{
-    type: Number
+    type: String
  },
  otp: { type: String },
  country:{
@@ -32,7 +32,7 @@ const adminSchema = new mongoose.Schema({
  },
  agree:{
     type:Boolean,
-    default:false,
+   //  default:false,
  },
  token:{
    type:String,

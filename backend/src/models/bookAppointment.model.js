@@ -21,11 +21,11 @@ doctorId: {
   
 },
 
-doctorTimeSlot:{
-   type: mongoose.Schema.Types.ObjectId,
-   ref: 'doctimeslot',  // Reference to the Patient model
+// doctorTimeSlot:{
+//    type: mongoose.Schema.Types.ObjectId,
+//    ref: 'doctimeslot',  // Reference to the Patient model
   
-},
+// },
 hospitalId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'hospital',  // Reference to the Patient model
@@ -54,9 +54,9 @@ city:{
  app_date: {
     type: Date,
  },
-//  app_time:{
-//     type:String,
-//  },
+ app_time:{
+    type:String,
+ },
  amount: {
     type: String,
     // required: [true, "Amount is required."],
@@ -68,6 +68,8 @@ type:String,
     type: Number,
     default: 0, //0-Pending,1-Completed,2-Cancelled,3-Accepted
   },
+  startTime: Date, // Storing start time as Date
+  endTime: Date,   // Storing end time as Date
   cancel_appointment: {
     type: String,
   },

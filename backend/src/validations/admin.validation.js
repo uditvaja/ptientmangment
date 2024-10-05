@@ -12,6 +12,7 @@ const createAdminRegister = {
     state: Joi.string().required(),
     city: Joi.string().required(),
     hospitalId: Joi.string().required(),
+    agree: Joi.boolean().required(),
     confirmPassword: Joi.string().required(),
   }),
 };
