@@ -20,14 +20,20 @@ import PatientForgotPassword from "./pages/PatientForgotPassword/PatientForgotPa
 import PatientOtpScreen from "./pages/PatientOtpScreen/PatientOtpScreen";
 import PatientResetPassword from "./pages/PatientResetPassword/PatientResetPassword";
 import PatientRegister from "./pages/PatientRegister/PatientRegister";
+import PendingBills from "./pages/PendingBills/PendingBills";
+import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
+import PatientAppointment from "./pages/PatientAppointment/PatientAppointment";
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<AdminProfile />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/adminProfile" element={<AdminProfile />} />
+        <Route path="/doctorProfile" element={<DoctorProfile />} />
+        <Route path="/patientAppointment" element={<PatientAppointment />} />
+        <Route path="/billing/monitor-billing" element={<PendingBills />} />
         {/* Admin Auth */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
