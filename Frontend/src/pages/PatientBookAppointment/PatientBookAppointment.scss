@@ -8,9 +8,7 @@
   .breadcrumb {
     margin-bottom: 0;
     .breadcrumb-item {
-    font-weight: 400;
       font-size: 18px;
-      color: $color6;
       &.active {
         color: $color2;
         font-weight: 400;
@@ -226,54 +224,159 @@
   }
 }
 
-.pending-bills-container {
-  .header {
+.patient-book-apointment-page {
+  .appointment-book-title {
     font-weight: 700;
     font-size: 26px;
     color: $color15;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
-  .bill-card {
-    border: 1px solid #f4f4f4;
-    background-color: $color1;
+  .form-select {
+    border: 1px solid #d9d9d9;
+    font-weight: 500;
+    font-size: 16px;
+    color: $color15;
     border-radius: 10px;
-    .bill-status {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      background: #f6f8fb;
-      .bill-number {
-        font-weight: 400;
-        font-size: 18px;
-        color: $color15;
-        .bill-count {
-          font-weight: 600;
-          font-size: 18px;
+    padding: 0.75rem;
+    option {
+      font-weight: 500;
+      font-size: 16px;
+      color: $color15;
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    margin-top: 2rem;
+
+    img {
+      max-width: 300px;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .schedule-table {
+    .date-selection {
+      font-weight: 600;
+      font-size: 18px;
+      color: $color2;
+    }
+    .calendar-container {
+      .calendar-table {
+        .text-blue {
+          font-weight: 500;
+          font-size: 16px;
           color: $color2;
+        }
+        thead {
+          tr {
+            th {
+              font-weight: 600;
+              font-size: 16px;
+              color: $color10;
+            }
+            .text-blue-head {
+              font-weight: 700;
+              font-size: 16px;
+              color: $color2;
+            }
+          }
+        }
+        tbody {
+          tr {
+            td {
+              font-weight: 500;
+              font-size: 13px;
+              color: $color7;
+            }
+          }
         }
       }
     }
-    .bill-details {
-        margin-top: 26px;
-      .bill-details-title {
-        font-weight: 400;
-        font-size: 16px;
-        color: $color4;
-        margin-bottom: 15px;
+  }
+
+  .doctor-details-card {
+    .doctor-title {
+      font-weight: 700;
+      font-size: 26px;
+      color: $color15;
+      margin-bottom: 39px;
+    }
+    .doctor-details-header {
+      background-image: url("/assets/images/doctor-details-bg.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      padding: 20px 17px;
+      .doctor-info {
+        margin-left: 15px;
+        h5 {
+          color: $color1;
+          font-weight: 800;
+          font-size: 20px;
+          margin-bottom: 16px;
+        }
+        span {
+          padding: 6px 12px;
+          border-radius: 78px;
+          background-color: $color3;
+          color: $color1;
+          font-weight: 600;
+          font-size: 18px;
+        }
       }
-      .bill-details-con {
-        font-weight: 700;
-        font-size: 16px;
-        color: $color5;
-        margin-bottom: 15px;
+    }
+    .doctor-extra-info {
+      margin-top: 40px;
+      p {
+        font-weight: 500;
+        font-size: 18px;
+        color: $color10;
+        strong {
+          font-weight: 400;
+          font-size: 18px;
+          color: $color6;
+          margin-bottom: 5px;
+        }
       }
     }
   }
 }
 
+@media (max-width: 992px) {
+  .patient-book-apointment-page {
+    .schedule-table {
+      .date-selection {
+        font-size: 16px;
+      }
+      .calendar-container {
+        .calendar-table {
+          thead {
+            tr {
+              th {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .doctor-details-card {
+      .doctor-title {
+        font-size: 24px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      .doctor-extra-info {
+        p {
+          strong {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+}
 
 @media (max-width: 768px) {
   .profile-header {

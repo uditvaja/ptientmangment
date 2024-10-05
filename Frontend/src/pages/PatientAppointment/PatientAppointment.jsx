@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Tab, Tabs, Card, Dropdown } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,6 +13,7 @@ const PatientAppointment = () => {
 
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -31,6 +32,10 @@ const PatientAppointment = () => {
       closeSidebar();
     }
   };
+
+  const bookAppointment = () => {
+    navigate("/patientBookAppointment")
+  }
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -347,7 +352,7 @@ const PatientAppointment = () => {
                       className="form-control"
                     />
                   </div>
-                  <button className="bookappointment-btn">
+                  <button onClick={bookAppointment} className="bookappointment-btn">
                     <img
                       src="/assets/images/calendar-white.svg"
                       alt="calendar-white"
@@ -362,7 +367,7 @@ const PatientAppointment = () => {
                   <h3 className="patientappointment-title mb-0">
                     My Appointment
                   </h3>
-                  <button className="bookappointment-btn">
+                  <button onClick={bookAppointment} className="bookappointment-btn">
                     <img
                       src="/assets/images/calendar-white.svg"
                       alt="calendar-white"
@@ -483,7 +488,7 @@ const PatientAppointment = () => {
                       className="form-control"
                     />
                   </div>
-                  <button className="bookappointment-btn">
+                  <button onClick={bookAppointment} className="bookappointment-btn">
                     <img
                       src="/assets/images/calendar-white.svg"
                       alt="calendar-white"
@@ -498,7 +503,7 @@ const PatientAppointment = () => {
                   <h3 className="patientappointment-title mb-0">
                     My Appointment
                   </h3>
-                  <button className="bookappointment-btn">
+                  <button onClick={bookAppointment} className="bookappointment-btn">
                     <img
                       src="/assets/images/calendar-white.svg"
                       alt="calendar-white"
@@ -601,7 +606,7 @@ const PatientAppointment = () => {
                       className="form-control"
                     />
                   </div>
-                  <button className="bookappointment-btn">
+                  <button onClick={bookAppointment} className="bookappointment-btn">
                     <img
                       src="/assets/images/calendar-white.svg"
                       alt="calendar-white"
@@ -616,7 +621,7 @@ const PatientAppointment = () => {
                   <h3 className="patientappointment-title mb-0">
                     My Appointment
                   </h3>
-                  <button className="bookappointment-btn">
+                  <button onClick={bookAppointment} className="bookappointment-btn">
                     <img
                       src="/assets/images/calendar-white.svg"
                       alt="calendar-white"

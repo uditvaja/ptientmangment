@@ -23,10 +23,7 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/personalHealthRecord"}
               className={`nav-link nav-links-1 ${
-                activeLink === "/doctorProfile" ||
-                activeLink === "/personalHealthRecord"
-                  ? "active"
-                  : ""
+                activeLink === "/personalHealthRecord" ? "active" : ""
               }`}
             >
               Personal Health Record
@@ -36,7 +33,10 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/patientAppointment"}
               className={`nav-link nav-links-2 ${
-                activeLink === "/patientAppointment" ? "active" : ""
+                activeLink === "/patientAppointment" ||
+                activeLink === "/patientBookAppointment"
+                  ? "active"
+                  : ""
               }`}
             >
               Appointment Booking
@@ -84,10 +84,21 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
           </li>
         </ul>
         <div className="doctor-kit">
-            <img src="/assets/images/doctor-kit.png" alt="doctorkit" className="img-fluid" />
-            <h6>Hospital appointment</h6>
-            <p>You have to fill up the form to be admitted to the hospital.</p>
-            <button type="button" className="appontment-btn"><img src="/assets/images/calendar-white.svg" alt="calendar-white" className="img-fluid" /> Appointment</button>
+          <img
+            src="/assets/images/doctor-kit.png"
+            alt="doctorkit"
+            className="img-fluid"
+          />
+          <h6>Hospital appointment</h6>
+          <p>You have to fill up the form to be admitted to the hospital.</p>
+          <button type="button" className="appontment-btn">
+            <img
+              src="/assets/images/calendar-white.svg"
+              alt="calendar-white"
+              className="img-fluid"
+            />{" "}
+            Appointment
+          </button>
         </div>
         <div className="logout-section">
           <a href="#logout" className="nav-link nav-links-6">
