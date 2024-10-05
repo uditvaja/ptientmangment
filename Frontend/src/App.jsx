@@ -23,6 +23,7 @@ import PatientRegister from "./pages/PatientRegister/PatientRegister";
 import PendingBills from "./pages/PendingBills/PendingBills";
 import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
 import PatientAppointment from "./pages/PatientAppointment/PatientAppointment";
+import PatientBookAppointment from "./pages/PatientBookAppointment/PatientBookAppointment";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/adminProfile" element={<AdminProfile />} />
         <Route path="/doctorProfile" element={<DoctorProfile />} />
         <Route path="/patientAppointment" element={<PatientAppointment />} />
+        <Route path="/patientBookAppointment" element={<PatientBookAppointment />} />
         <Route path="/billing/monitor-billing" element={<PendingBills />} />
         {/* Admin Auth */}
         <Route path="/register" element={<Register />} />
