@@ -18,7 +18,7 @@ const authPatientRoute = require("./patient/auth.route");
 
 const dashboardAdminRoute = require("./dashboard/dashboard.route");
 
-// const helpRoute = require("./doctor/web/help.route");
+const bookingappointmentRoute = require("./bookappointment/book.appointment.patient.route");
 // const homeScreenDoctorRoute = require("./doctor/app/homescreen.route");
 
 
@@ -32,7 +32,7 @@ router.use("/doctor", authDoctorRoute);
 router.use("/patient", authPatientRoute);
 
 router.use("/dashboard-admin", dashboardAdminRoute);
-// router.use("/help-doctor", helpDoctorRoute);
+router.use("/bookappointment", bookingappointmentRoute);
 // router.use("/notification", notificationRoute);
 
 // router.use("/doctor", authRoute);

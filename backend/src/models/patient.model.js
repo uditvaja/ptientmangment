@@ -61,6 +61,12 @@ patient_address:{
    public_id: { type: String },
    url: { type: String },
  },
+ patient_issue:{
+   type:String,
+ },
+ disease_name:{
+   type:String
+ }
 
 });
 

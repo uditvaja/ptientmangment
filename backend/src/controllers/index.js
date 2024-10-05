@@ -12,21 +12,17 @@ module.exports.doctorOwnController = require("./doctor/controller.doctor");
 
 module.exports.patientAuthController = require("./patient/auh.patient.controller");
 
-
-
-
-
 module.exports.patientController = require("./patient/patient.controller");
 
 // /* --------------------------------- PATIRNT -------------------------------- */
 
 module.exports.dashboardController = require("./admin/dashboard.controller");
 
-// module.exports.authPatientController = require("./Patient/app/auth.controller");
+module.exports.bookapointmentPatientController = require("./bookapointment/bookApointment.controller");
 
-// module.exports.updatePatientController = require("./Patient/app/updatePatient.controller");
+module.exports.doctorTimeSlotController = require("./doctor/timeslot.doctor.controller");
 
-// module.exports.notificationController = require("./Patient/app/notificationController");
+module.exports.doctorFlowAppointmentController = require("./bookapointment/doctorflow.controller");
 
 // module.exports.homeScreenPatientController = require("./Patient/app/homeScreen.controller");
 

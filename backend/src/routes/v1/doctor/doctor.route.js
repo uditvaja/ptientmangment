@@ -2,7 +2,7 @@
 /* ------------------------------- DEFINE AREA ------------------------------ */
 const express = require("express");
 const router = express.Router();
-const {  doctorAuthController, doctorOwnController } = require("../../../controllers");
+const {  doctorAuthController, doctorOwnController, doctorTimeSlotController } = require("../../../controllers");
 const authenticDoctor = require("../../../middlewares/doctorAuth");
 const { singleFileUpload, multiDiffFileUpload } = require("../../../helpers/upload");
 const multer = require('multer');
@@ -24,6 +24,8 @@ router.put("/reset-password", doctorAuthController.resetPassword);
 
 // // /* -------------------------- CHANGE PASSWORD DOCTOR ----------- */
 router.post("/change-password", authenticDoctor, doctorAuthController.changePassword);
+
+router.post("/create-time-slot",  doctorTimeSlotController.createTimeSlot);
 
  
 const storage = multer.memoryStorage(); // Use memory storage for direct upload to Cloudinary
