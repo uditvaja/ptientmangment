@@ -9,7 +9,7 @@ const AppointmentBook = require('../../models/bookAppointment.model'); // Adjust
 const bookAppointment = async (req, res) => {
     try {
         // Extract appointment details from request body
-        const { appointmentType, country, state, city, patient_issue, diseas_name, doctorId, hospitalId, patientId, app_time, app_date ,specialist} = req.body;
+        const { appointmentType, country, state, city, patient_issue, diseas_name, doctorId, hospitalId, patientId, doctorTimeSlot, app_date ,specialist} = req.body;
 
         // Optional: Validate other required fields
         if (!appointmentType || !country || !state || !city) {
@@ -23,10 +23,10 @@ const bookAppointment = async (req, res) => {
         }
 
         // Parse the time in IST (Indian Standard Time)
-        const formattedAppTime = moment.tz(`${app_date} ${app_time}`, "DD MMM YYYY h:mm A", "Asia/Kolkata").format(); // Convert to ISO format in IST
-        if (!moment(formattedAppTime).isValid()) {
-            return res.status(400).json({ message: 'Invalid time format. Please use "h:mm A".' });
-        }
+        // const formattedAppTime = moment.tz(`${app_date} ${app_time}`, "DD MMM YYYY h:mm A", "Asia/Kolkata").format(); // Convert to ISO format in IST
+        // if (!moment(formattedAppTime).isValid()) {
+        //     return res.status(400).json({ message: 'Invalid time format. Please use "h:mm A".' });
+        // }
 
         // Create a new appointment record
         const newAppointment = new AppointmentBook({
@@ -41,7 +41,7 @@ const bookAppointment = async (req, res) => {
             doctorId,
             hospitalId,
             app_date: formattedAppDate,    // Keeping formatted date
-            app_time: formattedAppTime     // Storing time in ISO format with IST timezone
+            doctorTimeSlot,     // Storing time in ISO format with IST timezone
         });
 
         // Save the appointment to the database
@@ -158,14 +158,47 @@ const appointmentTypeOnlineList = async (req, res) => {
 
 
 
+// Controller to cancel an appointment
+const cancelAppointment = async (req, res) => {
+    try {
+        // Extract the appointmentId from the request body
+        const { appointmentId } = req.body;
 
+        // Check if the appointment exists
+        const appointment = await AppointmentBook.findById(appointmentId);
 
+        // If no appointment is found, return an error
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found.' });
+        }
 
+        // If the appointment is already canceled, return an appropriate message
+        if (appointment.status === '0') {
+            return res.status(400).json({ message: 'Appointment is already canceled.' });
+        }
+
+        // Set the current date as the cancelation date and update the status to 0 (canceled)
+        appointment.status = '0';
+        appointment.cancel_app_date = moment().format('YYYY-MM-DD'); // Set the cancellation date
+
+        // Save the updated appointment to the database
+        await appointment.save();
+
+        // Return success response
+        return res.status(200).json({
+            message: 'Appointment canceled successfully.',
+            appointment
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'An error occurred while canceling the appointment.' });
+    }
+};
 
 
 
 
 
 module.exports = {
-    bookAppointment,doctorList,appointmentListById,appointmentTypeOnlineList
+    bookAppointment,doctorList,appointmentListById,appointmentTypeOnlineList,cancelAppointment
 };

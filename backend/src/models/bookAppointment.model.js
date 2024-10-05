@@ -12,9 +12,18 @@ patientId: {
     ref: 'patient',  // Reference to the Patient model
   
 },
+add_notes:{
+   type:String,
+},
 doctorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'doctor',  // Reference to the Patient model
+  
+},
+
+doctorTimeSlot:{
+   type: mongoose.Schema.Types.ObjectId,
+   ref: 'doctimeslot',  // Reference to the Patient model
   
 },
 hospitalId: {
@@ -45,9 +54,9 @@ city:{
  app_date: {
     type: Date,
  },
- app_time:{
-    type:String,
- },
+//  app_time:{
+//     type:String,
+//  },
  amount: {
     type: String,
     // required: [true, "Amount is required."],
@@ -59,10 +68,10 @@ type:String,
     type: Number,
     default: 0, //0-Pending,1-Completed,2-Cancelled,3-Accepted
   },
-  cancel_reason: {
+  cancel_appointment: {
     type: String,
-    default: "",
   },
+  
  
 
 });
