@@ -24,6 +24,7 @@ import PendingBills from "./pages/PendingBills/PendingBills";
 import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
 import PatientAppointment from "./pages/PatientAppointment/PatientAppointment";
 import PatientBookAppointment from "./pages/PatientBookAppointment/PatientBookAppointment";
+import InvoicePage from "./components/InvoicePage/InvoicePage";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/patientAppointment" element={<PatientAppointment />} />
         <Route path="/patientBookAppointment" element={<PatientBookAppointment />} />
         <Route path="/billing/monitor-billing" element={<PendingBills />} />
+        <Route path="/invoice" element={<InvoicePage />} />
         {/* Admin Auth */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

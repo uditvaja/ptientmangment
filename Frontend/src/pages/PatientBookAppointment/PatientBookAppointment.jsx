@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Modal, Dropdown } from "react-bootstrap";
 import doctors from "../../Data/doctorData";
 import "./PatientBookAppointment.scss";
@@ -8,10 +8,15 @@ import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
 const PatientBookAppointment = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [dateRange, setDateRange] = useState("18 June, 2022 - 23 June, 2022");
+  const [currentDate, setCurrentDate] = useState(new Date('2022-06-18'));
+  const [weekDays, setWeekDays] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+
+  const navigate = useNavigate();
+  const sidebarRef = useRef(null);
+  const location = useLocation();
 
   const timeSlots = [
     "08 AM",
@@ -25,15 +30,37 @@ const PatientBookAppointment = () => {
     "04 PM",
     "05 PM",
   ];
-  const weekDays = [
-    "Sun 17",
-    "Mon 18",
-    "Tue 19",
-    "Wed 20",
-    "Thu 21",
-    "Fri 22",
-    "Sat 23",
-  ];
+
+  useEffect(() => {
+    updateWeekDays();
+  }, [currentDate]);
+
+  const updateWeekDays = () => {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(currentDate);
+      day.setDate(currentDate.getDate() + i);
+      days.push(formatDate(day));
+    }
+    setWeekDays(days);
+  };
+
+  const formatDate = (date) => {
+    const options = { weekday: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  const handlePrevWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() - 7);
+    setCurrentDate(newDate);
+  };
+
+  const handleNextWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() + 7);
+    setCurrentDate(newDate);
+  };
 
   const handleTimeSlotClick = (day, time) => {
     setSelectedDate(day);
@@ -43,14 +70,26 @@ const PatientBookAppointment = () => {
 
   const handleCloseModal = () => setShowModal(false);
 
+  const getDateRange = () => {
+    const endDate = new Date(currentDate);
+    endDate.setDate(currentDate.getDate() + 6);
+    return `${formatDate(currentDate)} - ${formatDate(endDate)}`;
+  };
+
+  const isTimeSlotAvailable = (day, time) => {
+    return day === weekDays[2] && time === '11 AM';
+  };
+
   const handleDoctorSelect = (event) => {
     const doctorId = event.target.value;
     const doctor = doctors.find((doc) => doc.id === parseInt(doctorId));
     setSelectedDoctor(doctor);
   };
 
-  const sidebarRef = useRef(null);
-  const location = useLocation();
+  const handleBookAppointment = () => {
+    handleCloseModal();
+    navigate('/invoice');
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -363,15 +402,15 @@ const PatientBookAppointment = () => {
                 <div className="col-lg-8 col-md-12">
                   <div className="schedule-table">
                     <div className="d-flex justify-content-center align-items-center mb-3 date-selection">
-                      <Button variant="link">
+                      <Button variant="link" onClick={handlePrevWeek}>
                         <img
                           src="/assets/images/left-arrow.svg"
                           alt="left-arrow"
                           className="left-arrow img-fluid"
                         />
                       </Button>
-                      <span>{dateRange}</span>
-                      <Button variant="link">
+                      <span>{getDateRange()}</span>
+                      <Button variant="link" onClick={handleNextWeek}>
                         <img
                           src="/assets/images/right-arrow.svg"
                           alt="right-arrow"
@@ -387,7 +426,14 @@ const PatientBookAppointment = () => {
                           <tr>
                             <th className="text-blue">Time</th>
                             {weekDays.map((day) => (
-                              <th key={day} className={`${day === selectedDate ? 'text-blue-head' : ''}`}>{day}</th>
+                              <th
+                                key={day}
+                                className={`${
+                                  day === selectedDate ? "text-blue-head" : ""
+                                }`}
+                              >
+                                {day}
+                              </th>
                             ))}
                           </tr>
                         </thead>
@@ -396,19 +442,27 @@ const PatientBookAppointment = () => {
                             <tr key={time}>
                               <td className="text-blue">{time}</td>
                               {weekDays.map((day) => (
-                                <td key={`${day}-${time}`} className="time-slot">
-                                {day === 'Tue 19' && time === '11 AM' ? (
-                                  <Button 
-                                    variant="primary" 
-                                    style={{ backgroundColor: '#0EABEB', borderColor: '#0EABEB' }}
-                                    onClick={() => handleTimeSlotClick(day, time)}
-                                  >
-                                    Available
-                                  </Button>
-                                ) : (
-                                  <span className="unavailable">Not Available</span>
-                                )}
-                              </td>
+                                <td
+                                  key={`${day}-${time}`}
+                                  className="time-slot"
+                                >
+                                  {isTimeSlotAvailable(day, time)  ? (
+                                    <Button
+                                      variant="primary"
+                                      style={{
+                                        backgroundColor: "#0EABEB",
+                                        borderColor: "#0EABEB",
+                                      }}
+                                      onClick={() => handleTimeSlotClick(day, time)}
+                                    >
+                                      Available
+                                    </Button>
+                                  ) : (
+                                    <span className="unavailable">
+                                      Not Available
+                                    </span>
+                                  )}
+                                </td>
                               ))}
                             </tr>
                           ))}
@@ -510,55 +564,69 @@ const PatientBookAppointment = () => {
           </div>
 
           {/* Appointment Modal */}
-          <Modal show={showModal} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
+          <Modal centered show={showModal} onHide={handleCloseModal}>
+            <Modal.Header>
               <Modal.Title>Appointment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form>
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
                   <Form.Label>Appointment Type</Form.Label>
-                  <Form.Control type="text" value="Online" readOnly />
+                  <Form.Control
+                    type="text"
+                    value="Online"
+                    readOnly
+                    className="appo-type"
+                  />
                 </Form.Group>
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
                   <Form.Label>Patient Name</Form.Label>
-                  <Form.Control type="text" defaultValue="John doe" />
+                  <Form.Control type="text" defaultValue="John doe" readOnly className="modal-form-control" />
                 </Form.Group>
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
                   <Form.Label>Appointment Date</Form.Label>
-                  <Form.Control type="text" value={selectedDate} readOnly />
+                  <Form.Control type="text" value={selectedDate} readOnly className="modal-form-control" />
                 </Form.Group>
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
                   <Form.Label>Appointment Time</Form.Label>
                   <Form.Control
                     type="text"
                     value={`${selectedTime} - ${
                       parseInt(selectedTime) + 1
                     }:00 PM`}
-                    readOnly
+                    readOnly 
+                    className="modal-form-control"
                   />
                 </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Patient Issue</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
+                <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    name="PatientIssue"
+                    className={"form-control"}
+                    id="PatientIssue"
                     placeholder="Enter Patient Issue"
                   />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Disease Name (Optional)</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Disease Name" />
-                </Form.Group>
+                  <label htmlFor="PatientIssue">Patient Issue</label>
+                </div>
+                <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    name="DiseaseName"
+                    className={"form-control"}
+                    id="DiseaseName"
+                    placeholder="Enter Disease Name"
+                  />
+                  <label htmlFor="DiseaseName">Disease Name (Optional)</label>
+                </div>
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseModal}>
+              <button type="button" className="cancle-btn" onClick={handleCloseModal}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCloseModal}>
+              </button>
+              <button type="submit" className="submit-btn" onClick={handleBookAppointment}>
                 Book Appointment
-              </Button>
+              </button>
             </Modal.Footer>
           </Modal>
         </div>
