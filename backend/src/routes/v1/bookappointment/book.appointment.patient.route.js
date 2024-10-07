@@ -10,6 +10,10 @@ router.post("/create-appointment-book",
     // authenticAdmin, 
     bookapointmentPatientController.bookAppointment);
 
+    router.post("/create-notes-date-time",
+        // authenticAdmin, 
+        doctorFlowAppointmentController.createAppointmentNote);
+    
     
 router.post("/create-cancel-appointment",
     // authenticAdmin, 
@@ -63,5 +67,14 @@ router.post("/create-cancel-appointment",
                                 router.get("/searching-fromdate-todate-doctor",
                                     // authenticAdmin, 
                                     doctorFlowAppointmentController.getAppointmentsByDateRange);
+
+                                    
+                                router.get("/all-appointment-of-patient",
+                                    // authenticAdmin, 
+                                    doctorFlowAppointmentController.getAllAppointments);
+
+                                    router.get("/details-of-patient",
+                                        // authenticAdmin, 
+                                        doctorFlowAppointmentController.getAllAppointments);
     
 module.exports = router;

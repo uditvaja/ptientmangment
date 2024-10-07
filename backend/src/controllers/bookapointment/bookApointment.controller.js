@@ -9,10 +9,10 @@ const AppointmentBook = require('../../models/bookAppointment.model'); // Adjust
 const bookAppointment = async (req, res) => {
     try {
         // Extract appointment details from request body
-        const { appointmentType, country, state, city, patient_issue, diseas_name, doctorId, hospitalId, patientId, doctorTimeSlot, app_date ,specialist} = req.body;
+        const { appointmentType, country, state, city, app_time, patient_issue, diseas_name, doctorId, hospitalId, patientId, app_date, specialist } = req.body;
 
         // Optional: Validate other required fields
-        if (!appointmentType || !country || !state || !city) {
+        if (!appointmentType || !country || !state || !city || !app_time) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
 
@@ -22,11 +22,17 @@ const bookAppointment = async (req, res) => {
             return res.status(400).json({ message: 'Invalid date format. Please use "DD MMM YYYY".' });
         }
 
-        // Parse the time in IST (Indian Standard Time)
-        // const formattedAppTime = moment.tz(`${app_date} ${app_time}`, "DD MMM YYYY h:mm A", "Asia/Kolkata").format(); // Convert to ISO format in IST
-        // if (!moment(formattedAppTime).isValid()) {
-        //     return res.status(400).json({ message: 'Invalid time format. Please use "h:mm A".' });
-        // }
+        // Split app_time into startTime and endTime
+        const [startTime, endTime] = app_time.split(' - ');
+
+        // Validate startTime and endTime
+        const formattedStartTime = moment.tz(`${app_date} ${startTime}`, "DD MMM YYYY h:mm A", "Asia/Kolkata").format(); // Convert to ISO format in IST
+        const formattedEndTime = moment.tz(`${app_date} ${endTime}`, "DD MMM YYYY h:mm A", "Asia/Kolkata").format(); // Convert to ISO format in IST
+
+        // Check if the time is valid
+        if (!moment(formattedStartTime).isValid() || !moment(formattedEndTime).isValid()) {
+            return res.status(400).json({ message: 'Invalid time format. Please use "h:mm A".' });
+        }
 
         // Create a new appointment record
         const newAppointment = new AppointmentBook({
@@ -40,21 +46,34 @@ const bookAppointment = async (req, res) => {
             patientId,
             doctorId,
             hospitalId,
-            app_date: formattedAppDate,    // Keeping formatted date
-            doctorTimeSlot,     // Storing time in ISO format with IST timezone
+            app_date: formattedAppDate,    // Keeping formatted date in 'YYYY-MM-DD' format
+            startTime: formattedStartTime, // Storing start time in ISO format (IST)
+            endTime: formattedEndTime,     // Storing end time in ISO format (IST)
         });
 
         // Save the appointment to the database
         await newAppointment.save();
 
+        // Convert the startTime and endTime back to Indian format before sending the response
+        const indianStartTime = moment(newAppointment.startTime).tz("Asia/Kolkata").format("h:mm A");
+        const indianEndTime = moment(newAppointment.endTime).tz("Asia/Kolkata").format("h:mm A");
+
         // Respond with success
-        return res.status(201).json({ message: 'Appointment booked successfully!', appointment: newAppointment });
+        return res.status(201).json({
+            message: 'Appointment booked successfully!',
+            appointment: {
+                ...newAppointment.toObject(),
+                startTime: indianStartTime,  // Showing in h:mm A (Indian format)
+                endTime: indianEndTime       // Showing in h:mm A (Indian format)
+            }
+        });
     } catch (error) {
         // Handle any errors during the booking process
         console.error(error);
         return res.status(500).json({ message: 'An error occurred while booking the appointment.' });
     }
 };
+
 
 // Controller to get a simple list of doctors
 // Controller to get a doctor by doctorId
@@ -110,10 +129,6 @@ const appointmentListById = async (req, res) => {
 };
 
 
-
-
-
-
 // Controller to get all appointments filtered by multiple statuses (e.g., upcoming, scheduled, pending, canceled)
 const appointmentTypeOnlineList = async (req, res) => {
     try {
@@ -157,7 +172,6 @@ const appointmentTypeOnlineList = async (req, res) => {
 };
 
 
-
 // Controller to cancel an appointment
 const cancelAppointment = async (req, res) => {
     try {
@@ -194,10 +208,6 @@ const cancelAppointment = async (req, res) => {
         return res.status(500).json({ message: 'An error occurred while canceling the appointment.' });
     }
 };
-
-
-
-
 
 module.exports = {
     bookAppointment,doctorList,appointmentListById,appointmentTypeOnlineList,cancelAppointment

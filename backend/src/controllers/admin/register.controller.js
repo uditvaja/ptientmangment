@@ -23,6 +23,7 @@ const register = async (req, res) => {
       state,
       city,
       hospitalId,
+      agree
 
     
     } = req.body;
@@ -109,7 +110,8 @@ const register = async (req, res) => {
       country,
       last_name,
       state,
-      hospitalId
+      hospitalId,
+      agree
     };
 
     // Create doctor
