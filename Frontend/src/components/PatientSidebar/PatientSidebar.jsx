@@ -35,6 +35,7 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
               className={`nav-link nav-links-2 ${
                 activeLink === "/patientAppointment" ||
                 activeLink === "/invoice" ||
+                activeLink === "/appointmentTimeSlot" ||
                 activeLink === "/patientBookAppointment"
                   ? "active"
                   : ""

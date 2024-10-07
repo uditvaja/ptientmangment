@@ -222,6 +222,27 @@
       }
     }
   }
+
+  .breadcrumb-container {
+    .btn {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: $color10;
+      padding: 10px;
+      &:first-child {
+        &:active {
+          background-color: transparent;
+          border-color: transparent;
+          color: $color10;
+        }
+      }
+    }
+
+    i.bi-text-left {
+      font-size: 30px;
+    }
+  }
 }
 
 .patient-apointment-page {
@@ -335,6 +356,11 @@
 }
 
 @media (max-width: 768px) {
+  .profile-header {
+    .mobile-screen {
+      display: none;
+    }
+  }
   .profile-header .search-container {
     width: 100% !important;
     margin-bottom: 0px;

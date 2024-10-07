@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import AuthSlider from "../../components/auth-slider/AuthSlider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.scss";
 import { loginValidationSchema } from "../../validation/AuthValidation";
+import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null); 
+  const navigate = useNavigate(); 
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -18,9 +21,26 @@ const Login = () => {
     rememberMe: false,
   };
 
-  const handleSubmit = (values) => {
-    console.log("Form values:", values);
-    // Add your login logic here (e.g., API call)
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await axios.post('http://localhost:9500/v1/admin/admin-login', {
+        identifier: values.email, // 'email' represents both email and phone
+        password: values.password,
+      });
+
+      if (response.status === 200) {
+       
+        const token = response.data.token;
+        localStorage.setItem('token', token); 
+        setError(null); // Clear error state
+        navigate('/'); 
+      }
+    } catch (err) {
+      // Handle login error
+      setError(err.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -96,6 +116,8 @@ const Login = () => {
                       />
                     </div>
 
+                    {error && <p className="text-danger">{error}</p>} {/* Show error */}
+
                     <div className="d-flex align-items-center justify-content-between">
                       <div className="mb-3 form-check">
                         <Field
@@ -123,7 +145,7 @@ const Login = () => {
                     </button>
                     <div className="text-center account-text mt-3">
                       Don't have an account?{" "}
-                      <Link to={""} className="main-link ms-1">
+                      <Link to={"/register"} className="main-link ms-1">
                         Registration
                       </Link>
                     </div>

@@ -107,38 +107,44 @@ const PatientRegister = () => {
                     {/* First Name and Last Name */}
                     <div className="row">
                       <div className="col-md-6 mb-3">
-                        <Field
-                          type="text"
-                          name="firstName"
-                          className={`form-control ${
-                            errors.firstName && touched.firstName
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder="First Name"
-                        />
-                        <ErrorMessage
-                          name="firstName"
-                          component="div"
-                          className="invalid-feedback"
-                        />
+                        <div className="form-floating">
+                          <Field
+                            type="text"
+                            name="firstName"
+                            className={`form-control ${
+                              errors.firstName && touched.firstName
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            placeholder="First Name"
+                          />
+                          <label htmlFor="firstName">Enter Last Name</label>
+                          <ErrorMessage
+                            name="firstName"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
                       </div>
                       <div className="col-md-6 mb-3">
-                        <Field
-                          type="text"
-                          name="lastName"
-                          className={`form-control ${
-                            errors.lastName && touched.lastName
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          placeholder="Last Name"
-                        />
-                        <ErrorMessage
-                          name="lastName"
-                          component="div"
-                          className="invalid-feedback"
-                        />
+                        <div className="form-floating">
+                          <Field
+                            type="text"
+                            name="lastName"
+                            className={`form-control ${
+                              errors.lastName && touched.lastName
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            placeholder="Last Name"
+                          />
+                          <label htmlFor="lastName">Enter Last Name</label>
+                          <ErrorMessage
+                            name="lastName"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -177,6 +183,131 @@ const PatientRegister = () => {
                           <label htmlFor="phoneNumber">Phone Number</label>
                           <ErrorMessage
                             name="phoneNumber"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-4 mb-3">
+                        <div className="form-floating">
+                          <Field
+                            type="number"
+                            name="age"
+                            className={`form-control ${
+                              errors.age && touched.age ? "is-invalid" : ""
+                            }`}
+                            placeholder="Enter Age"
+                          />
+                          <label htmlFor="age">Age</label>
+                          <ErrorMessage
+                            name="age"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-4 mb-3">
+                        <div className="form-floating">
+                          <Field
+                            type="number"
+                            name="height"
+                            className={`form-control ${
+                              errors.height && touched.height
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            placeholder="Enter Hoght"
+                          />
+                          <label htmlFor="height">Height (cm)</label>
+                          <ErrorMessage
+                            name="height"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-4 mb-3">
+                        <div className="form-floating">
+                          <Field
+                            type="number"
+                            name="weight"
+                            className={`form-control ${
+                              errors.weight && touched.weight
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            placeholder="Enter Weight"
+                          />
+                          <label htmlFor="weight">Weight (Kg)</label>
+                          <ErrorMessage
+                            name="weight"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-4 mb-3">
+                        <div className="form-floating">
+                          <Field
+                            as="select"
+                            name="gender"
+                            className="form-select"
+                          >
+                            <option value="select">Select Gender</option>
+                            <option value={"male"}>Male</option>
+                            <option value={"female"}>FeMale</option>
+                          </Field>
+                          <label htmlFor="gender">Gender</label>
+                          <ErrorMessage
+                            name="gender"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-4 mb-3">
+                        <div className="form-floating">
+                          <Field
+                            as="select"
+                            name="bloodgroup"
+                            className="form-select"
+                          >
+                            <option value="">Select Group</option>
+                            <option value={"male"}>A+</option>
+                            <option value={"female"}>B+</option>
+                            <option value={"female"}>B-</option>
+                            <option value={"female"}>AB-</option>
+                            <option value={"female"}>AB+</option>
+                          </Field>
+                          <label htmlFor="bloodgroup">Blood Group</label>
+                          <ErrorMessage
+                            name="bloodgroup"
+                            component="div"
+                            className="invalid-feedback"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-4 mb-3">
+                        <div className="form-floating">
+                          <Field
+                            type="date"
+                            name="birthdate"
+                            className={`form-control ${
+                              errors.birthdate && touched.birthdate
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            placeholder="Select Date"
+                          />
+                          <label htmlFor="birthdate">Date of Birth</label>
+                          <ErrorMessage
+                            name="birthdate"
                             component="div"
                             className="invalid-feedback"
                           />

@@ -25,6 +25,7 @@ import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
 import PatientAppointment from "./pages/PatientAppointment/PatientAppointment";
 import PatientBookAppointment from "./pages/PatientBookAppointment/PatientBookAppointment";
 import InvoicePage from "./components/InvoicePage/InvoicePage";
+import AppointmentTimeSlot from "./pages/AppointmentTimeSlot/AppointmentTimeSlot";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/patientBookAppointment" element={<PatientBookAppointment />} />
         <Route path="/billing/monitor-billing" element={<PendingBills />} />
         <Route path="/invoice" element={<InvoicePage />} />
+        <Route path="/appointmentTimeSlot" element={<AppointmentTimeSlot />} />
         {/* Admin Auth */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

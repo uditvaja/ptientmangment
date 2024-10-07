@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import AuthSlider from "../../components/auth-slider/AuthSlider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginValidationSchema } from "../../validation/AuthValidation";
 import "./DoctorLogin.scss";
 
 const DoctorLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -18,9 +20,31 @@ const DoctorLogin = () => {
     rememberMe: false,
   };
 
-  const handleSubmit = (values) => {
-    console.log("Form values:", values);
-    // Add your login logic here (e.g., API call)
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+     
+      const response = await axios.post("http://localhost:9500/v1/doctor/doctor-login", {
+        identifier: values.email, 
+        password: values.password,
+      });
+
+    
+      console.log("Login successful:", response.data);
+
+    
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+
+
+      
+      navigate("/doctorProfile");
+    } catch (error) {
+      
+      setErrorMessage(error.response?.data?.message || "Something went wrong");
+      console.error("Login error:", error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -30,6 +54,11 @@ const DoctorLogin = () => {
           <div className="col-md-6 d-flex justify-content-center">
             <div className="login-card p-4">
               <h2 className="mb-4 login-title">Login</h2>
+              {errorMessage && (
+                <div className="alert alert-danger" role="alert">
+                  {errorMessage}
+                </div>
+              )}
               <Formik
                 initialValues={initialValues}
                 validationSchema={loginValidationSchema}

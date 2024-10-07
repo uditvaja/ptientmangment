@@ -149,7 +149,7 @@ const AdminProfile = () => {
           <div className="profile-header">
             <div className="container-fluid">
               <div className="row align-items-center">
-                <div className="col-md-6 col-12">
+                <div className="col-md-6 col-12 mobile-screen">
                   <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                       <li className="breadcrumb-item">
@@ -341,7 +341,7 @@ const AdminProfile = () => {
                         className="btn btn-primary"
                         onClick={toggleSidebar}
                       >
-                        <i className="bi bi-list"></i>
+                        <i className="bi bi-text-left"></i>
                       </button>
                     </nav>
                   </div>

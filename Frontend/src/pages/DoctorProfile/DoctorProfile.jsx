@@ -11,15 +11,15 @@ const DoctorProfile = () => {
   const [showPassword3, setShowPassword3] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [profileData, setProfileData] = useState({
-    firstName: "Lincoln",
-    lastName: "Philips",
-    emailAddress: "Lincoln@gmail.com",
-    phoneNumber: "99130 53222",
-    hospitalName: "Silver Park Medical Center",
-    gender: "Male",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    country: "India",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    hospitalName: "",  
+    gender: "",
+    city: "",
+    state: "",
+    country: "",
   });
   const [profileImage, setProfileImage] = useState(
     "./assets/images/doctor-pic.png"
@@ -95,6 +95,23 @@ const DoctorProfile = () => {
   };
 
   useEffect(() => {
+    const storedData = localStorage.getItem("doctorData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+     
+      setProfileData({
+        firstName: parsedData.firstName || "",
+        lastName: parsedData.lastName || "",  
+        email: parsedData.email || "",
+        phoneNumber: parsedData.phoneNumber || "",
+        hospitalName: parsedData.hospitalName || "",  
+        gender: parsedData.gender === "1" ? "Male" : "Female",  
+        city: parsedData.city || "",
+        state: parsedData.state || "",
+        country: parsedData.country || "",
+      });
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
@@ -148,7 +165,7 @@ const DoctorProfile = () => {
         <div className="profile-header">
           <div className="container-fluid">
             <div className="row align-items-center">
-              <div className="col-md-6 col-12">
+              <div className="col-md-6 col-12 mobile-screen">
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
@@ -330,7 +347,7 @@ const DoctorProfile = () => {
                   </Dropdown>
                   <nav className="breadcrumb-container d-block d-lg-none p-3">
                     <button className="btn btn-primary" onClick={toggleSidebar}>
-                      <i className="bi bi-list"></i>
+                      <i className="bi bi-text-left"></i>
                     </button>
                   </nav>
                 </div>

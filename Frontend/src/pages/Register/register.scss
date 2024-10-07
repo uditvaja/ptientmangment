@@ -1,8 +1,6 @@
 @import "../../css/variables.scss";
 
 .register-section {
-   
-
   .register-card {
     background: $color1;
     box-shadow: 0px 0px 15px 0px #0000000a;
@@ -19,7 +17,8 @@
       color: $color15;
     }
 
-    .form-control, .form-select {
+    .form-control,
+    .form-select {
       height: 50px !important;
       background: $color1;
       border-radius: 10px;
@@ -44,21 +43,81 @@
       border: none;
     }
 
+    .form-check-input {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      &:checked {
+        border: none;
+        background-color: $color2;
+      }
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
     .account-text {
       font-size: 16px;
       .main-link {
         color: $color13;
       }
 
-      .login-btn {  
+      .login-btn {
         color: $color2;
-      } 
+      }
 
       .login-btn:hover {
-        color: $color2;         
-
+        color: $color2;
       }
     }
   }
-}
 
+  .form-floating {
+    position: relative;
+    .form-control {
+      background: $color1;
+      border: 1px solid $color7;
+      border-radius: 14px;
+      padding: 10px 23px 8px;
+      &::placeholder {
+        color: $color6;
+        font-weight: 400;
+        font-size: 16px;
+      }
+      &:focus {
+        box-shadow: none;
+        outline: 0;
+      }
+    }
+    label {
+      position: absolute;
+      top: 0;
+      left: 12px;
+      font-weight: 500;
+      font-size: 16px;
+      color: $color15;
+      transition: all 0.3s;
+    }
+    .eye-btn {
+      position: absolute;
+      top: 28%;
+      right: 25px;
+    }
+  }
+  .form-floating input:focus ~ label,
+  .form-floating input:not(:placeholder-shown) ~ label {
+    top: -8px;
+    left: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: $color15;
+  }
+  .form-control::placeholder {
+    visibility: hidden;
+  }
+
+  .form-control:focus::placeholder,
+  .form-control:not(:placeholder-shown) {
+    visibility: visible;
+  }
+}
