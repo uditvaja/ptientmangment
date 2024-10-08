@@ -76,5 +76,17 @@ router.post("/create-cancel-appointment",
                                     router.get("/details-of-patient",
                                         // authenticAdmin, 
                                         doctorFlowAppointmentController.getAllAppointments);
+
+
+                                        // docotr flow in dash board
+router.get('/patient-record-access',doctorFlowAppointmentController.getDetailsPatients)
+router.get('/patient-record-access-seraching-month',doctorFlowAppointmentController.getDetailsPatientsSearching)
+
+
+router.get('/patient-record-access-doctor-id',doctorFlowAppointmentController.patientDetailFromDoctorIdInDoctorFlowAppointments)
+
+router.get('/patient-id-their-all-appointment-list',doctorFlowAppointmentController.getAppointmentsByDoctor)
+
+
     
 module.exports = router;

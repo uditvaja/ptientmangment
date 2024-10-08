@@ -2,7 +2,7 @@
 /* ------------------------------- DEFINE AREA ------------------------------ */
 const express = require("express");
 const router = express.Router();
-const {  doctorAuthController, doctorOwnController, doctorTimeSlotController } = require("../../../controllers");
+const {  doctorAuthController, doctorOwnController, doctorTimeSlotController, doctorFlowAppointmentController } = require("../../../controllers");
 const authenticDoctor = require("../../../middlewares/doctorAuth");
 const { singleFileUpload, multiDiffFileUpload } = require("../../../helpers/upload");
 const multer = require('multer');
@@ -39,4 +39,9 @@ router.put(
   ]),
   doctorOwnController.updateDoctor // Controller function to handle the update
 );
+
+
+
+
+
 module.exports = router;

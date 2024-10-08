@@ -24,7 +24,7 @@ module.exports.doctorTimeSlotController = require("./doctor/timeslot.doctor.cont
 
 module.exports.doctorFlowAppointmentController = require("./bookapointment/doctorflow.controller");
 
-// module.exports.homeScreenPatientController = require("./Patient/app/homeScreen.controller");
+module.exports.prescriptionController = require("./prescription/prescription.controller");
 
 // module.exports.appointmentController = require("./Patient/app/appointment.controller");
 

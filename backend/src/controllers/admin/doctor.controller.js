@@ -135,9 +135,9 @@ const addDoctorByAdmin = async (req, res) => {
     const reqbody = req.body;
 
     // Validate required fields
-    const { adminId, firstName, specialistType, country, state, email, password, phoneNumber, gender, age, city, doctorAddress, qualification, experience, workingTime, workOn, breakTime, patientCheckUpTime, description, onlineConsultationRate } = reqbody;
+    const { adminId, firstName, specialistType, country, state, email, password, phoneNumber, gender, age, city, doctorAddress, qualification, experience, workingTime, workOn, breakTime, patientCheckUpTime, description, onlineConsultationRate,hospitalName } = reqbody;
 
-    if (!adminId || !firstName || !specialistType || !country || !state || !email || !password || !phoneNumber  || !gender|| !age || !city|| !doctorAddress|| !qualification || !experience || !workingTime || !workOn || !breakTime|| !patientCheckUpTime || !description || !onlineConsultationRate ) {
+    if (!adminId || !firstName || !specialistType || !country || !state || !email || !password || !phoneNumber  || !gender|| !age || !city|| !doctorAddress|| !qualification || !experience || !workingTime || !workOn || !breakTime|| !patientCheckUpTime || !description || !onlineConsultationRate || !hospitalName ) {
       return res.status(400).json({
         status: 400,
         success: false,
@@ -209,6 +209,7 @@ const addDoctorByAdmin = async (req, res) => {
       breakTime,
       patientCheckUpTime,
       description,
+      hospitalName,
       onlineConsultationRate,
     });
 
