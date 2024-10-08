@@ -204,7 +204,7 @@ const Dashboard = () => {
           <div className="profile-header">
             <div className="container-fluid">
               <div className="row align-items-center">
-                <div className="col-md-6 col-12 mb-lg-0 mb-3">
+                <div className="col-md-6 col-12 mb-lg-0 mb-3 mobile-screen">
                   <h3 className="user-name mb-0">Good Morning ! Martin</h3>
                   <p className="content">Hope you have a good day</p>
                 </div>
@@ -391,7 +391,7 @@ const Dashboard = () => {
                         className="btn btn-primary"
                         onClick={toggleSidebar}
                       >
-                        <i className="bi bi-list"></i>
+                        <i className="bi bi-text-left"></i>
                       </button>
                     </nav>
                   </div>

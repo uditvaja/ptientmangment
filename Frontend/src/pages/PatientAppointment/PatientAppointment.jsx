@@ -5,11 +5,13 @@ import { Tab, Tabs, Card, Dropdown } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./PatientAppointment.scss";
+import CancelAppointment from "../../components/CancelAppointment/CancelAppointment";
 
 const PatientAppointment = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [showModal, setShowModal] = useState(false);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -36,6 +38,18 @@ const PatientAppointment = () => {
   const bookAppointment = () => {
     navigate("/patientBookAppointment")
   }
+
+  const RescheduleAppointment = () => {
+    navigate("/appointmentTimeSlot")
+  }
+
+  const handleCancelAppointment = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -129,7 +143,7 @@ const PatientAppointment = () => {
         <div className="profile-header">
           <div className="container-fluid">
             <div className="row align-items-center">
-              <div className="col-md-6 col-12">
+              <div className="col-md-6 col-12 mobile-screen">
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
@@ -311,7 +325,7 @@ const PatientAppointment = () => {
                   </Dropdown>
                   <nav className="breadcrumb-container d-block d-lg-none p-3">
                     <button className="btn btn-primary" onClick={toggleSidebar}>
-                      <i className="bi bi-list"></i>
+                      <i className="bi bi-text-left"></i>
                     </button>
                   </nav>
                 </div>
@@ -438,7 +452,7 @@ const PatientAppointment = () => {
                           </div>
                         </Card.Text>
                         <div className="d-flex align-items-center">
-                          <button className="cancle-btn">
+                          <button className="cancle-btn" onClick={handleCancelAppointment}>
                             <img
                               src="/assets/images/calendar-remove.svg"
                               alt="calendar-remove"
@@ -446,7 +460,7 @@ const PatientAppointment = () => {
                             />
                             Cancel
                           </button>
-                          <button className="pay-btn">
+                          <button onClick={RescheduleAppointment} className="pay-btn">
                             <img
                               src="/assets/images/Reschedule.svg"
                               alt="Reschedule"
@@ -810,7 +824,7 @@ const PatientAppointment = () => {
                           </div>
                         </Card.Text>
                         <div className="d-flex align-items-center">
-                          <button className="cancle-btn">
+                          <button className="cancle-btn" onClick={handleCancelAppointment}>
                             <img
                               src="/assets/images/calendar-remove.svg"
                               alt="calendar-remove"
@@ -818,7 +832,7 @@ const PatientAppointment = () => {
                             />
                             Cancel
                           </button>
-                          <button className="pay-btn">
+                          <button onClick={RescheduleAppointment} className="pay-btn">
                             <img
                               src="/assets/images/Reschedule.svg"
                               alt="Reschedule"
@@ -836,6 +850,7 @@ const PatientAppointment = () => {
           </Tabs>
         </div>
       </div>
+      <CancelAppointment show={showModal} handleClose={handleCloseModal} />
     </div>
   );
 };

@@ -240,7 +240,7 @@
     }
   }
 
-  i.bi-list {
+  i.bi-text-left {
     font-size: 30px;
   }
 }
@@ -591,6 +591,9 @@
 
 @media (max-width: 768px) {
   .profile-header {
+    .mobile-screen {
+      display: none;
+    }
     .breadcrumb {
       display: flex;
       justify-content: center;
