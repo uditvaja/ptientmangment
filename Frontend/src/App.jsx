@@ -26,37 +26,43 @@ import PatientAppointment from "./pages/PatientAppointment/PatientAppointment";
 import PatientBookAppointment from "./pages/PatientBookAppointment/PatientBookAppointment";
 import InvoicePage from "./components/InvoicePage/InvoicePage";
 import AppointmentTimeSlot from "./pages/AppointmentTimeSlot/AppointmentTimeSlot";
+import DoctorAppointment from "./pages/DoctorAppointment/DoctorAppointment";
+import DoctorAppointmentTimeSlot from "./pages/DoctorAppointmentTimeSlot";
+import PrescriptionAccess from "./pages/PrescriptionAccess/PrescriptionAccess";
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/adminProfile" element={<AdminProfile />} />
-        <Route path="/doctorProfile" element={<DoctorProfile />} />
-        <Route path="/patientAppointment" element={<PatientAppointment />} />
-        <Route path="/patientBookAppointment" element={<PatientBookAppointment />} />
-        <Route path="/billing/monitor-billing" element={<PendingBills />} />
-        <Route path="/invoice" element={<InvoicePage />} />
-        <Route path="/appointmentTimeSlot" element={<AppointmentTimeSlot />} />
-        {/* Admin Auth */}
+        {/* Admin */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<Forgot_Password />} />
         <Route path="/otp-verification" element={<Otp_screen />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        {/* Doctor Auth */}
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/adminProfile" element={<AdminProfile />} />
+        {/* Doctor */}
         <Route path="/doctor-login" element={<DoctorLogin />} />
         <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />
         <Route path="/doctor-otp-verification" element={<DoctorOtpScreen />} />
         <Route path="/doctor-reset-password" element={<DoctorResetPassword />} />
-        {/* Patient Auth */}
+        <Route path="/doctorProfile" element={<DoctorProfile />} />
+        <Route path="/doctorAppointmentManagement" element={<DoctorAppointment />} />
+        <Route path="/doctorAppointmentTimeSlot" element={<DoctorAppointmentTimeSlot />} />
+        {/* Patient */}
         <Route path="/patient-register" element={<PatientRegister />} />
         <Route path="/patient-login" element={<PatientLogin />} />
         <Route path="/patient-forgot-password" element={<PatientForgotPassword />} />
         <Route path="/patient-otp-verification" element={<PatientOtpScreen />} />
         <Route path="/patient-reset-password" element={<PatientResetPassword />} />
+        <Route path="/patientAppointment" element={<PatientAppointment />} />
+        <Route path="/patientBookAppointment" element={<PatientBookAppointment />} />
+        <Route path="/billing/monitor-billing" element={<PendingBills />} />
+        <Route path="/invoice" element={<InvoicePage />} />
+        <Route path="/appointmentTimeSlot" element={<AppointmentTimeSlot />} />
+        <Route path="/prescriptionAccess" element={<PrescriptionAccess />} />
       </Routes>
       <Toaster position="top-right" />
     </BrowserRouter>
