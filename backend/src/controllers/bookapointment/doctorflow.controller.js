@@ -3,7 +3,7 @@ const moment = require('moment');
 const AppointmentBook = require('../../models/bookAppointment.model');
 const Patient = require('../../models/patient.model');
 const Doctor = require('../../models/doctor.model');
-
+const mongoose = require('mongoose');
 
 
 const getTodayAppointments = async (req, res) => {
@@ -399,65 +399,233 @@ const createAppointmentNote = async (req, res) => {
     }
 };
 
-
-
+// pateint record access in doctor flow
 const getDetailsPatients = async (req, res) => {
     try {
-        // Aggregate to get last appointment details for each patient
-        const previousAppointments = await AppointmentBook.aggregate([
+        const { doctorId } = req.body; // Get doctorId from the request body
+
+        // Validate doctorId
+        if (!doctorId) {
+            return res.status(400).json({ message: 'Doctor ID is required.' });
+        }
+
+        // Aggregate to get last appointment details for all patients associated with the doctor
+        const lastAppointments = await AppointmentBook.aggregate([
             {
-                $sort: { app_date: -1 } // Sort by app_date in descending order
+                $match: { doctorId: new mongoose.Types.ObjectId(doctorId) } // Match appointments by doctorId
+            },
+            {
+                $sort: { app_date: -1, endTime: -1 } // Sort by app_date and endTime in descending order
             },
             {
                 $group: {
                     _id: "$patientId", // Group by patientId
-                    lastAppointment: { $first: "$$ROOT" } // Get the full last appointment document
+                    lastAppointment: { $first: "$$ROOT" } // Get the most recent appointment
                 }
             },
             {
                 $lookup: {
-                    from: "patients", // Name of the patients collection
-                    localField: "_id",
+                    from: "patients", // Lookup patient details
+                    localField: "_id", // Match patientId
                     foreignField: "_id",
                     as: "patientDetails"
                 }
             },
             {
-                $unwind: "$patientDetails" // Unwind the array to get patient details
+                $unwind: "$patientDetails" // Unwind the patientDetails array
             },
             {
                 $project: {
-                    _id: 0,
+                    _id: 0, // Exclude _id
                     patientId: "$_id",
-                    appointmentType: "$lastAppointment.appointmentType", // Get appointment type
-                    app_date: "$lastAppointment.app_date", // Get the last appointment date
-                    app_time: "$lastAppointment.app_time", // Get the app_time from last appointment
-                    patient_issue: "$lastAppointment.patient_issue", // Get patient issue
-                    diseas_name: "$lastAppointment.diseas_name", // Get disease name
-                    first_name: "$patientDetails.first_name",
-                    last_name: "$patientDetails.last_name",
-                    age: "$patientDetails.age",
-                    gender: "$patientDetails.gender"
+                    app_date: "$lastAppointment.app_date", // Include the last app_date
+                    endTime: "$lastAppointment.endTime", // Include the last endTime
+                    first_name: "$patientDetails.first_name", // Include patient first name
+                    last_name: "$patientDetails.last_name", // Include patient last name
+                    age: "$patientDetails.age", // Include patient age
+                    gender: "$patientDetails.gender", // Include patient gender
+                    diseas_name: "$lastAppointment.diseas_name", // Include disease name from last appointment
+                    patient_issue: "$lastAppointment.patient_issue" // Include patient issue from last appointment
                 }
             }
         ]);
 
         // Check if any appointments were found
-        if (!previousAppointments.length) {
-            return res.status(404).json({ message: 'No previous appointments found.' });
+        if (!lastAppointments.length) {
+            return res.status(404).json({ message: 'No appointments found for this doctor.' });
         }
 
-        // Return the list of previous appointments
+        // Return the list of patients with their last appointment details
         return res.status(200).json({
-            message: 'All appointment list retrieved successfully.',
-            appointments: previousAppointments
+            message: 'All patients with their last appointment retrieved successfully.',
+            patients: lastAppointments
         });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'An error occurred while retrieving previous appointments.' });
+        return res.status(500).json({ message: 'An error occurred while retrieving the appointments.' });
+    }
+};
+
+// patient record access in searching result month week day waise in doctor flow
+
+const getDetailsPatientsSearching = async (req, res) => {
+        try {
+            const { doctorId, periodType } = req.body; // Get doctorId and periodType from the request body
+    
+            // Validate doctorId
+            if (!doctorId) {
+                return res.status(400).json({ message: 'Doctor ID is required.' });
+            }
+    
+            // Calculate the date range based on the periodType (month, week, days)
+            let startDate;
+            const today = moment().endOf('day'); // Today's date
+    
+            switch (periodType) {
+                case 'month':
+                    startDate = moment().startOf('month'); // Get the start of the current month
+                    break;
+                case 'week':
+                    startDate = moment().startOf('week'); // Get the start of the current week
+                    break;
+                case 'day':
+                    startDate = moment().startOf('day'); // Get the start of the current day
+                    break;
+                default:
+                    return res.status(400).json({ message: 'Invalid period type. Use "month", "week", or "day".' });
+            }
+    
+            // Aggregate to get the last appointment details for each patient
+            const appointments = await AppointmentBook.aggregate([
+                {
+                    $match: {
+                        doctorId: new mongoose.Types.ObjectId(doctorId), // Match appointments by doctorId
+                        app_date: { $gte: new Date(startDate), $lte: new Date(today) } // Filter by app_date range
+                    }
+                },
+                {
+                    $sort: { app_date: -1, endTime: -1 } // Sort by app_date and endTime in descending order
+                },
+                {
+                    $group: {
+                        _id: "$patientId", // Group by patientId
+                        lastAppointment: { $first: "$$ROOT" } // Get the most recent appointment for each patient
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "patients", // Lookup patient details
+                        localField: "_id", // Match patientId
+                        foreignField: "_id",
+                        as: "patientDetails"
+                    }
+                },
+                {
+                    $unwind: "$patientDetails" // Unwind the patientDetails array
+                },
+                {
+                    $project: {
+                        _id: 0, // Exclude _id
+                        patientId: "$_id", // Include patient ID
+                        first_name: "$patientDetails.first_name", // Include patient first name
+                        last_name: "$patientDetails.last_name", // Include patient last name
+                        diseas_name: "$lastAppointment.diseas_name", // Include disease name from last appointment
+                        patient_issue: "$lastAppointment.patient_issue", // Include patient issue from last appointment
+                        app_date: "$lastAppointment.app_date", // Include the last app_date
+                        endTime: "$lastAppointment.endTime" // Include the last endTime
+                    }
+                }
+            ]);
+    
+            // Check if any appointments were found
+            if (!appointments.length) {
+                return res.status(404).json({ message: `No appointments found for this doctor within the specified ${periodType}.` });
+            }
+    
+            // Return the list of patients with their last appointment details
+            return res.status(200).json({
+                message: `All patients with their last appointment for the selected ${periodType} retrieved successfully.`,
+                patients: appointments
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'An error occurred while retrieving the appointments.' });
+        }
+    };
+    
+
+const patientDetailFromDoctorIdInDoctorFlowAppointments = async (req, res) => {
+    try {
+        const { doctorId, patientId } = req.body; // Extract doctorId and patientId from req.body
+
+        if (!doctorId || !patientId) {
+            return res.status(400).json({ message: 'Both doctorId and patientId are required in the request body.' });
+        }
+
+        // Find the last appointment where both doctorId and patientId match the request
+        const lastAppointment = await AppointmentBook.findOne({
+            doctorId: doctorId,         // Filter by doctorId from req.body
+            patientId: patientId        // Filter by patientId from req.body
+        })
+        // Sort by app_date and endTime in descending order to get the latest appointment
+        .sort({ app_date: -1, endTime: -1 })
+        // Populate patient details
+        .populate('patientId', 'first_name last_name phone_number gender age patient_address image')
+        // Populate doctor details (assuming you have a Doctor model with name fields)
+        .populate('doctorId', 'firstName')
+        // Select specific fields from the appointment schema itself
+        .select('appointmentType app_date endTime patient_issue');
+
+        // Check if an appointment exists
+        if (!lastAppointment) {
+            return res.status(404).json({ message: 'No appointments found for the specified doctor and patient.' });
+        }
+
+        // Return the last appointment
+        return res.status(200).json({
+            message: 'Last appointment retrieved successfully.',
+            appointment: lastAppointment
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'An error occurred while retrieving the last appointment.' });
+    }
+};
+
+
+const getAppointmentsByDoctor = async (req, res) => {
+    try {
+        const { patientId } = req.body; // Extract patientId from req.body
+
+        if (!patientId) {
+            return res.status(400).json({ message: 'patientId is required in the request body.' });
+        }
+
+        // Find all appointments where patientId matches the request
+        const appointments = await AppointmentBook.find({
+            patientId: patientId         // Filter by patientId from req.body
+        })
+        // Populate doctor details (assuming you have a Doctor model with name fields)
+        .populate('doctorId', 'firstName')
+        // Select specific fields from the appointment schema itself
+        .select('appointmentType app_date endTime');
+
+        // Check if appointments exist
+        if (appointments.length === 0) {
+            return res.status(404).json({ message: 'No appointments found for the specified patient.' });
+        }
+
+        // Return the list of appointments
+        return res.status(200).json({
+            message: 'Appointments retrieved successfully.',
+            appointments: appointments
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'An error occurred while retrieving the appointments.' });
     }
 };
 
 
 
-module.exports = {createAppointmentNote,getDetailsPatients,getAllAppointments, getPreviousAppointments,getTodayAppointments,getAppointmentsByDateRange,getUpcomingAppointments ,updateAppointmentDetails,getCanceledAppointments,deleteAppDateAndTimeSlot};
+module.exports = {getDetailsPatientsSearching,getAppointmentsByDoctor,patientDetailFromDoctorIdInDoctorFlowAppointments,createAppointmentNote,getDetailsPatients,getAllAppointments, getPreviousAppointments,getTodayAppointments,getAppointmentsByDateRange,getUpcomingAppointments ,updateAppointmentDetails,getCanceledAppointments,deleteAppDateAndTimeSlot};

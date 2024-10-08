@@ -10,7 +10,7 @@ const doctorSchema = new mongoose.Schema(
     email: { type: String },
     password: { type: String },
     token: { type: String },
-    phoneNumber: { type: Number },
+    phoneNumber: { type: String },
     refreshToken: { type: String },
     gender: {
       type: String,
