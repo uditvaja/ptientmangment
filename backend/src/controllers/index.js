@@ -26,9 +26,9 @@ module.exports.doctorFlowAppointmentController = require("./bookapointment/docto
 
 module.exports.prescriptionController = require("./prescription/prescription.controller");
 
-// module.exports.appointmentController = require("./Patient/app/appointment.controller");
+module.exports.telecommunicationController = require("./telecommunications/telecommunication.controller");
 
-// module.exports.faqController = require("./Doctor/web/faq.controller");
+module.exports.patientFlowPersonalHealthRecordController = require("./patient/personal health record/personal.health.record.patientflow.controller");
 
 // module.exports.faqPatientController = require("./Patient/web/patient.faq.controller");
 

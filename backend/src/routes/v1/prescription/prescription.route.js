@@ -14,6 +14,10 @@ router.get('/prescriptions-patient-id',prescriptionController.getPrescriptionsBy
 router.get('/list-patient-id',prescriptionController.patientDetailFromDoctorIdInDoctorFlowAppointments);
 router.get('/list-patient-id-prescription',prescriptionController.getPrescriptionDetailsByPatientId);
 router.get('/list-patient-id-prescription-old',prescriptionController.getOldPrescriptionDetails);
+router.get('/list-patient-all-appointment',prescriptionController.getAllAppointments);
+router.get('/list-patient-all-appointment-searchinf-fromdate-todate',prescriptionController.getAppointmentsByDateRange);
+
+
 
 
 
