@@ -19,9 +19,9 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
         <ul className="nav flex-column">
           <li className="nav-item">
             <Link
-              to={"/appointmentManagement"}
+              to={"/doctorAppointmentManagement"}
               className={`nav-link nav-links-1 ${
-                activeLink === "/doctorProfile" || activeLink === "/appointmentManagement"
+                activeLink === "/doctorProfile" || activeLink === "/doctorAppointmentManagement" || activeLink === "/doctorAppointmentTimeSlot"
                   ? "active"
                   : ""
               }`}

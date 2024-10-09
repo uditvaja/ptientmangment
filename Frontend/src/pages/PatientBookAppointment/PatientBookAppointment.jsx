@@ -7,6 +7,7 @@ import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
 
 const PatientBookAppointment = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date('2022-06-18'));
   const [weekDays, setWeekDays] = useState([]);
@@ -95,6 +96,10 @@ const PatientBookAppointment = () => {
     setIsSidebarOpen((prevState) => !prevState);
   };
 
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
+
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
@@ -179,7 +184,7 @@ const PatientBookAppointment = () => {
                 </nav>
               </div>
               <div className="col-md-6 col-12 d-lg-flex d-block justify-content-lg-end">
-                <div className="search-container me-3 mt-lg-0 mt-3">
+                <div className="d-lg-flex d-none search-container me-3 mt-lg-0 mt-3">
                   <input
                     type="text"
                     className="form-control"
@@ -200,6 +205,98 @@ const PatientBookAppointment = () => {
                       <Dropdown.Item href="#/action-3">Patient</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
+                </div>
+                <div className="d-lg-none d-flex align-items-center justify-content-between">
+                  <nav className="breadcrumb-container d-block d-lg-none p-0">
+                    <button className="btn btn-primary" onClick={toggleSidebar}>
+                      <i className="bi bi-text-left"></i>
+                    </button>
+                  </nav>
+                  <div className="d-flex align-items-center justify-content-center">
+                  <button className="btn" onClick={toggleSearch}>
+                    <img
+                      src="./assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </button>
+                  {isSearchVisible && (
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Quick Search"
+                      style={{ display: isSearchVisible ? "block" : "none" }}
+                    />
+                  )}
+                  <Dropdown className="notification-dropdown mx-3">
+                    <Dropdown.Toggle
+                      variant="link"
+                      className="notification-toggle"
+                    >
+                      <img
+                        src="./assets/images/notification-bing.svg"
+                        alt="Notification Icon"
+                        className="img-fluid"
+                      />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="notification-menu">
+                      <div className="notification-header d-flex justify-content-between align-items-center">
+                        <span>Notification</span>
+                        <button className="close-btn">&times;</button>
+                      </div>
+                      {notifications.length > 0 ? (
+                        notifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className="notification-item d-flex align-items-start"
+                          >
+                            <img
+                              src={`./assets/images/${notification.icon}`}
+                              alt={notification.title}
+                              className="notification-icon"
+                            />
+                            <div className="notification-content">
+                              <h5>{notification.title}</h5>
+                              <p>{notification.description}</p>
+                            </div>
+                            <span className="notification-time">
+                              {notification.time}
+                            </span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="no-notifications text-center">
+                          <img
+                            src={noNotificationImage}
+                            alt="No Notifications"
+                            className="no-notifications-img"
+                          />
+                        </div>
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Dropdown>
+                    <Dropdown.Toggle variant="link" id="dropdown-user">
+                      <div className="d-flex align-items-center">
+                        <img
+                          src="./assets/images/profile.png"
+                          alt="Lincoln Philips"
+                          className="profile-pic img-fluid"
+                        />
+                        <div className="d-none text-start">
+                          <h3 className="user-name mb-0">Lincoln Philips</h3>
+                          <span className="user-role">Admin</span>
+                        </div>
+                      </div>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
+                      <Dropdown.Item href="#/settings">Settings</Dropdown.Item>
+                      <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  </div>
                 </div>
                 <div className="d-lg-flex d-none align-items-center">
                   <Dropdown className="notification-dropdown">
@@ -270,81 +367,6 @@ const PatientBookAppointment = () => {
                       <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
-                </div>
-                <div className="d-lg-none d-flex align-items-center justify-content-center">
-                  <Dropdown className="notification-dropdown">
-                    <Dropdown.Toggle
-                      variant="link"
-                      className="notification-toggle"
-                    >
-                      <img
-                        src="./assets/images/notification-bing.svg"
-                        alt="Notification Icon"
-                        className="img-fluid"
-                      />
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu className="notification-menu">
-                      <div className="notification-header d-flex justify-content-between align-items-center">
-                        <span>Notification</span>
-                        <button className="close-btn">&times;</button>
-                      </div>
-                      {notifications.length > 0 ? (
-                        notifications.map((notification) => (
-                          <div
-                            key={notification.id}
-                            className="notification-item d-flex align-items-start"
-                          >
-                            <img
-                              src={`./assets/images/${notification.icon}`}
-                              alt={notification.title}
-                              className="notification-icon"
-                            />
-                            <div className="notification-content">
-                              <h5>{notification.title}</h5>
-                              <p>{notification.description}</p>
-                            </div>
-                            <span className="notification-time">
-                              {notification.time}
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="no-notifications text-center">
-                          <img
-                            src={noNotificationImage}
-                            alt="No Notifications"
-                            className="no-notifications-img"
-                          />
-                        </div>
-                      )}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown>
-                    <Dropdown.Toggle variant="link" id="dropdown-user">
-                      <div className="d-flex align-items-center">
-                        <img
-                          src="./assets/images/profile.png"
-                          alt="Lincoln Philips"
-                          className="profile-pic img-fluid"
-                        />
-                        <div className="d-block text-start">
-                          <h3 className="user-name mb-0">Lincoln Philips</h3>
-                          <span className="user-role">Admin</span>
-                        </div>
-                      </div>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
-                      <Dropdown.Item href="#/settings">Settings</Dropdown.Item>
-                      <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <nav className="breadcrumb-container d-block d-lg-none p-3">
-                    <button className="btn btn-primary" onClick={toggleSidebar}>
-                      <i className="bi bi-text-left"></i>
-                    </button>
-                  </nav>
                 </div>
               </div>
             </div>
