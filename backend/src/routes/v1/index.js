@@ -21,6 +21,9 @@ const dashboardAdminRoute = require("./dashboard/dashboard.route");
 const bookingappointmentRoute = require("./bookappointment/book.appointment.patient.route");
 const prescriptionRoute = require("./prescription/prescription.route");
 
+const telecommunicationRoute = require("./telecommunication/telecomunication.route")
+const personalHealthRecordRoute = require("./personal health records/personal.health.record.route")
+const bookappointementPatientFlowRoute = require("./bookappointment/book.appointement.doctor.route")
 
 
 const router = express.Router();
@@ -35,7 +38,12 @@ router.use("/dashboard-admin", dashboardAdminRoute);
 router.use("/bookappointment", bookingappointmentRoute);
 router.use("/prescription", prescriptionRoute);
 
-// router.use("/doctor", authRoute);
+router.use("/telecomunication", telecommunicationRoute);
+
+router.use("/patient-flow-personal-health-record", personalHealthRecordRoute);
+router.use("/bookappointment-patientFlow", bookappointementPatientFlowRoute);
+
+
 // router.use("/specialist", specialistRoute);
 // router.use("/faq", faqRoute);
 // router.use("/faq-patient", faqPatientRoute);

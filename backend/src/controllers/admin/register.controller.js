@@ -362,10 +362,13 @@ const verifyOtp = async (req, res) => {
 
 
 // /* ----------------------------- RESET PASSWORD ----------------------------- */
+
+
 const resetPassword = async (req, res) => {
   try {
     const { newPassword, confirmPassword, adminId } = req.body;
     
+    // Check if new password and confirm password match
     if (newPassword !== confirmPassword) {
       return res.status(400).json({
         status: 400,
@@ -373,27 +376,37 @@ const resetPassword = async (req, res) => {
         message: "New Password And Confirm Password Do Not Match.",
       });
     }
+
+    // Find the admin by adminId
     let admin = await Admin.findById(adminId);
-    // Checking if the user is in the database or not
+    
+    // Check if the admin exists
     if (!admin) {
-      return res.status(400).json({
-        status: 400,
+      return res.status(404).json({
+        status: 404,
         success: false,
-        message: "admin Does Not Exist!",
+        message: "Admin Does Not Exist!",
       });
     }
+
+    // Hash the new password before saving
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    admin.password = hashedPassword; // Set the new hashed password
+
+    // Save the updated admin document
+    await admin.save();
 
     res.status(200).json({
       status: 200,
       success: true,
       message: "Password Reset Successfully!",
-      data: admin,
-      adminId:admin._id,
+      adminId: admin._id,
     });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
+
 // /* ----------------------------- CHANGE PASSWORD ---------------------------- */
 const changePassword = async (req, res) => {
   try {

@@ -74,7 +74,10 @@ type:String,
     type: String,
   },
   
- 
+ join_call:{
+type:String,
+default:"",
+ },
 
 });
 

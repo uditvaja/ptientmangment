@@ -1,5 +1,5 @@
 // const mongoose = require("mongoose");
-
+const moment = require('moment-timezone')
 const AppointmentBook = require("../../models/bookAppointment.model");
 const Prescription = require("../../models/prescription.model");
 /* ------------------------------- CREATE Hospital  ------------------------------- */
@@ -133,46 +133,124 @@ const getPrescriptionDetailsByPatientId = async (req, res) => {
     };
 
     const getOldPrescriptionDetails = async (req, res) => {
-        try {
-          const currentDateTime = new Date(); // Get the current date and time
-      
-          // Fetch prescriptions with populated appointment and patient details where the appointment's endTime is in the past
-          const prescriptions = await Prescription.find()
-            .populate({
-              path: 'appointmentId', // Populate appointment details
-              match: { endTime: { $lt: currentDateTime } }, // Match appointments with endTime earlier than current time
-              populate: {
-                path: 'patientId', // Populate patient details inside the appointment
-                select: 'first_name last_name phone_number age gender', // Select the required fields from Patient
-              },
-              select: 'appointmentType endTime app_date', // Select the required fields from Appointment
-            });
-      
-          // Filter out prescriptions that don't have an old appointment (in case of null match due to filtering)
-          const oldPrescriptions = prescriptions.filter(prescription => prescription.appointmentId);
-      
-          if (oldPrescriptions.length === 0) {
-            return res.status(404).json({
-              status: 404,
-              message: "No old prescriptions found",
-              success: false,
-            });
-          }
-      
-          res.status(200).json({
-            status: 200,
-            message: "Successfully fetched old prescriptions",
-            success: true,
-            data: oldPrescriptions,
-          });
-        } catch (error) {
-          res.status(500).json({ success: false, message: error.message });
-        }
-      };
-      
+      try {
+          // Get today's date in 'YYYY-MM-DD' format
+          const today = moment().format('YYYY-MM-DD');
   
+          // Fetch prescriptions where the appointment's app_date is in the past (before today)
+          const prescriptions = await Prescription.find()
+              .populate({
+                  path: 'appointmentId', // Populate appointment details
+                  match: { app_date: { $lt: today } }, // Match appointments with app_date earlier than today
+                  populate: {
+                      path: 'patientId', // Populate patient details inside the appointment
+                      select: 'first_name last_name phone_number age gender', // Select required fields from Patient
+                  },
+                  select: 'appointmentType endTime app_date', // Select required fields from Appointment
+              }).select('_id');
+  
+          // Filter out prescriptions that don't have a past appointment (in case of null match due to filtering)
+          const oldPrescriptions = prescriptions.filter(prescription => prescription.appointmentId);
+  
+          if (oldPrescriptions.length === 0) {
+              return res.status(404).json({
+                  status: 404,
+                  message: "No old prescriptions found",
+                  success: false,
+              });
+          }
+  
+          res.status(200).json({
+              status: 200,
+              message: "Successfully fetched old prescriptions",
+              success: true,
+              data: oldPrescriptions,
+          });
+      } catch (error) {
+          res.status(500).json({ success: false, message: error.message });
+      }
+  };
+  
+      
+      const getAllAppointments = async (req, res) => {
+        try {
+            // Get today's date in 'YYYY-MM-DD' format
+            const today = moment().format('YYYY-MM-DD');
+    
+            // Find all appointments where app_date is equal to today
+            const todaysAppointments = await AppointmentBook.find({ app_date: today })
+                // Populate necessary fields
+                .populate('doctorId', 'firstName')
+                .populate('patientId', 'first_name last_name age gender')
+                .select('endTime appointmentType');
+
+   
+                if(!todaysAppointments){
+      res.status(400).json({
+        message:'today appointement not found'
+      })
+     }
+            // Return the list of today's appointments
+            return res.status(200).json({
+                message: 'Today\'s appointment list retrieved successfully.',
+                appointments: todaysAppointments
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'An error occurred while retrieving today\'s appointments.' });
+        }
+    };
+
+    const getAppointmentsByDateRange = async (req, res) => {
+      try {
+          // Extract fromDate and toDate from query parameters
+          const { fromDate, toDate } = req.query;
+  
+          // Validate the date formats and convert them to the required format
+          const formattedFromDate = moment(fromDate, "DD-MM-YYYY", true);
+          const formattedToDate = moment(toDate, "DD-MM-YYYY", true);
+  
+          if (!formattedFromDate.isValid() || !formattedToDate.isValid()) {
+              return res.status(400).json({ message: 'Invalid date format. Please use "DD-MM-YYYY".' });
+          }
+  
+          // Convert dates to ISO format (YYYY-MM-DDTHH:mm:ss.sssZ) for MongoDB queries
+          const from = formattedFromDate.startOf('day').toISOString(); // Set to start of the day
+          const to = formattedToDate.endOf('day').toISOString(); // Set to end of the day
+  
+          // Find appointments within the specified date range
+          const appointments = await AppointmentBook.find({
+              app_date: { $gte: from, $lte: to }
+          })
+          .select('appointmentType app_date startTime patient_issue diseas_name') // Adjust fields as needed
+          // .populate('doctorId', 'firstName')
+          .populate('patientId', 'first_name last_name')
+          // .populate('doctorTimeSlot', 'timeslot'); // Populate hospital name
+  
+          // Check if any appointments were found
+          if (!appointments.length) {
+              return res.status(404).json({ message: 'No appointments found in the specified date range.' });
+          }
+  
+          // Return the list of appointments
+          return res.status(200).json({
+              message: 'Appointments retrieved successfully.',
+              appointments
+          });
+      } catch (error) {
+          console.error(error);
+          return res.status(500).json({ message: 'An error occurred while retrieving appointments.' });
+      }
+  };
+    
   
 module.exports = {
-    createPrescription,getPrescriptionsByPatientId,patientDetailFromDoctorIdInDoctorFlowAppointments,getPrescriptionDetailsByPatientId,getOldPrescriptionDetails
+    createPrescription,
+    getPrescriptionsByPatientId,
+    patientDetailFromDoctorIdInDoctorFlowAppointments,
+    getPrescriptionDetailsByPatientId,
+    getOldPrescriptionDetails,
+    getAllAppointments,
+    getAppointmentsByDateRange
  
   };
