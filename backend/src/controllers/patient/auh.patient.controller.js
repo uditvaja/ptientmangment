@@ -389,6 +389,12 @@ const resetPassword = async (req, res) => {
       });
     }
 
+    // Hash the new password before saving
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    patient.password = hashedPassword; // Set the new hashed password
+
+    // Save the updated admin document
+    await patient.save();
     res.status(200).json({
       status: 200,
       success: true,
