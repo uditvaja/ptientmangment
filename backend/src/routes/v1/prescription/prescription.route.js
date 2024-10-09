@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 // const { singleFileUpload } = require("../../../../helpers/upload");
-const {   prescriptionController } = require("../../../controllers");
+const {   prescriptionController, precriptionPatientController } = require("../../../controllers");
 
 
 
@@ -18,6 +18,8 @@ router.get('/list-patient-all-appointment',prescriptionController.getAllAppointm
 router.get('/list-patient-all-appointment-searchinf-fromdate-todate',prescriptionController.getAppointmentsByDateRange);
 
 
+
+router.get('/prescriptions-patient-id-list',precriptionPatientController.getPrescriptionsByPatientId);
 
 
 

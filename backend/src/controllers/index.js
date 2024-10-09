@@ -32,6 +32,6 @@ module.exports.patientFlowPersonalHealthRecordController = require("./patient/pe
 
 module.exports.patintFlowBookappointmentController = require("./bookapointment/patientflow.controller");
 
-// module.exports.helpDoctorController = require("./Doctor/web/helpDoctor");
+module.exports.precriptionPatientController = require("./prescription/prescription.patient.controller");
 
 // module.exports.favoriteDoctorController = require("./Patient/app/favoritedoctor.controller");
