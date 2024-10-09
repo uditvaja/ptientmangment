@@ -23,6 +23,7 @@ const prescriptionRoute = require("./prescription/prescription.route");
 
 const telecommunicationRoute = require("./telecommunication/telecomunication.route")
 const personalHealthRecordRoute = require("./personal health records/personal.health.record.route")
+const bookappointementPatientFlowRoute = require("./bookappointment/book.appointement.doctor.route")
 
 
 const router = express.Router();
@@ -40,6 +41,8 @@ router.use("/prescription", prescriptionRoute);
 router.use("/telecomunication", telecommunicationRoute);
 
 router.use("/patient-flow-personal-health-record", personalHealthRecordRoute);
+router.use("/bookappointment-patientFlow", bookappointementPatientFlowRoute);
+
 
 // router.use("/specialist", specialistRoute);
 // router.use("/faq", faqRoute);

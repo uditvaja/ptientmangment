@@ -30,7 +30,7 @@ module.exports.telecommunicationController = require("./telecommunications/telec
 
 module.exports.patientFlowPersonalHealthRecordController = require("./patient/personal health record/personal.health.record.patientflow.controller");
 
-// module.exports.faqPatientController = require("./Patient/web/patient.faq.controller");
+module.exports.patintFlowBookappointmentController = require("./bookapointment/patientflow.controller");
 
 // module.exports.helpDoctorController = require("./Doctor/web/helpDoctor");
 
