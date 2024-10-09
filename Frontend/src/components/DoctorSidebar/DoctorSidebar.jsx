@@ -33,7 +33,7 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/patientRecordAccess"}
               className={`nav-link nav-links-2 ${
-                activeLink === "/patientRecordAccess" ? "active" : ""
+                activeLink === "/patientRecordAccess" || activeLink === "/patientDetails" ? "active" : ""
               }`}
             >
               Patient Record Access

@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./DoctorAppointment.scss";
+import "./PatientRecordAccess.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import DoctorSidebar from "../../components/DoctorSidebar/DoctorSidebar";
-import { Button, Dropdown, Form, Modal, Tab, Tabs } from "react-bootstrap";
-import { Calendar, Clock } from "lucide-react";
-import CancelDoctorAppointment from "../../components/CancelDoctorAppointment/CancelDoctorAppointment";
+import { Dropdown, Form, Table } from "react-bootstrap";
 
-const DoctorAppointment = () => {
+const PatientRecordAccess = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [patients, setPatients] = useState([]);
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTimeframe, setSelectedTimeframe] = useState("Month");
+
   const sidebarRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,8 +28,8 @@ const DoctorAppointment = () => {
     setIsSidebarOpen(false);
   };
 
-  const doctorAppointmentTableRidrect = () => {
-    navigate("/doctorAppointmentTimeSlot");
+  const patientDetailsRidrect = () => {
+    navigate("/patientDetails");
   }
 
   const handleClickOutside = (event) => {
@@ -40,14 +42,6 @@ const DoctorAppointment = () => {
     }
   };
 
-  const handleCancelAppointment = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -55,6 +49,52 @@ const DoctorAppointment = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      const data = [
+        {
+          id: 1,
+          name: "Marcus Philips",
+          disease: "Viral Infection",
+          issue: "Feeling Tired",
+          lastAppointmentDate: "2 Jan, 2022",
+          lastAppointmentTime: "4:30 PM",
+          age: 22,
+          gender: "Male",
+        },
+        {
+          id: 2,
+          name: "London Shaffer",
+          disease: "Diabetes",
+          issue: "Stomach Ache",
+          lastAppointmentDate: "5 Jan, 2022",
+          lastAppointmentTime: "5:00 PM",
+          age: 45,
+          gender: "Male",
+        },
+      ];
+      setPatients(data);
+      setFilteredPatients(data);
+    };
+
+    fetchPatients();
+  }, []);
+
+  useEffect(() => {
+    const filtered = patients.filter((patient) =>
+      patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredPatients(filtered);
+  }, [searchTerm, selectedTimeframe, patients]);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleTimeframeChange = (timeframe) => {
+    setSelectedTimeframe(timeframe);
+  };
 
   const notifications = [
     {
@@ -88,98 +128,6 @@ const DoctorAppointment = () => {
   ];
 
   const noNotificationImage = "./assets/images/no-notification.png";
-
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      patientName: "Marcus Philips",
-      dieseName: "Viral Infection",
-      patientIssue: "Stomach Ache",
-      appointmentDate: "2 Jan, 2022",
-      appointmentTime: "4:30 PM",
-      appointmentType: "Online",
-    },
-    {
-      id: 2,
-      patientName: "Julianna Warren",
-      dieseName: "Diabetes",
-      patientIssue: "Stomach Ache",
-      appointmentDate: "3 Jan, 2022",
-      appointmentTime: "2:40 PM",
-      appointmentType: "Onsite",
-    },
-  ]);
-
-  const renderAppointmentTable = () => {
-    if (appointments.length === 0) {
-      return (
-        <div className="text-center py-5">
-          <img
-            src="/assets/images/no-today-appointment.png"
-            alt="No appointments"
-            className="mb-3 img-fluid"
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="table-responsive">
-        <table className="table today-appoint-table table-hover">
-          <thead>
-            <tr>
-              <th>Patient Name</th>
-              <th>Dieses Name</th>
-              <th>Patient Issue</th>
-              <th>Appointment Date</th>
-              <th>Appointment Time</th>
-              <th>Appointment Type</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((appointment) => (
-              <tr key={appointment.id}>
-                <td>{appointment.patientName}</td>
-                <td>{appointment.dieseName}</td>
-                <td>{appointment.patientIssue}</td>
-                <td>{appointment.appointmentDate}</td>
-                <td className="appo-time">{appointment.appointmentTime}</td>
-                <td className="text-center appo-badge">
-                  <span
-                    className={`badge badge-${
-                      appointment.appointmentType === "Online"
-                        ? "warning"
-                        : "primary"
-                    }`}
-                  >
-                    {appointment.appointmentType}
-                  </span>
-                </td>
-                <td>
-                  <button className="me-3" onClick={handleCancelAppointment}>
-                    <img
-                      src="/assets/images/calendar-red-remove.svg"
-                      alt="calendar-red-remove"
-                      className="img-fluid"
-                    />
-                  </button>
-                  <button onClick={doctorAppointmentTableRidrect}>
-                    <img
-                      src="/assets/images/calendar-blue-tick.svg"
-                      alt="calendar-blue-tick"
-                      className="img-fluid"
-                    />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -206,7 +154,7 @@ const DoctorAppointment = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Appointment Booking
+                      Patient Record Access
                     </li>
                   </ol>
                 </nav>
@@ -402,135 +350,87 @@ const DoctorAppointment = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid doctor-apointment-page py-4">
-          <Tabs
-            defaultActiveKey="doctorscheduledappointment"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-          >
-            <Tab
-              eventKey="doctorscheduledappointment"
-              title="Today Appointment"
-            >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">Today Appointment</h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
-                    <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
-                </div>
+        <div className="container-fluid doctor-record-page py-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h1 className="doctor-record-title">Patient Record Access</h1>
+            <div className="d-flex">
+              <div className="doctor-record-search-container">
+                <input
+                  type="text"
+                  placeholder="Search Patient"
+                  className="form-control me-2"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+                <img
+                  src="./assets/images/search.svg"
+                  alt="search"
+                  className="search-icon"
+                />
               </div>
-              {renderAppointmentTable()}
-            </Tab>
-            <Tab
-              eventKey="doctorupcomingappointment"
-              title="Upcoming Appointment"
-            >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">
-                  Upcoming Appointment
-                </h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
+              <Dropdown className="doctor-record-dropdown">
+                <Dropdown.Toggle id="dropdown-timeframe">
+                  {selectedTimeframe}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleTimeframeChange("Day")}>
+                    Day
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleTimeframeChange("Week")}>
+                    Week
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleTimeframeChange("Month")}>
+                    Month
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
+          <Table responsive hover className="patient-table">
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>Dieses Name</th>
+                <th>Patient Issue</th>
+                <th>Last Appointment Date</th>
+                <th>Last Appointment Time</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPatients.map((patient) => (
+                <tr key={patient.id}>
+                  <td>{patient.name}</td>
+                  <td>{patient.disease}</td>
+                  <td>{patient.issue}</td>
+                  <td>{patient.lastAppointmentDate}</td>
+                  <td className="lastAppointmentTime">{patient.lastAppointmentTime}</td>
+                  <td>{patient.age} Years</td>
+                  <td>
                     <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
+                      src={`/assets/images/${patient.gender.toLowerCase()}-gender.png`}
+                      alt="gender"
+                      className="img-fluid"
                     />
-                  </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
-                </div>
-              </div>
-              {renderAppointmentTable()}
-            </Tab>
-            <Tab
-              eventKey="doctorpreviousappointment"
-              title="Previous Appointment"
-            >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">
-                  Previous Appointment
-                </h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
-                    <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
-                </div>
-              </div>
-              {renderAppointmentTable()}
-            </Tab>
-            <Tab eventKey="doctorcancelappointment" title="Cancel Appointment">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">Cancel Appointment</h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
-                    <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
-                </div>
-              </div>
-              {renderAppointmentTable()}
-            </Tab>
-          </Tabs>
+                  </td>
+                  <td>
+                    <button className="btn btn-link p-0" onClick={patientDetailsRidrect}>
+                      <img
+                        src="/assets/images/eye-blue.svg"
+                        alt="eye"
+                        className="img-fluid"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </div>
       </div>
-      <CancelDoctorAppointment show={showModal} handleClose={handleCloseModal} />
     </div>
   );
 };
-
-export default DoctorAppointment;
+export default PatientRecordAccess;
