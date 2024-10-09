@@ -29,6 +29,8 @@ import AppointmentTimeSlot from "./pages/AppointmentTimeSlot/AppointmentTimeSlot
 import DoctorAppointment from "./pages/DoctorAppointment/DoctorAppointment";
 import DoctorAppointmentTimeSlot from "./pages/DoctorAppointmentTimeSlot";
 import PrescriptionAccess from "./pages/PrescriptionAccess/PrescriptionAccess";
+import PatientRecordAccess from "./pages/PatientRecordAccess/PatientRecordAccess";
+import PatientDetails from "./pages/PatientDetails/PatientDetails";
 
 function App() {
   return (
@@ -51,6 +53,8 @@ function App() {
         <Route path="/doctorProfile" element={<DoctorProfile />} />
         <Route path="/doctorAppointmentManagement" element={<DoctorAppointment />} />
         <Route path="/doctorAppointmentTimeSlot" element={<DoctorAppointmentTimeSlot />} />
+        <Route path="/patientRecordAccess" element={<PatientRecordAccess />} />
+        <Route path="/patientDetails" element={<PatientDetails />} />
         {/* Patient */}
         <Route path="/patient-register" element={<PatientRegister />} />
         <Route path="/patient-login" element={<PatientLogin />} />

@@ -1,18 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./DoctorAppointment.scss";
-import { useLocation, useNavigate } from "react-router-dom";
+import "./PatientDetails.scss";
+import { Badge, Dropdown, Table } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import DoctorSidebar from "../../components/DoctorSidebar/DoctorSidebar";
-import { Button, Dropdown, Form, Modal, Tab, Tabs } from "react-bootstrap";
-import { Calendar, Clock } from "lucide-react";
-import CancelDoctorAppointment from "../../components/CancelDoctorAppointment/CancelDoctorAppointment";
+import AddRecordModal from "../../components/AddRecordModal/AddRecordModal";
 
-const DoctorAppointment = () => {
+const PatientDetails = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showAddRecordModal, setShowAddRecordModal] = useState(false);
+
   const sidebarRef = useRef(null);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -26,10 +25,6 @@ const DoctorAppointment = () => {
     setIsSidebarOpen(false);
   };
 
-  const doctorAppointmentTableRidrect = () => {
-    navigate("/doctorAppointmentTimeSlot");
-  }
-
   const handleClickOutside = (event) => {
     if (
       isSidebarOpen &&
@@ -38,14 +33,6 @@ const DoctorAppointment = () => {
     ) {
       closeSidebar();
     }
-  };
-
-  const handleCancelAppointment = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
   };
 
   useEffect(() => {
@@ -89,97 +76,77 @@ const DoctorAppointment = () => {
 
   const noNotificationImage = "./assets/images/no-notification.png";
 
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      patientName: "Marcus Philips",
-      dieseName: "Viral Infection",
-      patientIssue: "Stomach Ache",
-      appointmentDate: "2 Jan, 2022",
-      appointmentTime: "4:30 PM",
-      appointmentType: "Online",
-    },
-    {
-      id: 2,
-      patientName: "Julianna Warren",
-      dieseName: "Diabetes",
-      patientIssue: "Stomach Ache",
-      appointmentDate: "3 Jan, 2022",
-      appointmentTime: "2:40 PM",
-      appointmentType: "Onsite",
-    },
-  ]);
-
-  const renderAppointmentTable = () => {
-    if (appointments.length === 0) {
-      return (
-        <div className="text-center py-5">
-          <img
-            src="/assets/images/no-today-appointment.png"
-            alt="No appointments"
-            className="mb-3 img-fluid"
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="table-responsive">
-        <table className="table today-appoint-table table-hover">
-          <thead>
-            <tr>
-              <th>Patient Name</th>
-              <th>Dieses Name</th>
-              <th>Patient Issue</th>
-              <th>Appointment Date</th>
-              <th>Appointment Time</th>
-              <th>Appointment Type</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((appointment) => (
-              <tr key={appointment.id}>
-                <td>{appointment.patientName}</td>
-                <td>{appointment.dieseName}</td>
-                <td>{appointment.patientIssue}</td>
-                <td>{appointment.appointmentDate}</td>
-                <td className="appo-time">{appointment.appointmentTime}</td>
-                <td className="text-center appo-badge">
-                  <span
-                    className={`badge badge-${
-                      appointment.appointmentType === "Online"
-                        ? "warning"
-                        : "primary"
-                    }`}
-                  >
-                    {appointment.appointmentType}
-                  </span>
-                </td>
-                <td>
-                  <button className="me-3" onClick={handleCancelAppointment}>
-                    <img
-                      src="/assets/images/calendar-red-remove.svg"
-                      alt="calendar-red-remove"
-                      className="img-fluid"
-                    />
-                  </button>
-                  <button onClick={doctorAppointmentTableRidrect}>
-                    <img
-                      src="/assets/images/calendar-blue-tick.svg"
-                      alt="calendar-blue-tick"
-                      className="img-fluid"
-                    />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
+  const patientInfo = {
+    name: "Marcus Philips",
+    number: "99130 44537",
+    issue: "Feeling tired",
+    gender: "Male",
+    lastAppointmentDate: "2 Jan, 2022",
+    doctorName: "Dr. Marcus Philips",
+    age: "20 Years",
+    appointmentType: "Online",
+    address: "B-408 Swastik society, mota varachha rajkot.",
+    lastAppointmentTime: "4:30 PM",
   };
 
+  const appointments = [
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+      type: "Online",
+    },
+    {
+      name: "London Shaffer",
+      issue: "Stomach Ache",
+      date: "2 Jan, 2022",
+      time: "5:00 PM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "1:30 PM",
+      type: "Online",
+    },
+    {
+      name: "London Shaffer",
+      issue: "Stomach Ache",
+      date: "2 Jan, 2022",
+      time: "8:00 AM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "5:00 PM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "7 Jan, 2022",
+      time: "4:30 PM",
+      type: "Online",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "8 Jan, 2022",
+      time: "4:30 PM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "8 Jan, 2022",
+      time: "4:30 PM",
+      type: "Online",
+    },
+  ];
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -205,8 +172,11 @@ const DoctorAppointment = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Patient Record Access
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Appointment Booking
+                      Patient Details
                     </li>
                   </ol>
                 </nav>
@@ -402,135 +372,125 @@ const DoctorAppointment = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid doctor-apointment-page py-4">
-          <Tabs
-            defaultActiveKey="doctorscheduledappointment"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-          >
-            <Tab
-              eventKey="doctorscheduledappointment"
-              title="Today Appointment"
+        <div className="container-fluid patient-details-page py-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h1 className="patient-details-title">Patient Details</h1>
+            <button
+              type="button"
+              className="add-btn"
+              onClick={() => setShowAddRecordModal(true)}
             >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">Today Appointment</h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
-                    <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
+              <img
+                src="/assets/images/add.svg"
+                alt="add"
+                className="img-fluid me-3"
+              />
+              Add Record
+            </button>
+          </div>
+          <div className="patient-info-card mb-4">
+            <div className="row">
+              <div className="col-md-2">
+                <img
+                  src="/assets/images/patient_image.png"
+                  alt={patientInfo.name}
+                  className="patient-image img-fluid rounded-circle"
+                />
+              </div>
+              <div className="col-md-10">
+                <div className="row">
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Name</p>
+                    <p className="info-value">{patientInfo.name}</p>
                   </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Number</p>
+                    <p className="info-value">{patientInfo.number}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Issue</p>
+                    <p className="info-value">{patientInfo.issue}</p>
+                  </div>
+                  <div className="col-md-4 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Gender</p>
+                    <p className="info-value">{patientInfo.gender}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Last Appointment Date</p>
+                    <p className="info-value">
+                      {patientInfo.lastAppointmentDate}
+                    </p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Doctor Name</p>
+                    <p className="info-value">{patientInfo.doctorName}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Patient Age</p>
+                    <p className="info-value">{patientInfo.age}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Appointment Type</p>
+                    <p className="info-value">{patientInfo.appointmentType}</p>
+                  </div>
+                  <div className="col-md-4 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Patient Address</p>
+                    <p className="info-value">{patientInfo.address}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Last Appointment Time</p>
+                    <p className="info-value">
+                      {patientInfo.lastAppointmentTime}
+                    </p>
+                  </div>
                 </div>
               </div>
-              {renderAppointmentTable()}
-            </Tab>
-            <Tab
-              eventKey="doctorupcomingappointment"
-              title="Upcoming Appointment"
-            >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">
-                  Upcoming Appointment
-                </h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
-                    <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
-                </div>
-              </div>
-              {renderAppointmentTable()}
-            </Tab>
-            <Tab
-              eventKey="doctorpreviousappointment"
-              title="Previous Appointment"
-            >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">
-                  Previous Appointment
-                </h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
-                    <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
-                </div>
-              </div>
-              {renderAppointmentTable()}
-            </Tab>
-            <Tab eventKey="doctorcancelappointment" title="Cancel Appointment">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="doctorAppointment-title">Cancel Appointment</h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
-                    <input
-                      type="text"
-                      placeholder="Search Patient"
-                      className="form-control"
-                    />
-                    <img
-                      src="./assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </div>
-                  <button type="button" className="calendar-btn me-2">
-                    <Calendar size={16} /> Any Date
-                  </button>
-                  <button type="button" className="clock-btn">
-                    <Clock size={16} /> Appointment Time Slot
-                  </button>
-                </div>
-              </div>
-              {renderAppointmentTable()}
-            </Tab>
-          </Tabs>
+            </div>
+          </div>
+
+          <h2 className="appointments-title mb-3">All Appointments</h2>
+          <Table responsive className="appointments-table">
+            <thead>
+              <tr>
+                <th>Dieses Name</th>
+                <th>Patient Issue</th>
+                <th>Appointment Date</th>
+                <th>Appointment Time</th>
+                <th>Appointment Type</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((appointment, index) => (
+                <tr key={index}>
+                  <td>{appointment.name}</td>
+                  <td>{appointment.issue}</td>
+                  <td>{appointment.date}</td>
+                  <td className="text-blue">{appointment.time}</td>
+                  <td className="appo-badge">
+                    <Badge
+                      bg={appointment.type === "Online" ? "warning" : "primary"}
+                    >
+                      {appointment.type}
+                    </Badge>
+                  </td>
+                  <td>
+                    <button className="btn btn-link p-0">
+                      <img src="/assets/images/eye-blue.svg" alt="More" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </div>
       </div>
-      <CancelDoctorAppointment show={showModal} handleClose={handleCloseModal} />
+      <AddRecordModal
+        show={showAddRecordModal}
+        onHide={() => setShowAddRecordModal(false)}
+      />
     </div>
   );
 };
 
-export default DoctorAppointment;
+export default PatientDetails;
