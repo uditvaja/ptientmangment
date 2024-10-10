@@ -31,6 +31,7 @@ import DoctorAppointmentTimeSlot from "./pages/DoctorAppointmentTimeSlot";
 import PrescriptionAccess from "./pages/PrescriptionAccess/PrescriptionAccess";
 import PatientRecordAccess from "./pages/PatientRecordAccess/PatientRecordAccess";
 import PatientDetails from "./pages/PatientDetails/PatientDetails";
+import DoctorChat from "./components/DoctorChat/DoctorChat";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
         <Route path="/doctorAppointmentTimeSlot" element={<DoctorAppointmentTimeSlot />} />
         <Route path="/patientRecordAccess" element={<PatientRecordAccess />} />
         <Route path="/patientDetails" element={<PatientDetails />} />
+        <Route path="/doctor-chat" element={<DoctorChat />} />
         {/* Patient */}
         <Route path="/patient-register" element={<PatientRegister />} />
         <Route path="/patient-login" element={<PatientLogin />} />

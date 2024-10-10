@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Dropdown, Form, Modal } from "react-bootstrap";
-import DatePicker from "react-datepicker";
 import DoctorSidebar from "../components/DoctorSidebar/DoctorSidebar";
 import "./DoctorAppointmentTimeSlot.scss";
 
@@ -12,8 +11,10 @@ const DoctorAppointmentTimeSlot = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
-  const [selectedsDate, setSelectedsDate] = useState(new Date());
-  const [selectedsTime, setSelectedsTime] = useState("3:00 PM");
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editNote, setEditNote] = useState("");
+  const [editTime, setEditTime] = useState("");
   const sidebarRef = useRef(null);
 
   const timeSlots = [
@@ -110,6 +111,43 @@ const DoctorAppointmentTimeSlot = () => {
     ) {
       closeSidebar();
     }
+  };
+
+  const handleEditClick = () => {
+    setShowEditModal(true);
+    setShowModal(false);
+    setEditTime(selectedTime);
+    setEditNote(
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever"
+    );
+  };
+
+  const handleEditClose = () => {
+    setShowEditModal(false);
+  };
+
+  const handleEditSave = () => {
+    // Handle saving the edited appointment
+    console.log("Saving edited appointment:", {
+      time: editTime,
+      note: editNote,
+    });
+    setShowEditModal(false);
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+    setShowModal(false);
+  };
+
+  const handleDeleteClose = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDeleteConfirm = () => {
+    // Handle deleting the time slot
+    console.log("Deleting time slot:", selectedDate, selectedTime);
+    setShowDeleteModal(false);
   };
 
   useEffect(() => {
@@ -452,7 +490,7 @@ const DoctorAppointmentTimeSlot = () => {
             onHide={handleCloseModal}
             className="doctor-custom-modal"
           >
-            <Modal.Header>
+            <Modal.Header closeButton>
               <Modal.Title>Not Available</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -466,25 +504,108 @@ const DoctorAppointmentTimeSlot = () => {
                   <span>Monday,18 June,2022 09:00 AM - 10:00 AM</span>
                 </div>
                 {/* Appointment Time */}
-                <Form.Group className="mb-0 form-floating">
+                <div className="d-flex align-items-center appo-date mb-0">
+                  <img
+                    src="/assets/images/available-note.svg"
+                    alt="available-note"
+                    className="img-fluid me-3"
+                  />
+                  <span>
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever
+                  </span>
+                </div>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                type="submit"
+                onClick={handleEditClick}
+                className="edit-btn"
+              >
+                Edit
+              </Button>
+              <Button onClick={handleDeleteClick} className="cancel-btn">
+                Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Edit Modal */}
+          <Modal
+            centered
+            show={showEditModal}
+            onHide={handleEditClose}
+            className="doctor-edit-modal"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Slot</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group className="mb-3 form-floating">
+                  <Form.Select
+                    value={editTime}
+                    onChange={(e) => setEditTime(e.target.value)}
+                  >
+                    {times.map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <label className="form-label">Select Time</label>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Add Note</Form.Label>
                   <Form.Control
                     as="textarea"
-                    placeholder="Write a Note"
-                    id="floatingnote"
-                  ></Form.Control>
-                  <label htmlFor="floatingnote">Add Note</label>
+                    rows={3}
+                    value={editNote}
+                    onChange={(e) => setEditNote(e.target.value)}
+                  />
                 </Form.Group>
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={handleCloseModal} className="cancel-btn">
+              <button className="cancle-btn" onClick={handleEditClose}>
                 Cancel
-              </Button>
-              <Button type="submit" className="reschedule-btn">
-                Disable
-              </Button>
+              </button>
+              <button
+                type="submit"
+                className="save-btn"
+                onClick={handleEditSave}
+              >
+                Save
+              </button>
             </Modal.Footer>
           </Modal>
+
+          {/* Delete Confirmation Modal */}
+      <Modal
+        centered
+        show={showDeleteModal}
+        onHide={handleDeleteClose}
+        className="doctor-delete-modal"
+      >
+        <div className="red-bg"></div>
+        <Modal.Body className="text-center">
+          <div className="delete-icon mb-3">
+            <img src="/assets/images/trash.svg" alt="trash" className="tmg-fluid" />
+          </div>
+          <h4>Delete Time Slot ?</h4>
+          <p>This slot is to be deleted ?</p>
+          <div className="d-flex justify-content-center mt-4">
+            <Button variant="secondary" onClick={handleDeleteClose} className="cancel-btn me-2">
+              No
+            </Button>
+            <Button variant="primary" onClick={handleDeleteConfirm} className="save-btn">
+              Yes
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
         </div>
       </div>
     </div>

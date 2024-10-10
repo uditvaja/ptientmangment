@@ -77,7 +77,7 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/chat"}
               className={`nav-link nav-links-5 ${
-                activeLink === "/chat" ? "active" : ""
+                activeLink === "/doctor-chat" ? "active" : ""
               }`}
             >
               Chat

@@ -309,6 +309,12 @@
       color: #030229;
       margin-bottom: 15px;
     }
+    .btn-close {
+      margin-bottom: 15px;
+      background-color: $color12;
+      border-radius: 50%;
+      --bs-btn-close-opacity: 1;
+    }
   }
 
   .modal-body {
@@ -336,10 +342,6 @@
       color: $color15;
     }
 
-    .form-control {
-      height: 110px;
-    }
-
     > .form-control,
     > .custom-select {
       padding: 13px 14px;
@@ -354,36 +356,169 @@
     .cancel-btn {
       width: 223px;
       height: 48px;
-      border: 1px solid #d3d3d3;
-      background-color: $color1;
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-right: 15px;
-      font-weight: 600;
-      font-size: 18px;
-      color: $color10;
-      transition: all 0.5s;
-      &:hover {
-        background: $color12;
-        color: $color1;
-      }
-    }
-    .reschedule-btn {
-      width: 223px;
-      height: 48px;
-      background: $color2;
       border: none;
+      background-color: $color12;
       border-radius: 10px;
       padding: 12px 14px;
       font-weight: 600;
       font-size: 18px;
       color: $color1;
       transition: all 0.5s;
-      &:hover {
-        background: #f6f8fb;
-        color: $color5;
+    }
+    .edit-btn {
+      width: 223px;
+      height: 48px;
+      background: $color11;
+      border: none;
+      border-radius: 10px;
+      margin-right: 15px;
+      padding: 12px 14px;
+      font-weight: 600;
+      font-size: 18px;
+      color: $color1;
+      transition: all 0.5s;
+    }
+  }
+}
+
+.doctor-edit-modal {
+  .modal-content {
+    border-radius: 10px;
+  }
+
+  .modal-header {
+    border-bottom: none;
+    padding: 20px 20px 0;
+
+    .modal-title {
+      font-weight: bold;
+    }
+  }
+
+  .modal-body {
+    padding: 20px;
+
+    .form-label {
+      font-weight: 500 !important;
+      font-size: 16px !important;
+      color: $color15 !important;
+    }
+
+    .form-floating {
+      position: relative;
+      margin-bottom: 40px;
+
+      > .form-select {
+        border-radius: 10px;
+        border: 1px solid #a7a7a7;
+        padding-top: 0.625rem;
+        padding-bottom: 0.625rem;
+      }
+
+      > label {
+        position: absolute;
+        top: -17px;
+        left: 17px;
+        font-weight: 500;
+        font-size: 16px;
+        color: $color15;
       }
     }
+
+    textarea {
+      border: 1px solid #a7a7a7;
+      border-radius: 10px;
+    }
+  }
+
+  .modal-footer {
+    border-top: none;
+    .cancel-btn {
+      width: 223px;
+      height: 48px;
+      border: none;
+      background-color: $color12;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-weight: 600;
+      font-size: 18px;
+      color: $color1;
+      transition: all 0.5s;
+    }
+    .save-btn {
+      width: 223px;
+      height: 48px;
+      background: $color2;
+      border: none;
+      border-radius: 10px;
+      margin-right: 15px;
+      padding: 12px 14px;
+      font-weight: 600;
+      font-size: 18px;
+      color: $color1;
+      transition: all 0.5s;
+    }
+  }
+}
+
+.doctor-delete-modal {
+  .delete-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+  }
+  .red-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: $color12;
+    width: 100%;
+    height: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 15px;
+  }
+  .modal-body {
+    padding: 0;
+  }
+
+  h4 {
+    font-weight: 800;
+    font-size: 24px;
+    color: $color15;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    color: $color5;
+    margin-bottom: 20px;
+  }
+
+  .cancel-btn {
+    width: 223px;
+    height: 48px;
+    border: none;
+    background-color: $color12;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 18px;
+    color: $color1;
+    transition: all 0.5s;
+  }
+  .save-btn {
+    width: 223px;
+    height: 48px;
+    background: $color2;
+    border: none;
+    border-radius: 10px;
+    margin-right: 15px;
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 18px;
+    color: $color1;
+    transition: all 0.5s;
   }
 }
 
