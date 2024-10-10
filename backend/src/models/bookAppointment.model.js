@@ -78,7 +78,8 @@ type:String,
 type:String,
 default:"",
  },
-
+ cancel_date: { type: String }, // To store cancellation date
+    cancel_time: { type: String },
 });
 
 const AppointmentBook = mongoose.model('appointmentBook', bookSchema);

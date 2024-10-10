@@ -52,6 +52,19 @@ const searchDoctorAndPatientist = async (req, res) => {
     }
   };
 
+  const allDoctorList= async(req,res)=>{
+    try {
+      const doctors = await Doctor.find();
+      res.status(200).json({success:true,doctors,message:'all doctor list is done'});
+  } catch (error) {
+      // console.error('Error fetching doctors:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+
+  }
+
   module.exports = {
-    searchDoctorAndPatientist
+    searchDoctorAndPatientist,
+    allDoctorList
+
   }
