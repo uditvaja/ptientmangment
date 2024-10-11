@@ -1,3 +1,5 @@
+@import "../../css/variables.scss";
+
 .message-input {
     padding: 1rem;
     background-color: #f8f9fa;
@@ -8,6 +10,7 @@
       align-items: center;
   
       .attach-button {
+        background: #718ebf2b;
         position: relative;
         overflow: hidden;
         
@@ -34,10 +37,12 @@
       }
   
       .send-button {
+        border: none;
         border-radius: 50%;
         width: 38px;
         height: 38px;
         padding: 0;
+        background-color: $color2;
         display: flex;
         align-items: center;
         justify-content: center;

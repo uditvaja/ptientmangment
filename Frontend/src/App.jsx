@@ -32,6 +32,7 @@ import PrescriptionAccess from "./pages/PrescriptionAccess/PrescriptionAccess";
 import PatientRecordAccess from "./pages/PatientRecordAccess/PatientRecordAccess";
 import PatientDetails from "./pages/PatientDetails/PatientDetails";
 import DoctorChat from "./components/DoctorChat/DoctorChat";
+import PatientMeetingConference from "./components/PatientMeetingConference/PatientMeetingConference";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
         <Route path="/doctorAppointmentTimeSlot" element={<DoctorAppointmentTimeSlot />} />
         <Route path="/patientRecordAccess" element={<PatientRecordAccess />} />
         <Route path="/patientDetails" element={<PatientDetails />} />
+        <Route path="/teleconsultationModule" element={<PatientMeetingConference />} />
         <Route path="/doctor-chat" element={<DoctorChat />} />
         {/* Patient */}
         <Route path="/patient-register" element={<PatientRegister />} />

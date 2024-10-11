@@ -33,7 +33,7 @@ const MessageInput = ({ onSendMessage, onFileUpload }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <Button type="submit" variant="primary" className="ms-2 send-button">
+        <Button type="submit" className="ms-2 send-button">
           <i className="bi bi-send"></i>
         </Button>
       </Form>

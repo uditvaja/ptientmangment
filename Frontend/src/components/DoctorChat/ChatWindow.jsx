@@ -116,15 +116,17 @@ const ChatWindow = ({ chat, messages }) => {
       <div className="chat-messages">
         {Object.entries(groupedMessages).map(([date, msgs]) => (
           <div key={date}>
-            <div className="message-date">{date}</div>
+            <div className="text-center">
+              <div className="message-date">{date}</div>
+            </div>
             {msgs.map((message, index) => (
               <Card
                 key={index}
                 className={`message ${
-                  message.sender === "user" ? "user-message" : "other-message"
+                  message.sender === "You" ? "user-message" : "other-message"
                 }`}
               >
-                {message.sender !== "user" && (
+                {message.sender !== "You" && (
                   <img
                     src={chat.avatar}
                     alt={chat.name}
@@ -132,24 +134,39 @@ const ChatWindow = ({ chat, messages }) => {
                   />
                 )}
                 <Card.Body>
-                  <p className="message-content">{message.content}</p>
+                  {!message.file ? (
+                    <p className="message-content">{message.content}</p>
+                  ) : (
+                    ""
+                  )}
                   {message.file && renderFileAttachment(message.file)}
                 </Card.Body>
-                <Card.Footer>{message.time}</Card.Footer>
+                <Card.Footer>
+                  {message.sender} {message.time}
+                </Card.Footer>
               </Card>
             ))}
           </div>
         ))}
       </div>
 
-      <Modal show={previewFile !== null} onHide={handleClosePreview} size="lg">
+      <Modal
+        show={previewFile !== null}
+        onHide={handleClosePreview}
+        size="lg"
+        className="chat-doc-modal"
+      >
         <Modal.Header closeButton>
           <Modal.Title>{previewFile && previewFile.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{previewFile && renderFilePreview(previewFile)}</Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => handleDownload(previewFile)}>
-            <Download size={16} /> Download
+          <Button onClick={() => handleDownload(previewFile)}>
+            <img
+              src="/assets/images/download-image-icon.svg"
+              alt="download-image-icon"
+              className="img-fluid"
+            />
           </Button>
         </Modal.Footer>
       </Modal>

@@ -245,43 +245,15 @@
   }
 }
 
-$sidebar-width: 240px;
-$header-height: 60px;
-$border-color: #dee2e6;
-
-.doctor-chat {
-  height: 100vh;
-  overflow: hidden;
-
-  .chat-list-container,
-  .chat-window-container {
-    height: calc(100vh - #{$header-height});
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+.meeting-conference-page {
+  .meeting-conference-title {
+    font-weight: 700;
+    font-size: 26px;
+    color: $color15;
   }
 
-  .chat-list-container {
-    border-right: 1px solid $border-color;
-  }
-
-  .no-chat-selected {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-}
-
-// Responsive styles
-@media (max-width: 767px) {
-  .doctor-chat {
-    .chat-list-container,
-    .chat-window-container {
-      height: calc(100vh - #{$header-height});
-    }
+  .video-call-container {
+    border-radius: 10px;
   }
 }
 
