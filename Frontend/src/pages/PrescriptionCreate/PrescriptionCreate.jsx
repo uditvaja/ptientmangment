@@ -1,19 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientMeetingConference.scss";
-import { useLocation } from "react-router-dom";
-import { Dropdown } from "react-bootstrap";
-import DoctorSidebar from "../DoctorSidebar/DoctorSidebar";
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { useLocation, useNavigate } from "react-router-dom";
+import DoctorSidebar from "../../components/DoctorSidebar/DoctorSidebar";
+import {
+  Dropdown,
+  Card,
+  Row,
+  Col,
+  Button,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
+import { CalendarDays, Search } from "lucide-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./PrescriptionCreate.scss";
 
-const PatientMeetingConference = () => {
+const PrescriptionCreate = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const localVideoRef = useRef(null);
-  const remoteVideoRef = useRef(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [searchTerm, setSearchTerm] = useState("");
 
   const sidebarRef = useRef(null);
   const location = useLocation();
-
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -37,6 +47,10 @@ const PatientMeetingConference = () => {
     }
   };
 
+  const handleNavigation = () => {
+    navigate("/prescription-tools/create/details");
+  }
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -44,50 +58,6 @@ const PatientMeetingConference = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  const initZegoCloudMeeting = async (element) => {
-    const appID = 1300643029;
-    const serverSecret = "6a96061db83de617391c972a69979191";
-
-    const roomID = "sample_room";
-    const userID = "1";
-    const userName = "Lincoln Philips";
-
-    const kitToken =  ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID,  Date.now().toString(),  userName);
-    const zp = ZegoUIKitPrebuilt.create(kitToken);
-
-    zp.joinRoom({
-      container: element,
-      sharedLinks: [
-        {
-          name: 'Personal link',
-          url:
-           window.location.protocol + '//' + 
-           window.location.host + window.location.pathname +
-            '?roomID=' +
-            roomID,
-        },
-      ],
-      roomID: roomID,
-      userID: userID,
-      userName: userName,
-      scenario: {
-        mode: ZegoUIKitPrebuilt.OneONoneCall,
-      },
-      onUserAvatarSetter:(userList) => {
-        userList.forEach(user => {
-            user.setUserAvatar("/assets/images/Avatar-2.png")
-        })
-    }, 
-    });
-  };
-
-  useEffect(() => {
-    const videoCallDiv = document.getElementById('video-call-container');
-    if (videoCallDiv) {
-      initZegoCloudMeeting(videoCallDiv);
-    }
-  }, []);
 
   const notifications = [
     {
@@ -121,6 +91,136 @@ const PatientMeetingConference = () => {
   ];
 
   const noNotificationImage = "/assets/images/no-notification.png";
+
+  const AppointmentCard = ({ patient }) => (
+    <Card className="mb-3">
+      <Card.Body>
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <h5 className="card-title">{patient.name}</h5>
+          <div className="d-flex align-items-center">
+          <span
+            className={`badge ${
+              patient.status === "New"
+                ? "bage-info"
+                : patient.status === "Old"
+                ? "bage-success"
+                : "bage-info"
+            }`}
+          >
+            {patient.status}
+          </span>
+          <button type="button" className="eyebtn" onClick={handleNavigation} >
+          <img src="/assets/images/eye-blue-2.svg" alt="eye-blue" className="img-fluid eye-icon" />
+          </button>
+          </div>
+        </div>
+        <div className="card-details">
+          <div className="row mb-2">
+            <div className="col-sm-6">
+              <small>Appointment Type</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end appo-type">{patient.appointmentType}</p>
+            </div>
+            <div className="col-sm-6">
+              <small>Patient Age</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end">{patient.age} Years</p>
+            </div>
+            <div className="col-sm-6">
+              <small>Patient Gender</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end">{patient.gender}</p>
+            </div>
+            <div className="col-sm-6">
+              <small>Appointment Time</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end">{patient.time}</p>
+            </div>
+          </div>
+          <button type="button" className="create-btn w-100">
+            Create Prescription
+          </button>
+        </div>
+      </Card.Body>
+    </Card>
+  );
+
+  const patients = [
+    {
+      name: "Jaydon Philips",
+      status: "New",
+      appointmentType: "Onsite",
+      age: 36,
+      gender: "Male",
+      time: "10:10 AM",
+    },
+    {
+      name: "Charlie Herwitz",
+      status: "Old",
+      appointmentType: "Onsite",
+      age: 25,
+      gender: "Female",
+      time: "10:10 AM",
+    },
+    {
+      name: "Charlie Herwitz",
+      status: "New",
+      appointmentType: "Onsite",
+      age: 25,
+      gender: "Female",
+      time: "10:10 AM",
+    },
+    {
+      name: "Charlie Herwitz",
+      status: "Old",
+      appointmentType: "Onsite",
+      age: 25,
+      gender: "Female",
+      time: "10:10 AM",
+    },
+    {
+      name: "Charlie Herwitz",
+      status: "New",
+      appointmentType: "Onsite",
+      age: 25,
+      gender: "Female",
+      time: "10:10 AM",
+    },
+    {
+      name: "Charlie Herwitz",
+      status: "Old",
+      appointmentType: "Onsite",
+      age: 25,
+      gender: "Female",
+      time: "10:10 AM",
+    },
+    {
+      name: "Charlie Herwitz",
+      status: "New",
+      appointmentType: "Onsite",
+      age: 25,
+      gender: "Female",
+      time: "10:10 AM",
+    },
+    {
+      name: "Charlie Herwitz",
+      status: "Old",
+      appointmentType: "Onsite",
+      age: 25,
+      gender: "Female",
+      time: "10:10 AM",
+    },
+    // ... add more patients here
+  ];
+
+  const filteredPatients = patients.filter((patient) =>
+    patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -146,8 +246,11 @@ const PatientMeetingConference = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Prescription Tools
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Teleconsultation Module
+                      Create
                     </li>
                   </ol>
                 </nav>
@@ -343,20 +446,52 @@ const PatientMeetingConference = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid meeting-conference-page py-4">
-          <h4 className="meeting-conference-title">
-            Patient Meeting Conference
-          </h4>
-
-          <div
-            id="video-call-container"
-            className="video-call-container"
-            style={{ width: '100%', height: '100vh', backgroundColor: '#718EBF' }}
-          ></div>
+        <div className="container-fluid doctor-prescription-create-page py-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h4 className="doctor-prescription-create-title">
+              Today Appointment
+            </h4>
+            <div className="d-flex align-items-center">
+              <div className="doctor-prescription-search-container me-3">
+                <input
+                  type="text"
+                  placeholder="Search Patient"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <img
+                  src="/assets/images/search.svg"
+                  alt="search"
+                  className="search-icon"
+                />
+              </div>
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                customInput={
+                  <button type="button">
+                    <CalendarDays size={20} />{" "}
+                    {selectedDate.toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </button>
+                }
+              />
+            </div>
+          </div>
+          <div className="row">
+            {filteredPatients.map((patient, index) => (
+              <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
+                <AppointmentCard patient={patient} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientMeetingConference;
+export default PrescriptionCreate;

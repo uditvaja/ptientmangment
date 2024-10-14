@@ -7,6 +7,11 @@
 
   .breadcrumb {
     margin-bottom: 0;
+    background: #0eabeb08;
+    border-radius: 30px;
+    padding: 14px 20px;
+    border: 0.3px solid #d9d9d9;
+    display: inline-flex;
     .breadcrumb-item {
       font-size: 18px;
       &.active {
@@ -29,7 +34,7 @@
   .search-container {
     position: relative;
     width: 335px;
-    background-color: $color9;
+    background-color: transparent;
     display: flex;
     align-items: center;
 
@@ -249,6 +254,7 @@
   padding: 20px;
   max-width: 830px;
   border-radius: 15px;
+  background-color: $color1;
   .invoice-header {
     display: flex;
     justify-content: space-between;

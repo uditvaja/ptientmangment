@@ -250,43 +250,20 @@
   }
 }
 
-.doctor-apointment-page {
+.doctor-prescription-create-page {
   background-color: $color1;
   border-radius: 15px;
   margin-top: 30px;
   padding: 40px;
-  .nav-tabs {
-    border: none;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    width: 100%;
-    .nav-link {
-      display: inline-block;
-      font-weight: 400;
-      font-size: 14px;
-      color: #667080;
-      &.active {
-        font-weight: 400;
-        font-size: 14px;
-        color: $color2;
-        border: none;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        border-bottom: 3px solid $color2;
-      }
-    }
-  }
 
-  .doctorAppointment-title {
+  .doctor-prescription-create-title {
     font-weight: 700;
     font-size: 26px;
     color: $color15;
   }
 
-  .today-search-container {
+  .doctor-prescription-search-container {
     position: relative;
-    width: 270px;
     background-color: transparent;
     display: flex;
     align-items: center;
@@ -301,6 +278,7 @@
     input {
       padding: 13px 50px;
       border-radius: 50px;
+      border: var(--bs-border-width) solid var(--bs-border-color);
     }
 
     .search-icon {
@@ -309,127 +287,130 @@
       top: 50%;
       transform: translateY(-50%);
     }
+  }
 
-    .dropdown-toggle {
-      &::after {
-        display: inline-block;
-      }
+  .card {
+    background-color: #f8f9fa;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f4f4f4;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-5px);
     }
 
-    .btn-link {
-      font-weight: 400;
-      font-size: 16px;
-      color: $color6;
-      text-decoration: none;
+    .card-body {
+      padding: 0;
+
+      .card-title {
+        padding: 20px 15px 0;
+        font-weight: 600;
+        font-size: 18px;
+        color: $color15;
+        margin-bottom: 5px;
+      }
+
+      .badge {
+        margin-top: 10px;
+      }
+
+      .bage-info {
+        background: #0eabeb1a;
+        padding: 10px 15px;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 14px;
+        color: $color2;
+      }
+
+      .bage-success {
+        background: #39973d1a;
+        padding: 10px 15px;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 14px;
+        color: $color11;
+      }
+
+      .eyebtn {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        box-shadow: none;
+        .eye-icon {
+          margin-top: 10px;
+          margin-right: 15px;
+          margin-left: 15px;
+        }
+      }
+
+      .card-details {
+        background-color: $color1;
+        padding: 15px;
+        border: 1px solid #f4f4f4;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+
+        small {
+          font-weight: 400;
+          font-size: 16px;
+          color: $color4;
+        }
+
+        p {
+          font-weight: 700;
+          font-size: 16px;
+          color: $color5;
+        }
+
+        .appo-type {
+          color: $color13;
+        }
+
+        .create-btn {
+          background-color: $color9;
+          border-radius: 10px;
+          padding: 12px 14px;
+          font-weight: 600;
+          font-size: 18px;
+          color: $color5;
+          transition: all 0.5s;
+          &:hover {
+            color: $color1;
+            background-color: $color2;
+            border-color: $color2;
+          }
+        }
+      }
     }
   }
 
-  .calendar-btn {
-    border: 1px solid #d3d3d3;
-    background-color: $color1;
+  .react-datepicker-wrapper {
+    width: auto;
+  }
+
+  .react-datepicker__input-container button {
     font-weight: 600;
     font-size: 16px;
     color: $color10;
+    white-space: nowrap;
+    background-color: $color1;
+    border: 1px solid #d3d3d3;
     border-radius: 10px;
-    width: 157px;
-    height: 48px;
     padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    svg {
-      width: 17px;
-      height: 17px;
-      color: $color5;
-      margin-right: 15px;
-    }
   }
 
-  .clock-btn {
-    width: 267px;
-    height: 48px;
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $color2;
-    color: $color1;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 17px;
-    svg {
-      width: 17px;
-      height: 17px;
-      color: $color1;
-      margin-right: 15px;
-    }
-  }
-
-  .today-appoint-table {
-    background-color: #fff;
-    border-radius: 0.25rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-
-    th {
-      font-weight: 700;
-      font-size: 16px;
-      color: $color15;
+  @media (max-width: 768px) {
+    .d-flex {
+      flex-direction: column;
+      align-items: stretch;
     }
 
-    td {
-      font-weight: 600;
-      font-size: 16px;
-      color: $color5;
-      vertical-align: middle;
+    .input-group,
+    .react-datepicker-wrapper {
+      margin-bottom: 1rem;
     }
-
-    .appo-time {
-      font-weight: 600;
-      font-size: 14px;
-      color: $color3;
-    }
-
-    .appo-badge {
-      .badge-primary {
-        width: 82px;
-        height: 28px;
-        background: #5678e91a;
-        font-weight: 600;
-        font-size: 13px;
-        color: $color13;
-        border-radius: 30px;
-      }
-      .badge-warning {
-        width: 82px;
-        height: 28px;
-        background: #ffc3131a;
-        font-weight: 600;
-        font-size: 13px;
-        color: $color14;
-        border-radius: 30px;
-      }
-    }
-  }
-
-  .btn-outline-primary {
-    border-color: #ced4da;
-  }
-}
-
-@media (max-width: 992px) {
-  .doctor-apointment-page {
-    padding: 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .profile-header {
-    .mobile-screen {
-      display: none;
-    }
-  }
-  .profile-header .search-container {
-    width: 100% !important;
-    margin-bottom: 0px;
   }
 }

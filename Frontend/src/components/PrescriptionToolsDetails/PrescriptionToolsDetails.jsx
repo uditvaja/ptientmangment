@@ -1,19 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientMeetingConference.scss";
-import { useLocation } from "react-router-dom";
-import { Dropdown } from "react-bootstrap";
+import "./PrescriptionToolsDetails.scss";
+import { useLocation, useNavigate } from "react-router-dom";
 import DoctorSidebar from "../DoctorSidebar/DoctorSidebar";
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { Button, Dropdown, Tab, Tabs, Form } from "react-bootstrap";
 
-const PatientMeetingConference = () => {
+const PrescriptionToolsDetails = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const localVideoRef = useRef(null);
-  const remoteVideoRef = useRef(null);
+  const [activeTab, setActiveTab] = useState("allDocument");
+  const [documents, setDocuments] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
-
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -44,50 +44,6 @@ const PatientMeetingConference = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  const initZegoCloudMeeting = async (element) => {
-    const appID = 1300643029;
-    const serverSecret = "6a96061db83de617391c972a69979191";
-
-    const roomID = "sample_room";
-    const userID = "1";
-    const userName = "Lincoln Philips";
-
-    const kitToken =  ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID,  Date.now().toString(),  userName);
-    const zp = ZegoUIKitPrebuilt.create(kitToken);
-
-    zp.joinRoom({
-      container: element,
-      sharedLinks: [
-        {
-          name: 'Personal link',
-          url:
-           window.location.protocol + '//' + 
-           window.location.host + window.location.pathname +
-            '?roomID=' +
-            roomID,
-        },
-      ],
-      roomID: roomID,
-      userID: userID,
-      userName: userName,
-      scenario: {
-        mode: ZegoUIKitPrebuilt.OneONoneCall,
-      },
-      onUserAvatarSetter:(userList) => {
-        userList.forEach(user => {
-            user.setUserAvatar("/assets/images/Avatar-2.png")
-        })
-    }, 
-    });
-  };
-
-  useEffect(() => {
-    const videoCallDiv = document.getElementById('video-call-container');
-    if (videoCallDiv) {
-      initZegoCloudMeeting(videoCallDiv);
-    }
-  }, []);
 
   const notifications = [
     {
@@ -121,6 +77,96 @@ const PatientMeetingConference = () => {
   ];
 
   const noNotificationImage = "/assets/images/no-notification.png";
+
+  const patientInfo = {
+    name: "Marcus Philips",
+    number: "99130 44537",
+    issue: "Feeling tired",
+    gender: "Male",
+    lastAppointmentDate: "2 Jan, 2022",
+    doctorName: "Dr. Marcus Philips",
+    age: "20 Years",
+    appointmentType: "Online",
+    address: "B-408 Swastik society, mota varachha rajkot.",
+    lastAppointmentTime: "4:30 PM",
+  };
+
+  const renderDocuments = () => {
+    return (
+      <div className="documents-container">
+        {documents.length === 0 ? (
+          <div className="no-data-found">
+            <img src="/assets/images/no_data_found.png" alt="No Data Found" />
+          </div>
+        ) : (
+          documents.map((doc, index) => (
+            <div key={index} className="document-item">
+              <h4>{doc.title}</h4>
+              <p>Type: {doc.type}</p>
+              <p>Created: {doc.createdDate}</p>
+            </div>
+          ))
+        )}
+        
+      </div>
+    );
+  };
+
+  const renderPrescriptions = () => {
+    return (
+      <div className="prescriptions-container">
+        {prescriptions.length === 0 ? (
+          <div className="no-data-found">
+            <img src="/assets/images/no_data_found.png" alt="No Data Found" />
+          </div>
+        ) : (
+          prescriptions.map((prescription, index) => (
+            <div key={index} className="prescription-item">
+              <h4>{prescription.medication}</h4>
+              <p>Dosage: {prescription.dosage}</p>
+              <p>Frequency: {prescription.frequency}</p>
+              <p>Created: {prescription.createdDate}</p>
+            </div>
+          ))
+        )}
+      </div>
+    );
+  };
+
+  const renderDescriptions = () => {
+    const descriptions = [
+      {
+        date: "2 Jan, 2022",
+        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      },
+      {
+        date: "2 Jan, 2022",
+        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      },
+      {
+        date: "2 Jan, 2022",
+        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      },
+      {
+        date: "2 Jan, 2022",
+        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      },
+    ];
+
+    return (
+      <div className="descriptions-container">
+        {descriptions.map((description, index) => (
+          <div key={index} className="description-item">
+            <p className="description-date">
+              Description Date: {description.date}
+            </p>
+            <p className="description-content">{description.content}</p>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -146,8 +192,11 @@ const PatientMeetingConference = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Prescription Tools
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Teleconsultation Module
+                      Create
                     </li>
                   </ol>
                 </nav>
@@ -343,20 +392,95 @@ const PatientMeetingConference = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid meeting-conference-page py-4">
-          <h4 className="meeting-conference-title">
-            Patient Meeting Conference
-          </h4>
+        <div className="container-fluid doctor-prescription-create-detials-page py-4">
+          <div className="mb-4">
+            <h1 className="patient-details-title">Patient Details</h1>
+          </div>
+          <div className="patient-info-card mb-4">
+            <div className="row">
+              <div className="col-md-2">
+                <img
+                  src="/assets/images/patient_image.png"
+                  alt={patientInfo.name}
+                  className="patient-image img-fluid rounded-circle"
+                />
+              </div>
+              <div className="col-md-10">
+                <div className="row">
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Name</p>
+                    <p className="info-value">{patientInfo.name}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Number</p>
+                    <p className="info-value">{patientInfo.number}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Issue</p>
+                    <p className="info-value">{patientInfo.issue}</p>
+                  </div>
+                  <div className="col-md-4 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Gender</p>
+                    <p className="info-value">{patientInfo.gender}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Last Appointment Date</p>
+                    <p className="info-value">
+                      {patientInfo.lastAppointmentDate}
+                    </p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Doctor Name</p>
+                    <p className="info-value">{patientInfo.doctorName}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Patient Age</p>
+                    <p className="info-value">{patientInfo.age}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Appointment Type</p>
+                    <p className="info-value">{patientInfo.appointmentType}</p>
+                  </div>
+                  <div className="col-md-4 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Patient Address</p>
+                    <p className="info-value">{patientInfo.address}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Last Appointment Time</p>
+                    <p className="info-value">
+                      {patientInfo.lastAppointmentTime}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <div
-            id="video-call-container"
-            className="video-call-container"
-            style={{ width: '100%', height: '100vh', backgroundColor: '#718EBF' }}
-          ></div>
+          <Tabs
+            activeKey={activeTab}
+            onSelect={(k) => setActiveTab(k)}
+            className="custom-tabs"
+          >
+            <Tab eventKey="allDocument" title="All Document">
+              {renderDocuments()}
+            </Tab>
+            <Tab eventKey="allPrescription" title="All Prescription">
+              {renderPrescriptions()}
+            </Tab>
+            <Tab eventKey="description" title="Description">
+              {renderDescriptions()}
+            </Tab>
+          </Tabs>
+
+          {activeTab === "allPrescription" && (
+            <Button variant="primary" className="create-prescription-btn">
+              Create Prescription
+            </Button>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientMeetingConference;
+export default PrescriptionToolsDetails;

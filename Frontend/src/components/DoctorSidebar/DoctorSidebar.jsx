@@ -7,7 +7,9 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
     <>
       <div
         ref={sidebarRef}
-        className={`doctor-sidebar d-flex flex-column ${isOpen ? "open" : "closed"}`}
+        className={`doctor-sidebar d-flex flex-column ${
+          isOpen ? "open" : "closed"
+        }`}
       >
         <div className="logo-section">
           <img
@@ -21,7 +23,9 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/doctorAppointmentManagement"}
               className={`nav-link nav-links-1 ${
-                activeLink === "/doctorProfile" || activeLink === "/doctorAppointmentManagement" || activeLink === "/doctorAppointmentTimeSlot"
+                activeLink === "/doctorProfile" ||
+                activeLink === "/doctorAppointmentManagement" ||
+                activeLink === "/doctorAppointmentTimeSlot"
                   ? "active"
                   : ""
               }`}
@@ -33,7 +37,10 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/patientRecordAccess"}
               className={`nav-link nav-links-2 ${
-                activeLink === "/patientRecordAccess" || activeLink === "/patientDetails" ? "active" : ""
+                activeLink === "/patientRecordAccess" ||
+                activeLink === "/patientDetails"
+                  ? "active"
+                  : ""
               }`}
             >
               Patient Record Access
@@ -42,7 +49,7 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
           <li className="nav-item">
             <Link
               className={`nav-link nav-links-3 collapsed ${
-                activeLink.includes("/prescriptionCreate") ? "active" : ""
+                activeLink.includes("/prescription-tools/") ? "active" : ""
               }`}
               to={"#billing"}
               data-bs-toggle="collapse"
@@ -50,19 +57,35 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             >
               Prescription Tools
             </Link>
-            <ul id="billing" className="collapse">
+            <ul
+              id="billing"
+              className={`collapse ${
+                activeLink.includes("/prescription-tools/") ? "show" : ""
+              }`}
+            >
               <li>
-                <Link to={"/prescriptionCreate"} className="nav-link">
+                <Link
+                  to={"/prescription-tools/create"}
+                  className={`nav-link ${
+                    activeLink === "/prescription-tools/create" || activeLink === "/prescription-tools/create/details" ? "active" : ""
+                  }`}
+                >
                   Create
                 </Link>
               </li>
               <li>
-                <Link to={"/prescriptionManage"} className="nav-link">
+                <Link
+                  to={"/prescription-tools/manage"}
+                  className={`nav-link ${
+                    activeLink === "/prescription-tools/manage" ? "active" : ""
+                  }`}
+                >
                   Manage
                 </Link>
               </li>
             </ul>
           </li>
+
           <li className="nav-item">
             <Link
               to={"/teleconsultationModule"}

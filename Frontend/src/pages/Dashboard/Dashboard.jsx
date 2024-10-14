@@ -134,7 +134,7 @@ const Dashboard = () => {
     },
   ];
 
-  const noNotificationImage = "./assets/images/no-notification.png";
+  const noNotificationImage = "/assets/images/no-notification.png";
 
   const doctorAppointments = [
     {
@@ -223,7 +223,7 @@ const Dashboard = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                     <img
-                      src="./assets/images/search.svg"
+                      src="/assets/images/search.svg"
                       alt="search"
                       className="search-icon"
                     />
@@ -257,7 +257,7 @@ const Dashboard = () => {
                   <div className="d-flex align-items-center justify-content-center">
                   <button className="btn" onClick={toggleSearch}>
                     <img
-                      src="./assets/images/search.svg"
+                      src="/assets/images/search.svg"
                       alt="search"
                       className="search-icon"
                     />
@@ -276,7 +276,7 @@ const Dashboard = () => {
                       className="notification-toggle"
                     >
                       <img
-                        src="./assets/images/notification-bing.svg"
+                        src="/assets/images/notification-bing.svg"
                         alt="Notification Icon"
                         className="img-fluid"
                       />
@@ -294,7 +294,7 @@ const Dashboard = () => {
                             className="notification-item d-flex align-items-start"
                           >
                             <img
-                              src={`./assets/images/${notification.icon}`}
+                              src={`/assets/images/${notification.icon}`}
                               alt={notification.title}
                               className="notification-icon"
                             />
@@ -322,7 +322,7 @@ const Dashboard = () => {
                     <Dropdown.Toggle variant="link" id="dropdown-user">
                       <div className="d-flex align-items-center">
                         <img
-                          src="./assets/images/profile.png"
+                          src="/assets/images/profile.png"
                           alt="Lincoln Philips"
                           className="profile-pic img-fluid"
                         />
@@ -347,7 +347,7 @@ const Dashboard = () => {
                         className="notification-toggle"
                       >
                         <img
-                          src="./assets/images/notification-bing.svg"
+                          src="/assets/images/notification-bing.svg"
                           alt="Notification Icon"
                           className="img-fluid"
                         />
@@ -365,7 +365,7 @@ const Dashboard = () => {
                               className="notification-item d-flex align-items-start"
                             >
                               <img
-                                src={`./assets/images/${notification.icon}`}
+                                src={`/assets/images/${notification.icon}`}
                                 alt={notification.title}
                                 className="notification-icon"
                               />
@@ -393,7 +393,7 @@ const Dashboard = () => {
                       <Dropdown.Toggle variant="link" id="dropdown-user">
                         <div className="d-flex align-items-center">
                           <img
-                            src="./assets/images/profile.png"
+                            src="/assets/images/profile.png"
                             alt="Lincoln Philips"
                             className="profile-pic img-fluid"
                           />
@@ -421,7 +421,7 @@ const Dashboard = () => {
               {searchQuery === "" ? (
                 <>
                   <div className="row">
-                    <div className="col-lg-7">
+                    <div className="col-xl-7">
                       <div className="row">
                         <div className="col-md-4 col-sm-6 mb-4">
                           <div className="stat-card stat-card-1">
@@ -534,7 +534,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-lg-5 mt-lg-0 mt-4">
+                    <div className="col-xl-5 mt-lg-0 mt-4">
                       <div className="d-flex align-items-center justify-content-between mb-4">
                         <h3 className="billing-title">Billing & Payments</h3>
                         <button className="create-btn">
@@ -638,7 +638,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="row mt-lg-0 mt-4">
-                    <div className="col-lg-7 mb-4">
+                    <div className="col-xl-7 mb-4">
                       <div className="d-flex align-items-center justify-content-between">
                         <h5 className="billing-title">
                           Today's Appointments List
@@ -734,7 +734,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-lg-5 mb-4">
+                    <div className="col-xl-5 mb-4">
                       <PatientsSummary />
                     </div>
                   </div>

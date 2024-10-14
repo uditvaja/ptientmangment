@@ -127,7 +127,7 @@ const PatientRecordAccess = () => {
     },
   ];
 
-  const noNotificationImage = "./assets/images/no-notification.png";
+  const noNotificationImage = "/assets/images/no-notification.png";
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -147,7 +147,7 @@ const PatientRecordAccess = () => {
                     <li className="breadcrumb-item">
                       <a href="#">
                         <img
-                          src="./assets/images/home-2.svg"
+                          src="/assets/images/home-2.svg"
                           alt="Home"
                           className="breadcrumb-icon"
                         />
@@ -167,7 +167,7 @@ const PatientRecordAccess = () => {
                     placeholder="Quick Search"
                   />
                   <img
-                    src="./assets/images/search.svg"
+                    src="/assets/images/search.svg"
                     alt="search"
                     className="search-icon"
                   />
@@ -191,7 +191,7 @@ const PatientRecordAccess = () => {
                   <div className="d-flex align-items-center justify-content-center">
                     <button className="btn" onClick={toggleSearch}>
                       <img
-                        src="./assets/images/search.svg"
+                        src="/assets/images/search.svg"
                         alt="search"
                         className="search-icon"
                       />
@@ -210,7 +210,7 @@ const PatientRecordAccess = () => {
                         className="notification-toggle"
                       >
                         <img
-                          src="./assets/images/notification-bing.svg"
+                          src="/assets/images/notification-bing.svg"
                           alt="Notification Icon"
                           className="img-fluid"
                         />
@@ -228,7 +228,7 @@ const PatientRecordAccess = () => {
                               className="notification-item d-flex align-items-start"
                             >
                               <img
-                                src={`./assets/images/${notification.icon}`}
+                                src={`/assets/images/${notification.icon}`}
                                 alt={notification.title}
                                 className="notification-icon"
                               />
@@ -256,7 +256,7 @@ const PatientRecordAccess = () => {
                       <Dropdown.Toggle variant="link" id="dropdown-user">
                         <div className="d-flex align-items-center">
                           <img
-                            src="./assets/images/profile.png"
+                            src="/assets/images/profile.png"
                             alt="Lincoln Philips"
                             className="profile-pic img-fluid"
                           />
@@ -283,7 +283,7 @@ const PatientRecordAccess = () => {
                       className="notification-toggle"
                     >
                       <img
-                        src="./assets/images/notification-bing.svg"
+                        src="/assets/images/notification-bing.svg"
                         alt="Notification Icon"
                         className="img-fluid"
                       />
@@ -301,7 +301,7 @@ const PatientRecordAccess = () => {
                             className="notification-item d-flex align-items-start"
                           >
                             <img
-                              src={`./assets/images/${notification.icon}`}
+                              src={`/assets/images/${notification.icon}`}
                               alt={notification.title}
                               className="notification-icon"
                             />
@@ -329,7 +329,7 @@ const PatientRecordAccess = () => {
                     <Dropdown.Toggle variant="link" id="dropdown-user">
                       <div className="d-flex align-items-center">
                         <img
-                          src="./assets/images/profile.png"
+                          src="/assets/images/profile.png"
                           alt="Lincoln Philips"
                           className="profile-pic img-fluid"
                         />
@@ -351,9 +351,9 @@ const PatientRecordAccess = () => {
           </div>
         </div>
         <div className="container-fluid doctor-record-page py-4">
-          <div className="d-flex justify-content-between align-items-center mb-4">
+          <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center mb-4">
             <h1 className="doctor-record-title">Patient Record Access</h1>
-            <div className="d-flex">
+            <div className="d-flex mt-lg-0 mt-3">
               <div className="doctor-record-search-container">
                 <input
                   type="text"
@@ -363,7 +363,7 @@ const PatientRecordAccess = () => {
                   onChange={handleSearch}
                 />
                 <img
-                  src="./assets/images/search.svg"
+                  src="/assets/images/search.svg"
                   alt="search"
                   className="search-icon"
                 />

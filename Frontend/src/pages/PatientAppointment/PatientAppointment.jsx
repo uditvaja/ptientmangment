@@ -134,7 +134,7 @@ const PatientAppointment = () => {
     },
   ];
 
-  const noNotificationImage = "./assets/images/no-notification.png";
+  const noNotificationImage = "/assets/images/no-notification.png";
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -154,7 +154,7 @@ const PatientAppointment = () => {
                     <li className="breadcrumb-item">
                       <a href="#">
                         <img
-                          src="./assets/images/home-2.svg"
+                          src="/assets/images/home-2.svg"
                           alt="Home"
                           className="breadcrumb-icon"
                         />
@@ -174,7 +174,7 @@ const PatientAppointment = () => {
                     placeholder="Quick Search"
                   />
                   <img
-                    src="./assets/images/search.svg"
+                    src="/assets/images/search.svg"
                     alt="search"
                     className="search-icon"
                   />
@@ -198,7 +198,7 @@ const PatientAppointment = () => {
                   <div className="d-flex align-items-center justify-content-center">
                   <button className="btn" onClick={toggleSearch}>
                     <img
-                      src="./assets/images/search.svg"
+                      src="/assets/images/search.svg"
                       alt="search"
                       className="search-icon"
                     />
@@ -217,7 +217,7 @@ const PatientAppointment = () => {
                       className="notification-toggle"
                     >
                       <img
-                        src="./assets/images/notification-bing.svg"
+                        src="/assets/images/notification-bing.svg"
                         alt="Notification Icon"
                         className="img-fluid"
                       />
@@ -235,7 +235,7 @@ const PatientAppointment = () => {
                             className="notification-item d-flex align-items-start"
                           >
                             <img
-                              src={`./assets/images/${notification.icon}`}
+                              src={`/assets/images/${notification.icon}`}
                               alt={notification.title}
                               className="notification-icon"
                             />
@@ -263,7 +263,7 @@ const PatientAppointment = () => {
                     <Dropdown.Toggle variant="link" id="dropdown-user">
                       <div className="d-flex align-items-center">
                         <img
-                          src="./assets/images/profile.png"
+                          src="/assets/images/profile.png"
                           alt="Lincoln Philips"
                           className="profile-pic img-fluid"
                         />
@@ -288,7 +288,7 @@ const PatientAppointment = () => {
                       className="notification-toggle"
                     >
                       <img
-                        src="./assets/images/notification-bing.svg"
+                        src="/assets/images/notification-bing.svg"
                         alt="Notification Icon"
                         className="img-fluid"
                       />
@@ -306,7 +306,7 @@ const PatientAppointment = () => {
                             className="notification-item d-flex align-items-start"
                           >
                             <img
-                              src={`./assets/images/${notification.icon}`}
+                              src={`/assets/images/${notification.icon}`}
                               alt={notification.title}
                               className="notification-icon"
                             />
@@ -334,7 +334,7 @@ const PatientAppointment = () => {
                     <Dropdown.Toggle variant="link" id="dropdown-user">
                       <div className="d-flex align-items-center">
                         <img
-                          src="./assets/images/profile.png"
+                          src="/assets/images/profile.png"
                           alt="Lincoln Philips"
                           className="profile-pic img-fluid"
                         />
@@ -399,7 +399,7 @@ const PatientAppointment = () => {
                 </div>
               </div>
               <div className="d-lg-none pat-appo-box">
-                <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center justify-content-between px-md-0 px-3">
                   <h3 className="patientappointment-title mb-0">
                     My Appointment
                   </h3>
@@ -412,7 +412,7 @@ const PatientAppointment = () => {
                     <span>Book Appointment</span>
                   </button>
                 </div>
-                <div className="date-range-picker mt-3">
+                <div className="date-range-picker mt-3 px-md-0 px-3">
                   <DatePicker
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
@@ -535,7 +535,7 @@ const PatientAppointment = () => {
                 </div>
               </div>
               <div className="d-lg-none pat-appo-box">
-                <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center justify-content-between px-md-0 px-3">
                   <h3 className="patientappointment-title mb-0">
                     My Appointment
                   </h3>
@@ -548,7 +548,7 @@ const PatientAppointment = () => {
                     <span>Book Appointment</span>
                   </button>
                 </div>
-                <div className="date-range-picker mt-3">
+                <div className="date-range-picker mt-3 px-md-0 px-3">
                   <DatePicker
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
@@ -653,7 +653,7 @@ const PatientAppointment = () => {
                 </div>
               </div>
               <div className="d-lg-none pat-appo-box">
-                <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center justify-content-between px-md-0 px-3">
                   <h3 className="patientappointment-title mb-0">
                     My Appointment
                   </h3>
@@ -666,7 +666,7 @@ const PatientAppointment = () => {
                     <span>Book Appointment</span>
                   </button>
                 </div>
-                <div className="date-range-picker mt-3">
+                <div className="date-range-picker mt-3 px-md-0 px-3">
                   <DatePicker
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
@@ -771,7 +771,7 @@ const PatientAppointment = () => {
                 </div>
               </div>
               <div className="d-lg-none pat-appo-box">
-                <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center justify-content-between px-md-0 px-3">
                   <h3 className="patientappointment-title mb-0">
                     My Appointment
                   </h3>
@@ -784,7 +784,7 @@ const PatientAppointment = () => {
                     <span>Book Appointment</span>
                   </button>
                 </div>
-                <div className="date-range-picker mt-3">
+                <div className="date-range-picker mt-3 px-md-0 px-3">
                   <DatePicker
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
