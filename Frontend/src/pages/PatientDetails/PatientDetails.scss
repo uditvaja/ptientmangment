@@ -7,6 +7,11 @@
 
   .breadcrumb {
     margin-bottom: 0;
+    background: #0eabeb08;
+    border-radius: 30px;
+    padding: 14px 20px;
+    border: 0.3px solid #d9d9d9;
+    display: inline-flex;
     .breadcrumb-item {
       font-size: 18px;
       &.active {
@@ -29,7 +34,7 @@
   .search-container {
     position: relative;
     width: 335px;
-    background-color: $color9;
+    background-color: transparent;
     display: flex;
     align-items: center;
 
@@ -246,6 +251,10 @@
 }
 
 .patient-details-page {
+  background-color: $color1;
+  border-radius: 15px;
+  margin-top: 30px;
+  padding: 40px;
   .patient-details-title {
     font-weight: 700;
     font-size: 26px;
@@ -337,6 +346,12 @@
             height: 40px;
         }
     }
+  }
+}
+
+@media (max-width: 992px) {
+  .patient-details-page {
+    padding: 0;
   }
 }
 

@@ -74,7 +74,7 @@ const PatientDetails = () => {
     },
   ];
 
-  const noNotificationImage = "./assets/images/no-notification.png";
+  const noNotificationImage = "/assets/images/no-notification.png";
 
   const patientInfo = {
     name: "Marcus Philips",
@@ -166,7 +166,7 @@ const PatientDetails = () => {
                     <li className="breadcrumb-item">
                       <a href="#">
                         <img
-                          src="./assets/images/home-2.svg"
+                          src="/assets/images/home-2.svg"
                           alt="Home"
                           className="breadcrumb-icon"
                         />
@@ -189,7 +189,7 @@ const PatientDetails = () => {
                     placeholder="Quick Search"
                   />
                   <img
-                    src="./assets/images/search.svg"
+                    src="/assets/images/search.svg"
                     alt="search"
                     className="search-icon"
                   />
@@ -213,7 +213,7 @@ const PatientDetails = () => {
                   <div className="d-flex align-items-center justify-content-center">
                     <button className="btn" onClick={toggleSearch}>
                       <img
-                        src="./assets/images/search.svg"
+                        src="/assets/images/search.svg"
                         alt="search"
                         className="search-icon"
                       />
@@ -232,7 +232,7 @@ const PatientDetails = () => {
                         className="notification-toggle"
                       >
                         <img
-                          src="./assets/images/notification-bing.svg"
+                          src="/assets/images/notification-bing.svg"
                           alt="Notification Icon"
                           className="img-fluid"
                         />
@@ -250,7 +250,7 @@ const PatientDetails = () => {
                               className="notification-item d-flex align-items-start"
                             >
                               <img
-                                src={`./assets/images/${notification.icon}`}
+                                src={`/assets/images/${notification.icon}`}
                                 alt={notification.title}
                                 className="notification-icon"
                               />
@@ -278,7 +278,7 @@ const PatientDetails = () => {
                       <Dropdown.Toggle variant="link" id="dropdown-user">
                         <div className="d-flex align-items-center">
                           <img
-                            src="./assets/images/profile.png"
+                            src="/assets/images/profile.png"
                             alt="Lincoln Philips"
                             className="profile-pic img-fluid"
                           />
@@ -305,7 +305,7 @@ const PatientDetails = () => {
                       className="notification-toggle"
                     >
                       <img
-                        src="./assets/images/notification-bing.svg"
+                        src="/assets/images/notification-bing.svg"
                         alt="Notification Icon"
                         className="img-fluid"
                       />
@@ -323,7 +323,7 @@ const PatientDetails = () => {
                             className="notification-item d-flex align-items-start"
                           >
                             <img
-                              src={`./assets/images/${notification.icon}`}
+                              src={`/assets/images/${notification.icon}`}
                               alt={notification.title}
                               className="notification-icon"
                             />
@@ -351,7 +351,7 @@ const PatientDetails = () => {
                     <Dropdown.Toggle variant="link" id="dropdown-user">
                       <div className="d-flex align-items-center">
                         <img
-                          src="./assets/images/profile.png"
+                          src="/assets/images/profile.png"
                           alt="Lincoln Philips"
                           className="profile-pic img-fluid"
                         />

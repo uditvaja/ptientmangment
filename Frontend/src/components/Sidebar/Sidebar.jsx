@@ -18,43 +18,93 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
         </div>
         <ul className="nav flex-column">
           <li className="nav-item">
-            <Link to={"/"}  className={`nav-link nav-links-1 ${activeLink === '/adminProfile' || activeLink === '/' ? 'active' : ''}`}>
+            <Link
+              to={"/"}
+              className={`nav-link nav-links-1 ${
+                activeLink === "/adminProfile" || activeLink === "/"
+                  ? "active"
+                  : ""
+              }`}
+            >
               Dashboard
             </Link>
           </li>
           <li className="nav-item">
-            <Link to={"/doctor-management"} className={`nav-link nav-links-2 ${activeLink === '/doctor-management' ? 'active' : ''}`}>
+            <Link
+              to={"/doctor-management"}
+              className={`nav-link nav-links-2 ${
+                activeLink === "/doctor-management" ? "active" : ""
+              }`}
+            >
               Doctor Management
             </Link>
           </li>
           <li className="nav-item">
-            <Link to={"/patient-management"} className={`nav-link nav-links-3 ${activeLink === '/patient-management' ? 'active' : ''}`}>
+            <Link
+              to={"/patient-management"}
+              className={`nav-link nav-links-3 ${
+                activeLink === "/patient-management" ? "active" : ""
+              }`}
+            >
               Patient Management
             </Link>
           </li>
           <li className="nav-item">
             <Link
-              className={`nav-link nav-links-4 collapsed ${activeLink.includes('/billing') ? 'active' : ''}`}
+              className={`nav-link nav-links-3 collapsed ${
+                activeLink.includes("/billing/") ? "active" : ""
+              }`}
               to={"#billing"}
               data-bs-toggle="collapse"
               aria-expanded="false"
             >
-              Billing and Payments
+              Prescription Tools
             </Link>
-            <ul id="billing" className="collapse">
+            <ul
+              id="billing"
+              className={`collapse ${
+                activeLink.includes("/billing/") ? "show" : ""
+              }`}
+            >
               <li>
-              <Link to={"/billing/monitor-billing"} className="nav-link">Monitor Billing</Link>
+                <Link
+                  to={"/billing/monitor-billing"}
+                  className={`nav-link ${
+                    activeLink === "/billing/monitor-billing" ? "active" : ""
+                  }`}
+                >
+                  Monitor Billing
+                </Link>
               </li>
               <li>
-              <Link to={"/billing/insurance-claims"} className="nav-link">Insurance Claims</Link>
+                <Link
+                  to={"/billing/insurance-claims"}
+                  className={`nav-link ${
+                    activeLink === "/billing/insurance-claims" ? "active" : ""
+                  }`}
+                >
+                  Insurance Claims
+                </Link>
               </li>
               <li>
-              <Link to={"/billing/payment-process"} className="nav-link">Payment Process</Link>
+                <Link
+                  to={"/billing/payment-process"}
+                  className={`nav-link ${
+                    activeLink === "/billing/payment-process" ? "active" : ""
+                  }`}
+                >
+                  Payment Process
+                </Link>
               </li>
             </ul>
           </li>
           <li className="nav-item">
-            <Link to={"/analytics"} className={`nav-link nav-links-5 ${activeLink === '/analytics' ? 'active' : ''}`}>
+            <Link
+              to={"/analytics"}
+              className={`nav-link nav-links-5 ${
+                activeLink === "/analytics" ? "active" : ""
+              }`}
+            >
               Reporting and Analytics
             </Link>
           </li>

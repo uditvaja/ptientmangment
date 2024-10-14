@@ -1,19 +1,70 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientMeetingConference.scss";
-import { useLocation } from "react-router-dom";
-import { Dropdown } from "react-bootstrap";
-import DoctorSidebar from "../DoctorSidebar/DoctorSidebar";
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { Button, Dropdown, Form, Modal, Tab, Tabs } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./DoctorTeleconsultation.scss";
+import DoctorSidebar from "../../components/DoctorSidebar/DoctorSidebar";
 
-const PatientMeetingConference = () => {
+const CustomDateRangeSelector = ({
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
+}) => {
+  const formatDate = (date) => {
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const resetDates = () => {
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  return (
+    <div className="custom-date-selector">
+      <DatePicker
+        selectsRange={true}
+        startDate={startDate}
+        endDate={endDate}
+        onChange={(update) => {
+          const [start, end] = update;
+          setStartDate(start);
+          setEndDate(end);
+        }}
+        isClearable={false}
+        customInput={
+          <Form.Control as="button" className="date-range-button">
+            {startDate && endDate
+              ? `${formatDate(startDate)} - ${formatDate(endDate)}`
+              : "Select Date Range"}
+          </Form.Control>
+        }
+      />
+      {startDate && endDate && (
+        <Button variant="link" className="reset-dates-btn" onClick={resetDates}>
+          <img src="./assets/images/cross-icon.svg" alt="Reset" />
+        </Button>
+      )}
+    </div>
+  );
+};
+
+const DoctorTeleconsultation = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const localVideoRef = useRef(null);
-  const remoteVideoRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [startDate, setStartDate] = useState(new Date("2022-01-02"));
+  const [endDate, setEndDate] = useState(new Date("2022-01-13"));
 
   const sidebarRef = useRef(null);
   const location = useLocation();
-
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -44,50 +95,6 @@ const PatientMeetingConference = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  const initZegoCloudMeeting = async (element) => {
-    const appID = 1300643029;
-    const serverSecret = "6a96061db83de617391c972a69979191";
-
-    const roomID = "sample_room";
-    const userID = "1";
-    const userName = "Lincoln Philips";
-
-    const kitToken =  ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID,  Date.now().toString(),  userName);
-    const zp = ZegoUIKitPrebuilt.create(kitToken);
-
-    zp.joinRoom({
-      container: element,
-      sharedLinks: [
-        {
-          name: 'Personal link',
-          url:
-           window.location.protocol + '//' + 
-           window.location.host + window.location.pathname +
-            '?roomID=' +
-            roomID,
-        },
-      ],
-      roomID: roomID,
-      userID: userID,
-      userName: userName,
-      scenario: {
-        mode: ZegoUIKitPrebuilt.OneONoneCall,
-      },
-      onUserAvatarSetter:(userList) => {
-        userList.forEach(user => {
-            user.setUserAvatar("/assets/images/Avatar-2.png")
-        })
-    }, 
-    });
-  };
-
-  useEffect(() => {
-    const videoCallDiv = document.getElementById('video-call-container');
-    if (videoCallDiv) {
-      initZegoCloudMeeting(videoCallDiv);
-    }
-  }, []);
 
   const notifications = [
     {
@@ -121,6 +128,187 @@ const PatientMeetingConference = () => {
   ];
 
   const noNotificationImage = "/assets/images/no-notification.png";
+
+  const handleJoinClick = (appointment) => {
+    setSelectedAppointment(appointment);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedAppointment(null);
+  };
+
+  const handleVideoModalNavigate = () => {
+    navigate("/patientMeetingConference")
+  }
+
+  const appointments = [
+    {
+      name: "Ryan Vetrovs",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Marcus Septimus",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Alfonso Dokidis",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Davis Korsgaard",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Ryan Botosh",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Nolan Dias",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Ahmad Arcand",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Wilson Arcand",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Jaylon Korsgaard",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Abram Stanton",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "James Saris",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      name: "Leo Lipshutz",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+  ];
+
+  const renderAppointmentCard = (appointment) => (
+    <div className="appointment-card">
+      <h3>{appointment.name}</h3>
+      <div className="appointment-card-details">
+        <div className="row">
+          <div className="col-6">
+            <p className="appo-card-details-title">Patient Issue</p>
+            <p className="appo-card-details-title">Disease Name</p>
+            <p className="appo-card-details-title">Appointment Date</p>
+            <p className="appo-card-details-title">Appointment Time</p>
+          </div>
+          <div className="col-6 text-end">
+            <p>{appointment.issue}</p>
+            <p>{appointment.disease}</p>
+            <p>{appointment.date}</p>
+            <p>{appointment.time}</p>
+          </div>
+        </div>
+        <div className="d-flex justify-content-between mt-3">
+          <button type="button" className="join-call-btn" onClick={() => handleJoinClick(appointment)}>
+            <img src="/assets/images/call-calling.svg" alt="call-calling" className="img-fluid me-2" /> Join Call
+          </button>
+          <button type="button" className="reschedule-btn">
+          <img src="/assets/images/Reschedule.svg" alt="Reschedule" className="img-fluid me-2" /> Reschedule
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAppointmentList = () => (
+    <div className="appointment-list">
+      <div className="row">
+        {appointments.map((appointment, index) => (
+          <div className="col-lg-3 col-md-6 col-12 mb-4" key={index}>
+            {renderAppointmentCard(appointment)}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const ReminderModal = ({ show, onHide, appointment }) => (
+    <Modal show={show} onHide={onHide} centered className="reminder-modal">
+      <Modal.Body>
+        <h5 className="reminder-title">Reminder</h5>
+        <div className="reminder-content">
+            <div className="meet-box">
+                <img src="/assets/images/appointment-yellow.svg" alt="appointment-yellow" className="img-fluyid me-2" /> This patient wants to meet you
+            </div>
+          <div className="row mb-2">
+            <div className="col-6"><p className="reminder-modal-title">Patient Name</p></div>
+            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.name}</p></div>
+          </div>
+          <div className="row mb-2">
+            <div className="col-6"><p className="reminder-modal-title">Patient Issue</p></div>
+            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.issue}</p></div>
+          </div>
+          <div className="row mb-2">
+            <div className="col-6"><p className="reminder-modal-title">Disease Name</p></div>
+            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.disease}</p></div>
+          </div>
+          <div className="row mb-2">
+            <div className="col-6"><p className="reminder-modal-title">Appointment Time</p></div>
+            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.time}</p></div>
+          </div>
+        </div>
+        <div className="d-flex justify-content-end mt-3">
+          <button type="button" onClick={onHide} className="cancle-btn me-2">
+            Cancel
+          </button>
+          <button type="button" onClick={handleVideoModalNavigate} className="join-btn">
+            Join
+          </button>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -147,7 +335,7 @@ const PatientMeetingConference = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Teleconsultation Module
+                      Appointment Booking
                     </li>
                   </ol>
                 </nav>
@@ -343,20 +531,87 @@ const PatientMeetingConference = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid meeting-conference-page py-4">
-          <h4 className="meeting-conference-title">
-            Patient Meeting Conference
-          </h4>
-
-          <div
-            id="video-call-container"
-            className="video-call-container"
-            style={{ width: '100%', height: '100vh', backgroundColor: '#718EBF' }}
-          ></div>
+        <div className="container-fluid doctor-teleconsultation-page py-4">
+          <Tabs
+            defaultActiveKey="doctorscheduledappointment"
+            id="uncontrolled-tab-example"
+            className="mb-3"
+          >
+            <Tab
+              eventKey="doctorscheduledappointment"
+              title="Today Appointment"
+            >
+              <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
+                <h2 className="doctorteleconsultation-title">
+                  Today Appointment
+                </h2>
+                <CustomDateRangeSelector
+                  startDate={startDate}
+                  endDate={endDate}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                />
+              </div>
+              {renderAppointmentList()}
+            </Tab>
+            <Tab
+              eventKey="doctorupcomingappointment"
+              title="Upcoming Appointment"
+            >
+              <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
+                <h2 className="doctorteleconsultation-title">
+                  Upcoming Appointment
+                </h2>
+                <CustomDateRangeSelector
+                  startDate={startDate}
+                  endDate={endDate}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                />
+              </div>
+              {renderAppointmentList()}
+            </Tab>
+            <Tab
+              eventKey="doctorpreviousappointment"
+              title="Previous Appointment"
+            >
+              <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
+                <h2 className="doctorteleconsultation-title">
+                  Previous Appointment
+                </h2>
+                <CustomDateRangeSelector
+                  startDate={startDate}
+                  endDate={endDate}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                />
+              </div>
+              {renderAppointmentList()}
+            </Tab>
+            <Tab eventKey="doctorcancelappointment" title="Cancel Appointment">
+              <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
+                <h2 className="doctorteleconsultation-title">
+                  Cancel Appointment
+                </h2>
+                <CustomDateRangeSelector
+                  startDate={startDate}
+                  endDate={endDate}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                />
+              </div>
+              {renderAppointmentList()}
+            </Tab>
+          </Tabs>
         </div>
       </div>
+      <ReminderModal 
+        show={showModal} 
+        onHide={handleCloseModal} 
+        appointment={selectedAppointment}
+      />
     </div>
   );
 };
 
-export default PatientMeetingConference;
+export default DoctorTeleconsultation;

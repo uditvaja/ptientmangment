@@ -8,7 +8,7 @@
   .search-container {
     position: relative;
     width: 335px;
-    background-color: $color9;
+    background-color: transparent;
     display: flex;
     align-items: center;
 
@@ -134,7 +134,10 @@
 }
 
 .dashboard-main {
-  padding: 20px;
+  background-color: $color1;
+  border-radius: 15px;
+  margin-top: 30px;
+  padding: 40px;
 }
 
 .stat-card-1 {
@@ -307,7 +310,7 @@
   margin-top: 30px;
   border-radius: 10px;
   background-color: $color1;
-  border: 1px solid #f4f4f4;
+  border: none;
 
   .appo-title {
     font-weight: 600;
@@ -553,6 +556,10 @@
     .breadcrumb {
       margin-bottom: 10px;
     }
+  }
+
+  .dashboard-main {
+    padding: 0;
   }
 }
 

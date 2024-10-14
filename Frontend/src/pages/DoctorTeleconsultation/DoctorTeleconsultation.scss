@@ -1,4 +1,4 @@
-@import "../css/variables.scss";
+@import "../../css/variables.scss";
 
 .profile-header {
   background-color: #fff;
@@ -250,280 +250,267 @@
   }
 }
 
-.doctor-appointmenttime-page {
-  .doctor-appointmenttime-title {
+.doctor-teleconsultation-page {
+  background-color: $color1;
+  border-radius: 15px;
+  margin-top: 30px;
+  padding: 40px;
+  .nav-tabs {
+    border: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    width: 100%;
+    .nav-link {
+      display: inline-block;
+      font-weight: 400;
+      font-size: 14px;
+      color: #667080;
+      &.active {
+        font-weight: 400;
+        font-size: 14px;
+        color: $color2;
+        border: none;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom: 3px solid $color2;
+      }
+    }
+  }
+
+  .doctorteleconsultation-title {
     font-weight: 700;
     font-size: 26px;
     color: $color15;
   }
 
-  .doctor-schedule-table {
-    .date-selection {
+  .custom-date-selector {
+    position: relative;
+    display: inline-block;
+
+    .date-range-button {
+      background-color: $color1;
+      border: 1px solid #d3d3d3;
+      border-radius: 10px;
+      padding: 8px 14px;
+      text-align: left;
+      width: auto;
+      min-width: 278px;
       font-weight: 600;
-      font-size: 18px;
-      color: $color2;
+      font-size: 17px;
+      color: $color10;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        box-shadow: none;
+      }
     }
-    .calendar-container {
-      .calendar-table {
-        .text-blue {
-          font-weight: 500;
-          font-size: 16px;
-          color: $color2;
-        }
-        thead {
-          tr {
-            th {
-              font-weight: 600;
-              font-size: 16px;
-              color: $color10;
-            }
-            .text-blue-head {
-              font-weight: 700;
-              font-size: 16px;
-              color: $color2;
-            }
-          }
-        }
-        tbody {
-          tr {
-            td {
-              font-weight: 500;
-              font-size: 13px;
-              color: $color7;
-            }
-          }
-        }
+
+    .reset-dates-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0;
+      background: none;
+      border: none;
+
+      img {
+        width: 24px;
+        height: 24px;
       }
     }
   }
-}
 
-.doctor-custom-modal {
-  .modal-content {
-    border-radius: 15px;
-    box-shadow: 0px 0px 40px 0px #00000026;
-  }
+  .appointment-list {
+    .appointment-card {
+      background-color: #f8f9fa;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
 
-  .modal-header {
-    border-bottom: 1px solid #d9d9d9;
-    padding-bottom: 0;
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
 
-    .modal-title {
-      font-weight: 700;
-      font-size: 24px;
-      color: #030229;
-      margin-bottom: 15px;
-    }
-    .btn-close {
-      margin-bottom: 15px;
-      background-color: $color12;
-      border-radius: 50%;
-      --bs-btn-close-opacity: 1;
-    }
-  }
-
-  .modal-body {
-    padding-top: 25px;
-    .appo-date {
-      margin-bottom: 25px;
-      span {
-        font-weight: 400;
-        font-size: 16px;
+      h3 {
+        padding: 20px 15px 0;
+        font-weight: 600;
+        font-size: 18px;
+        margin-bottom: 15px;
         color: $color15;
       }
+
+      .appointment-card-details {
+        background-color: $color1;
+        padding: 15px;
+        border: 1px solid #f4f4f4;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+
+        .appo-card-details-title {
+          font-weight: 400;
+          font-size: 16px;
+          color: $color4;
+        }
+
+        p {
+          font-weight: 700;
+          font-size: 16px;
+          color: $color5;
+        }
+      }
+
+      .join-call-btn,
+      .reschedule-btn {
+        font-weight: 600;
+        font-size: 18px;
+        color: $color1;
+        width: 163px;
+        height: 48px;
+        border-radius: 10px;
+      }
+
+      .join-call-btn {
+        background-color: $color11;
+        border-color: $color11;
+
+        &:hover {
+          background-color: #218838;
+          border-color: #1e7e34;
+        }
+      }
+
+      .reschedule-btn {
+        background-color: $color2;
+        border-color: $color2;
+
+        &:hover {
+          background-color: #138496;
+          border-color: #117a8b;
+        }
+      }
     }
   }
 
-  .form-floating {
-    position: relative;
-    margin-bottom: 40px;
-
-    > label {
-      position: absolute;
-      top: -17px;
-      left: 17px;
-      font-weight: 500;
-      font-size: 16px;
-      color: $color15;
-    }
-
-    > .form-control,
-    > .custom-select {
-      padding: 13px 14px;
-    }
-  }
-
-  .modal-footer {
-    border-top: none;
-    justify-content: space-between;
-    padding-top: 0;
-    margin-top: 10px;
-    .cancel-btn {
-      width: 223px;
-      height: 48px;
-      border: none;
-      background-color: $color12;
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-weight: 600;
-      font-size: 18px;
-      color: $color1;
-      transition: all 0.5s;
-    }
-    .edit-btn {
-      width: 223px;
-      height: 48px;
-      background: $color11;
-      border: none;
-      border-radius: 10px;
-      margin-right: 15px;
-      padding: 12px 14px;
-      font-weight: 600;
-      font-size: 18px;
-      color: $color1;
-      transition: all 0.5s;
+  @media (max-width: 767px) {
+    .appointment-card {
+      margin-bottom: 20px;
     }
   }
 }
 
-.doctor-edit-modal {
+.reminder-modal {
   .modal-content {
     border-radius: 10px;
+    border: none;
   }
 
-  .modal-header {
-    border-bottom: none;
-    padding: 20px 20px 0;
-
-    .modal-title {
-      font-weight: bold;
-    }
-  }
-
-  .modal-body {
-    padding: 20px;
-
-    .form-label {
-      font-weight: 500 !important;
-      font-size: 16px !important;
-      color: $color15 !important;
-    }
-
-    .form-floating {
-      position: relative;
-      margin-bottom: 40px;
-
-      > .form-select {
-        border-radius: 10px;
-        border: 1px solid #a7a7a7;
-        padding-top: 0.625rem;
-        padding-bottom: 0.625rem;
-      }
-
-      > label {
-        position: absolute;
-        top: -17px;
-        left: 17px;
-        font-weight: 500;
-        font-size: 16px;
-        color: $color15;
-      }
-    }
-
-    textarea {
-      border: 1px solid #a7a7a7;
-      border-radius: 10px;
-    }
-  }
-
-  .modal-footer {
-    border-top: none;
-    .cancel-btn {
-      width: 223px;
-      height: 48px;
-      border: none;
-      background-color: $color12;
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-weight: 600;
-      font-size: 18px;
-      color: $color1;
-      transition: all 0.5s;
-    }
-    .save-btn {
-      width: 223px;
-      height: 48px;
-      background: $color2;
-      border: none;
-      border-radius: 10px;
-      margin-right: 15px;
-      padding: 12px 14px;
-      font-weight: 600;
-      font-size: 18px;
-      color: $color1;
-      transition: all 0.5s;
-    }
-  }
-}
-
-.doctor-delete-modal {
-  .delete-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 20px;
-  }
-  .red-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: $color12;
-    width: 100%;
-    height: 10px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 15px;
-  }
   .modal-body {
     padding: 0;
   }
 
-  h4 {
-    font-weight: 800;
-    font-size: 24px;
+  .reminder-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
     color: $color15;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #F4F4F4;
   }
 
-  p {
-    font-weight: 400;
-    font-size: 16px;
-    color: $color5;
-    margin-bottom: 20px;
+  .reminder-content {
+    margin-bottom: 15px;
+
+    .meet-box {
+      background-color: #ffc3131c;
+      border-radius: 5px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      font-size: 14px;
+      color: $color14;
+    }
+
+    .reminder-modal-title {
+      font-weight: 400;
+      font-size: 16px;
+      color: $color5;
+    }
+
+    .reminder-modal-text {
+      font-weight: 400;
+      font-size: 16px;
+      color: $color15;
+    }
   }
 
-  .cancel-btn {
+  .cancle-btn {
     width: 223px;
     height: 48px;
-    border: none;
-    background-color: $color12;
+    border: 1px solid #d3d3d3;
+    background-color: $color1;
     border-radius: 10px;
     padding: 12px 14px;
+    margin-right: 15px;
     font-weight: 600;
     font-size: 18px;
-    color: $color1;
+    color: $color10;
     transition: all 0.5s;
+    &:hover {
+      background: $color12;
+      color: $color1;
+    }
   }
-  .save-btn {
+  .join-btn {
     width: 223px;
     height: 48px;
     background: $color2;
     border: none;
     border-radius: 10px;
-    margin-right: 15px;
     padding: 12px 14px;
     font-weight: 600;
     font-size: 18px;
     color: $color1;
     transition: all 0.5s;
+    &:hover {
+      background: #f6f8fb;
+      color: $color5;
+    }
+  }
+}
+
+// Override react-datepicker styles
+.react-datepicker-popper {
+  z-index: 9999 !important;
+}
+
+.react-datepicker {
+  font-family: inherit;
+  border-radius: 10px;
+  border: 1px solid #ced4da;
+}
+
+.react-datepicker__header {
+  background-color: $color9;
+  border-bottom: 1px solid #ced4da;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background-color: $color2;
+  font-weight: 600;
+  border-radius: 10px;
+  color: $color1;
+}
+
+@media (max-width: 992px) {
+  .doctor-teleconsultation-page {
+    padding: 0;
   }
 }
 

@@ -7,6 +7,11 @@
 
   .breadcrumb {
     margin-bottom: 0;
+    background: #0eabeb08;
+    border-radius: 30px;
+    padding: 14px 20px;
+    border: 0.3px solid #d9d9d9;
+    display: inline-flex;
     .breadcrumb-item {
       font-size: 18px;
       &.active {
@@ -29,7 +34,7 @@
   .search-container {
     position: relative;
     width: 335px;
-    background-color: $color9;
+    background-color: transparent;
     display: flex;
     align-items: center;
 
@@ -246,6 +251,10 @@
 }
 
 .doctor-record-page {
+  background-color: $color1;
+  border-radius: 15px;
+  margin-top: 30px;
+  padding: 40px;
   .doctor-record-title {
     font-weight: 700;
     font-size: 26px;
@@ -255,7 +264,7 @@
   .doctor-record-search-container {
     position: relative;
     width: 335px;
-    background-color: $color9;
+    background-color: transparent;
     display: flex;
     align-items: center;
 
@@ -294,27 +303,28 @@
 
   .doctor-record-dropdown {
     .dropdown-toggle {
-        border-radius: 10px;
-        border: 1px solid #D3D3D3;
-        padding: 12px 30px;
-        font-weight: 600;
-        font-size: 17px;
-        color: $color10;
+      border-radius: 10px;
+      border: 1px solid #d3d3d3;
+      padding: 12px 30px;
+      font-weight: 600;
+      font-size: 17px;
+      color: $color10;
     }
     .dropdown-menu {
-        background-color: $color1;
-        box-shadow: 0px 0px 35.6px 0px #00000014;
-        border-radius: 10px;
-        .dropdown-item {
-            font-weight: 600;
-            font-size: 16px;
-            color: $color5;
-        }
+      background-color: $color1;
+      box-shadow: 0px 0px 35.6px 0px #00000014;
+      border-radius: 10px;
+      .dropdown-item {
+        font-weight: 600;
+        font-size: 16px;
+        color: $color5;
+      }
     }
   }
 
   .patient-table {
-    th, td {
+    th,
+    td {
       vertical-align: middle;
     }
 
@@ -325,13 +335,13 @@
     }
 
     td {
-        font-weight: 700;
-        font-size: 17px;
-        color: $color5;
+      font-weight: 700;
+      font-size: 17px;
+      color: $color5;
     }
 
     .lastAppointmentTime {
-        color: $color3;
+      color: $color3;
     }
 
     .btn-link {
@@ -343,13 +353,20 @@
     }
   }
 
-  .form-control, .dropdown-toggle {
+  .form-control,
+  .dropdown-toggle {
     border-color: #e9ecef;
   }
 
   .dropdown-toggle {
     background-color: $color1;
     color: #6c757d;
+  }
+}
+
+@media (max-width: 992px) {
+  .doctor-record-page {
+    padding: 0;
   }
 }
 
@@ -362,5 +379,9 @@
   .profile-header .search-container {
     width: 100% !important;
     margin-bottom: 0px;
+  }
+
+  .doctor-record-page .doctor-record-search-container {
+    width: 200px;
   }
 }

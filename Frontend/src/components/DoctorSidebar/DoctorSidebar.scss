@@ -8,6 +8,7 @@
   left: 0;
   top: 0;
   overflow: hidden;
+  z-index: 9;
   transition: all 0.5s;
 
   @media (max-width: 992px) {
@@ -312,6 +313,10 @@
         font-size: 14px;
         color: $color4;
         &:hover {
+          color: $color2;
+        }
+        &.active {
+          background: transparent;
           color: $color2;
         }
       }

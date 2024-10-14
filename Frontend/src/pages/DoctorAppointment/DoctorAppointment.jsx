@@ -89,7 +89,7 @@ const DoctorAppointment = () => {
     },
   ];
 
-  const noNotificationImage = "./assets/images/no-notification.png";
+  const noNotificationImage = "/assets/images/no-notification.png";
 
   const [appointments, setAppointments] = useState([
     {
@@ -201,7 +201,7 @@ const DoctorAppointment = () => {
                     <li className="breadcrumb-item">
                       <a href="#">
                         <img
-                          src="./assets/images/home-2.svg"
+                          src="/assets/images/home-2.svg"
                           alt="Home"
                           className="breadcrumb-icon"
                         />
@@ -221,7 +221,7 @@ const DoctorAppointment = () => {
                     placeholder="Quick Search"
                   />
                   <img
-                    src="./assets/images/search.svg"
+                    src="/assets/images/search.svg"
                     alt="search"
                     className="search-icon"
                   />
@@ -245,7 +245,7 @@ const DoctorAppointment = () => {
                   <div className="d-flex align-items-center justify-content-center">
                     <button className="btn" onClick={toggleSearch}>
                       <img
-                        src="./assets/images/search.svg"
+                        src="/assets/images/search.svg"
                         alt="search"
                         className="search-icon"
                       />
@@ -264,7 +264,7 @@ const DoctorAppointment = () => {
                         className="notification-toggle"
                       >
                         <img
-                          src="./assets/images/notification-bing.svg"
+                          src="/assets/images/notification-bing.svg"
                           alt="Notification Icon"
                           className="img-fluid"
                         />
@@ -282,7 +282,7 @@ const DoctorAppointment = () => {
                               className="notification-item d-flex align-items-start"
                             >
                               <img
-                                src={`./assets/images/${notification.icon}`}
+                                src={`/assets/images/${notification.icon}`}
                                 alt={notification.title}
                                 className="notification-icon"
                               />
@@ -310,7 +310,7 @@ const DoctorAppointment = () => {
                       <Dropdown.Toggle variant="link" id="dropdown-user">
                         <div className="d-flex align-items-center">
                           <img
-                            src="./assets/images/profile.png"
+                            src="/assets/images/profile.png"
                             alt="Lincoln Philips"
                             className="profile-pic img-fluid"
                           />
@@ -337,7 +337,7 @@ const DoctorAppointment = () => {
                       className="notification-toggle"
                     >
                       <img
-                        src="./assets/images/notification-bing.svg"
+                        src="/assets/images/notification-bing.svg"
                         alt="Notification Icon"
                         className="img-fluid"
                       />
@@ -355,7 +355,7 @@ const DoctorAppointment = () => {
                             className="notification-item d-flex align-items-start"
                           >
                             <img
-                              src={`./assets/images/${notification.icon}`}
+                              src={`/assets/images/${notification.icon}`}
                               alt={notification.title}
                               className="notification-icon"
                             />
@@ -383,7 +383,7 @@ const DoctorAppointment = () => {
                     <Dropdown.Toggle variant="link" id="dropdown-user">
                       <div className="d-flex align-items-center">
                         <img
-                          src="./assets/images/profile.png"
+                          src="/assets/images/profile.png"
                           alt="Lincoln Philips"
                           className="profile-pic img-fluid"
                         />
@@ -414,25 +414,25 @@ const DoctorAppointment = () => {
               eventKey="doctorscheduledappointment"
               title="Today Appointment"
             >
-              <div className="d-flex justify-content-between align-items-center mb-3">
+              <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center mb-3">
                 <h2 className="doctorAppointment-title">Today Appointment</h2>
-                <div className="d-flex align-items-center">
-                  <div className="today-search-container me-2">
+                <div className="d-flex align-items-center flex-lg-row flex-column">
+                  <div className="today-search-container me-2 mt-lg-0 mt-2">
                     <input
                       type="text"
                       placeholder="Search Patient"
                       className="form-control"
                     />
                     <img
-                      src="./assets/images/search.svg"
+                      src="/assets/images/search.svg"
                       alt="search"
                       className="search-icon"
                     />
                   </div>
-                  <button type="button"  onClick={() => setShowDateRangeModal(true)} className="calendar-btn me-2">
+                  <button type="button"  onClick={() => setShowDateRangeModal(true)} className="calendar-btn me-2 mt-lg-0 mt-2">
                     <Calendar size={16} /> Any Date
                   </button>
-                  <button type="button" className="clock-btn">
+                  <button type="button" className="clock-btn mt-lg-0 mt-2">
                     <Clock size={16} /> Appointment Time Slot
                   </button>
                 </div>
@@ -455,7 +455,7 @@ const DoctorAppointment = () => {
                       className="form-control"
                     />
                     <img
-                      src="./assets/images/search.svg"
+                      src="/assets/images/search.svg"
                       alt="search"
                       className="search-icon"
                     />
@@ -486,7 +486,7 @@ const DoctorAppointment = () => {
                       className="form-control"
                     />
                     <img
-                      src="./assets/images/search.svg"
+                      src="/assets/images/search.svg"
                       alt="search"
                       className="search-icon"
                     />
@@ -512,7 +512,7 @@ const DoctorAppointment = () => {
                       className="form-control"
                     />
                     <img
-                      src="./assets/images/search.svg"
+                      src="/assets/images/search.svg"
                       alt="search"
                       className="search-icon"
                     />
