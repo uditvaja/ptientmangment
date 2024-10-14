@@ -30,10 +30,11 @@ if (error) {
 module.exports = {
   port: envVars.PORT,
   mongodb: {
-    url: "mongodb://localhost:27017/patient-management-system-app",
-    options: {
+    url: "mongodb+srv://vibhudemo1997:demo1234@cluster0.el1x5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    options: {  
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      ssl: true, 
     },
   },
   base_url: envVars.BASE_URL,
@@ -52,3 +53,4 @@ module.exports = {
     from: envVars.EMAIL_FROM,
   },
 };
+
