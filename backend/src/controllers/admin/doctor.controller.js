@@ -288,6 +288,28 @@ const listDoctorAdmin = async (req, res) => {
 const searchDoctorByAdmin = async (req, res) => {
   try {
     const { query } = req.query; // Get the search query from the request
+    const { adminId } = req.body; // Get the adminId from the request body
+
+    // Check if adminId is provided
+    if (!adminId) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Admin ID is required.",
+      });
+    }
+
+    // Check if the adminId exists in the database
+    const admin = await Admin.findById(adminId); // Assuming 'Admin' is your model for admins
+
+    // If admin is not found, return an error
+    if (!admin) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: "Admin not found.",
+      });
+    }
 
     // Check if query parameter is provided
     if (!query) {
@@ -304,13 +326,13 @@ const searchDoctorByAdmin = async (req, res) => {
     // Search for doctors based on the provided query
     const doctors = await Doctor.find({
       $or: [
-        { name: regex }, // Search by name
+        { firstName: regex }, // Search by name
         { specialistType: regex }, // Search by specialistType
         // Add more fields to search if needed
       ],
     })
-    .select('name gender qualification specialistType workingTime patientCheckUpTime breakTime image') // Select specific fields
-    .exec(); // Execute the query
+      .select('name gender qualification specialistType workingTime patientCheckUpTime breakTime image') // Select specific fields
+      .exec(); // Execute the query
 
     if (doctors.length === 0) {
       return res.status(404).json({
@@ -337,6 +359,7 @@ const searchDoctorByAdmin = async (req, res) => {
     });
   }
 };
+
 
 
 // list api doctors

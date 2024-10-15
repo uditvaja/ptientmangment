@@ -2,12 +2,26 @@ const AppointmentBook = require('../../models/bookAppointment.model');
 // const Appointment = require('../models/Appointment');
 const moment = require('moment-timezone');
 const Doctor = require('../../models/doctor.model');
+const Patient = require('../../models/patient.model');
 
 // Function to fetch today's appointments for a particular patient
 // Function to fetch today's appointments for a particular patient
 const getTodaysAppointmentsForPatient = async (req, res) => {
     try {
         const { patientId } = req.body; // Get the patientId from request body
+
+        // Check if patientId is provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'Patient ID is required.' });
+        }
+
+        // Check if the patientId exists in the database
+        const patient = await Patient.findById(patientId);  // Assuming 'Patient' is your model for patients
+
+        // If patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
+        }
 
         // Get today's date in 'YYYY-MM-DD' format
         const todayDate = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
@@ -17,8 +31,7 @@ const getTodaysAppointmentsForPatient = async (req, res) => {
             patientId,
             app_date: todayDate
         })
-        .populate('doctorId', 'firstName hospitalName')  // Populate doctor's first name
-        // .populate('hospitalId', 'hospitalName');  // Populate hospital's name
+        .populate('doctorId', 'firstName hospitalName');  // Populate doctor's first name and hospital
 
         if (!appointments || appointments.length === 0) {
             return res.status(404).json({ message: 'No appointments found for today.' });
@@ -31,14 +44,12 @@ const getTodaysAppointmentsForPatient = async (req, res) => {
 
             return {
                 appointmentType: appointment.appointmentType,
-                // hospitalName: appointment.hospitalId.hospitalName, // Populated hospital name
                 app_date: appointment.app_date,
                 startTime: formattedStartTime, // Showing in h:mm A (Indian format)
                 endTime: formattedEndTime,     // Showing in h:mm A (Indian format)
                 patient_issue: appointment.patient_issue,
-                doctorFirstName: appointment.doctorId.firstName ,// Populated doctor's first name
-                doctorHospitalName: appointment.doctorId.hospitalName // Populated doctor's first name
-
+                doctorFirstName: appointment.doctorId.firstName,  // Populated doctor's first name
+                doctorHospitalName: appointment.doctorId.hospitalName  // Populated doctor's hospital name
             };
         });
 
@@ -56,11 +67,23 @@ const getTodaysAppointmentsForPatient = async (req, res) => {
 };
 
 
+
 // Function to fetch appointments for a particular patient within a date range
 const getAppointmentsForPatientInRange = async (req, res) => {
     try {
         const { patientId, fromDate, toDate } = req.body; // Get patientId, fromDate, and toDate from request body
+   // Validate that patientId is provided
+   if (!patientId) {
+    return res.status(400).json({ message: 'Patient ID is required.' });
+}
 
+// Check if the patientId exists in the database
+const patient = await Patient.findById(patientId); // Assuming 'Patient' is your model for patients
+
+// If patient is not found, return an error
+if (!patient) {
+    return res.status(404).json({ message: 'Patient not found.' });
+}
         // Validate that fromDate and toDate are provided
         if (!fromDate || !toDate) {
             return res.status(400).json({ message: 'Both fromDate and toDate are required.' });
@@ -120,12 +143,24 @@ const getAppointmentsForPatientInRange = async (req, res) => {
 // Function to fetch all appointments for a particular patient with a specific doctor
 const getPatientAppointmentsWithDoctor = async (req, res) => {
     try {
-        const { doctorId } = req.body; // Get doctorId from request body
+        const { patientId, doctorId } = req.body; // Get patientId and doctorId from request body
 
-        // Validate that doctorId is provided
+        // Validate that both patientId and doctorId are provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'patientId is required.' });
+        }
         if (!doctorId) {
             return res.status(400).json({ message: 'doctorId is required.' });
         }
+
+        // Check if the patient exists in the database
+        const patient = await Patient.findById(patientId);
+
+        // If the patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
+        }
+
 
         // Find the doctor by doctorId and select the required fields
         const doctor = await Doctor.findById(doctorId).select('doctorname firstName gender image breakTime workingTime hospitalName qualification experience emergencyContactNumber description');
@@ -164,7 +199,20 @@ const getPatientAppointmentsWithDoctor = async (req, res) => {
 
 const getPreviousAppointmentsForPatient = async (req, res) => {
     try {
-        const { patientId } = req.body; // Get the patientId from the request body
+        const { patientId } = req.body; // Get the patientId from request body
+
+        // Check if patientId is provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'Patient ID is required.' });
+        }
+
+        // Check if the patientId exists in the database
+        const patient = await Patient.findById(patientId);  // Assuming 'Patient' is your model for patients
+
+        // If patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
+        }
 
         // Get today's date in 'YYYY-MM-DD' format
         const todayDate = moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
@@ -215,7 +263,18 @@ const getPreviousAppointmentsForPatient = async (req, res) => {
 const getPreviousAppointmentsForPatientInRange = async (req, res) => {
     try {
         const { patientId, fromDate, toDate } = req.body; // Get patientId, fromDate, and toDate from request body
-
+        // Validate that patientId is provided
+        if (!patientId) {
+         return res.status(400).json({ message: 'Patient ID is required.' });
+     }
+     
+     // Check if the patientId exists in the database
+     const patient = await Patient.findById(patientId); // Assuming 'Patient' is your model for patients
+     
+     // If patient is not found, return an error
+     if (!patient) {
+         return res.status(404).json({ message: 'Patient not found.' });
+     }
         // Validate that fromDate and toDate are provided
         if (!fromDate || !toDate) {
             return res.status(400).json({ message: 'Both fromDate and toDate are required.' });
@@ -282,11 +341,22 @@ const getPreviousAppointmentsForPatientInRange = async (req, res) => {
 // Function to fetch all appointments for a particular patient with a specific doctor
 const getPatientAppointmentsWithDoctorPrevious = async (req, res) => {
     try {
-        const { doctorId } = req.body; // Get doctorId from request body
+        const { patientId, doctorId } = req.body; // Get patientId and doctorId from request body
 
-        // Validate that doctorId is provided
+        // Validate that both patientId and doctorId are provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'patientId is required.' });
+        }
         if (!doctorId) {
             return res.status(400).json({ message: 'doctorId is required.' });
+        }
+
+        // Check if the patient exists in the database
+        const patient = await Patient.findById(patientId);
+
+        // If the patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
         }
 
         // Find the doctor by doctorId and select the required fields
@@ -325,7 +395,20 @@ const getPatientAppointmentsWithDoctorPrevious = async (req, res) => {
 
 const getCanceledAppointments = async (req, res) => {
     try {
-        const { patientId } = req.body; // Get patientId from the request body (optional)
+        const { patientId } = req.body; // Get the patientId from request body
+
+        // Check if patientId is provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'Patient ID is required.' });
+        }
+
+        // Check if the patientId exists in the database
+        const patient = await Patient.findById(patientId);  // Assuming 'Patient' is your model for patients
+
+        // If patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
+        }
 
         // Build the query for canceled appointments
         const query = { status: '0' };
@@ -374,11 +457,22 @@ const getCanceledAppointments = async (req, res) => {
 
 const getPatientAppointmentsWithDoctorcancel = async (req, res) => {
     try {
-        const { doctorId } = req.body; // Get doctorId from request body
+        const { patientId, doctorId } = req.body; // Get patientId and doctorId from request body
 
-        // Validate that doctorId is provided
+        // Validate that both patientId and doctorId are provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'patientId is required.' });
+        }
         if (!doctorId) {
             return res.status(400).json({ message: 'doctorId is required.' });
+        }
+
+        // Check if the patient exists in the database
+        const patient = await Patient.findById(patientId);
+
+        // If the patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
         }
 
         // Find the doctor by doctorId and select the required fields
@@ -486,6 +580,19 @@ const getPendingAppointments = async (req, res) => {
     try {
         const { fromDate, toDate, patientId } = req.body;
 
+        // Check if patientId is provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'patientId is required.' });
+        }
+
+        // Check if the patient exists in the database
+        const patient = await Patient.findById(patientId);
+
+        // If the patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
+        }
+
         // Build the query for pending appointments
         const query = {
             status: '0'  // Filter only pending appointments
@@ -550,11 +657,22 @@ const getPendingAppointments = async (req, res) => {
 
 const getPatientAppointmentsWithDoctorPending = async (req, res) => {
     try {
-        const { doctorId } = req.body; // Get doctorId from request body
+        const { patientId, doctorId } = req.body; // Get patientId and doctorId from request body
 
-        // Validate that doctorId is provided
+        // Validate that both patientId and doctorId are provided
+        if (!patientId) {
+            return res.status(400).json({ message: 'patientId is required.' });
+        }
         if (!doctorId) {
             return res.status(400).json({ message: 'doctorId is required.' });
+        }
+
+        // Check if the patient exists in the database
+        const patient = await Patient.findById(patientId);
+
+        // If the patient is not found, return an error
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
         }
 
         // Find the doctor by doctorId and select the required fields
@@ -594,8 +712,19 @@ const getPatientAppointmentsWithDoctorPending = async (req, res) => {
 
 const getPendingAppointmentsInRange = async (req, res) => {
     try {
-        const { fromDate, toDate } = req.body; // Get fromDate and toDate from the request body
+        const { patientId, fromDate, toDate } = req.body; // Get patientId, fromDate, and toDate from request body
+   // Validate that patientId is provided
+   if (!patientId) {
+    return res.status(400).json({ message: 'Patient ID is required.' });
+}
 
+// Check if the patientId exists in the database
+const patient = await Patient.findById(patientId); // Assuming 'Patient' is your model for patients
+
+// If patient is not found, return an error
+if (!patient) {
+    return res.status(404).json({ message: 'Patient not found.' });
+}
         // Validate that fromDate and toDate are provided
         if (!fromDate || !toDate) {
             return res.status(400).json({ message: 'Both fromDate and toDate are required.' });

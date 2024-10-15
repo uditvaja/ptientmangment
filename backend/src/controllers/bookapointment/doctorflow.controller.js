@@ -348,7 +348,9 @@ const createAppointmentNote = async (req, res) => {
     try {
         // Extract the appointmentId, app_date, doctorTimeSlot (app_time), and add_notes from the request body
         const { appointmentId, app_date, app_time, add_notes } = req.body;
-
+        if (!appointmentId) {
+            return res.status(404).json({ message: 'appointmentId is required.' });
+        }
         // Check if the appointment exists
         const appointment = await AppointmentBook.findById(appointmentId);
 

@@ -1,3 +1,4 @@
+const Admin = require("../../models/admin.model");
 const Doctor = require("../../models/doctor.model");
 const Patient = require("../../models/patient.model");
 
@@ -52,17 +53,36 @@ const searchDoctorAndPatientist = async (req, res) => {
     }
   };
 
-  const allDoctorList= async(req,res)=>{
+  const allDoctorList = async (req, res) => {
     try {
+      const { adminId } = req.body; // Get the adminId from request body
+  
+      // Check if adminId is provided
+      if (!adminId) {
+        return res.status(400).json({ message: 'Admin ID is required.' });
+      }
+  
+      // Check if the adminId exists in the database
+      const admin = await Admin.findById(adminId); // Assuming 'Admin' is your model for admins
+  
+      // If admin is not found, return an error
+      if (!admin) {
+        return res.status(404).json({ message: 'Admin not found.' });
+      }
+  
+      // If admin exists, proceed to fetch the doctor list
       const doctors = await Doctor.find();
-      res.status(200).json({success:true,doctors,message:'all doctor list is done'});
-  } catch (error) {
-      // console.error('Error fetching doctors:', error);
+  
+      // Send the doctor list with a success message
+      res.status(200).json({ success: true, doctors, message: 'All doctor list is done' });
+  
+    } catch (error) {
+      // Handle any errors during the fetching process
+      console.error('Error fetching doctors:', error);
       res.status(500).json({ message: 'Internal server error' });
-  }
-
-  }
-
+    }
+  };
+  
   module.exports = {
     searchDoctorAndPatientist,
     allDoctorList

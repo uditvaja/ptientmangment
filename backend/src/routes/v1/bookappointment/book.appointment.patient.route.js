@@ -2,25 +2,27 @@
 const express = require("express");
 const router = express.Router();
 const {   bookapointmentPatientController, doctorFlowAppointmentController } = require("../../../controllers");
-const authenticAdmin = require("../../../middlewares/patientAuth");
+const authenticPatient = require("../../../middlewares/patientAuth");
+const authenticDoctor = require("../../../middlewares/doctorAuth");
+
 
 
 
 router.post("/create-appointment-book",
-    // authenticAdmin, 
+    authenticPatient, 
     bookapointmentPatientController.bookAppointment);
 
     router.post("/create-notes-date-time",
-        // authenticAdmin, 
+        authenticDoctor, 
         doctorFlowAppointmentController.createAppointmentNote);
     
     
 router.post("/create-cancel-appointment",
-    // authenticAdmin, 
+    authenticDoctor, 
     bookapointmentPatientController.cancelAppointment);
 
     router.get("/docotr-list-by-id",
-        // authenticAdmin, 
+        authenticDoctor, 
         bookapointmentPatientController.doctorList);
 
         router.get("/appointment-previous",

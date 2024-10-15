@@ -3,6 +3,7 @@ const Doctor = require('../../models/doctor.model'); // Make sure to adjust the 
 const Patient = require("../../models/patient.model");
 const moment = require("moment-timezone");
 const AppointmentBook = require('../../models/bookAppointment.model'); // Adjust path as needed
+const Hospital = require('../../models/hospital.model');
 
 // Controller to handle booking an appointment
 
@@ -12,9 +13,27 @@ const bookAppointment = async (req, res) => {
         const { appointmentType, country, state, city, app_time, patient_issue, diseas_name, doctorId, hospitalId, patientId, app_date, specialist } = req.body;
 
         // Optional: Validate other required fields
-        if (!appointmentType || !country || !state || !city || !app_time) {
+        if (!appointmentType || !country || !state || !city || !app_time || !doctorId || !patientId || !hospitalId)  {
             return res.status(400).json({ message: 'All fields are required.' });
         }
+         
+            // Check if the doctor exists in the database
+            const doctor = await Doctor.findById(doctorId);
+            if (!doctor) {
+                return res.status(404).json({ message: 'Doctor not found.' });
+            }
+
+                // Check if the patient exists in the database
+                const patient  = await Patient.findById(patientId);
+                if (!patient) {
+                    return res.status(404).json({ message: 'patient not found.' });
+                }
+
+                   // Check if the hospital exists in the database
+                   const hospital  = await Hospital.findById(hospitalId);
+                   if (!hospital) {
+                       return res.status(404).json({ message: 'hospital not found.'});
+                   }
 
         // Ensure the date is parsed correctly by explicitly specifying the format
         const formattedAppDate = moment(app_date, "DD MMM YYYY", true).format("YYYY-MM-DD"); // For example, '11 Nov 2024'
@@ -82,13 +101,21 @@ const doctorList = async (req, res) => {
         // Extract doctorId from request parameters
         const { doctorId } = req.body;
         const { patientId } = req.body; // Assuming patientId comes from the request body
+       
+        if (!patientId || !doctorId) {
+            return res.status(404).json({ message: 'doctorId and patientId is required.' });
+        }
 
         // Check if the patient exists in the database
         const patient = await Patient.findById(patientId);
         if (!patient) {
             return res.status(404).json({ message: 'Patient not found.' });
         }
-
+   // Check if the patient exists in the database
+   const doctorExisting = await Doctor.findById(doctorId);
+   if (!doctorExisting) {
+       return res.status(404).json({ message: 'doctorId not found.' });
+   }
         // Fetch the doctor by ID from the database
         const doctor = await Doctor.findById(doctorId).select('hospitalName qualification image breakTime description workingTime experience specialistType firstName lastName gender');    
 
@@ -113,7 +140,7 @@ const appointmentListById = async (req, res) => {
         const { appointmentId } = req.body;
 
         // Fetch the doctor by ID, but only return specific fields
-        const appointment = await AppointmentBook.findById(appointmentId).select('appointmentType app_date app_time')  .populate('doctorId', 'firstName');;
+        const appointment = await AppointmentBook.findById(appointmentId).select('appointmentType app_date app_time startTime endTime')  .populate('doctorId', 'firstName');;
 
         // Check if the doctor was found
         if (!appointment) {
