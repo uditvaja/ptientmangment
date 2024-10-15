@@ -30,7 +30,7 @@ if (error) {
 module.exports = {
   port: envVars.PORT,
   mongodb: {
-    url: "mongodb+srv://vibhudemo1997:demo1234@cluster0.el1x5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    url: envVars.MONGODB_URL,
     options: {  
       useNewUrlParser: true,
       useUnifiedTopology: true,

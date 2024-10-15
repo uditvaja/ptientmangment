@@ -10,6 +10,6 @@ const connectDB = async () => {
     .catch((error) => {
       console.log("Database connetion error: ", error);
     });
-};
+}; 
 
 module.exports = { connectDB };
