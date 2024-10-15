@@ -8,6 +8,20 @@ const mongoose = require('mongoose');
 
 const getTodayAppointments = async (req, res) => {
     try {
+              // Get doctorId from request
+              const { doctorId } = req.body;
+
+              // Validate doctorId
+              if (!doctorId) {
+                  return res.status(400).json({ message: 'doctorId is required.' });
+              }
+      
+              // Check if the doctor exists
+              const doctorExists = await Doctor.findById(doctorId);
+              if (!doctorExists) {
+                  return res.status(404).json({ message: 'Doctor not found.' });
+              }
+
         // Get today's date in 'YYYY-MM-DD' format
         const today = moment().format('YYYY-MM-DD');
 
@@ -46,6 +60,20 @@ const getTodayAppointments = async (req, res) => {
 
 const getUpcomingAppointments = async (req, res) => {
     try {
+
+          // Get doctorId from request
+          const { doctorId } = req.body;
+
+          // Validate doctorId
+          if (!doctorId) {
+              return res.status(400).json({ message: 'doctorId is required.' });
+          }
+  
+          // Check if the doctor exists
+          const doctorExists = await Doctor.findById(doctorId);
+          if (!doctorExists) {
+              return res.status(404).json({ message: 'Doctor not found.' });
+          }
         // Get today's date in 'YYYY-MM-DD' format
         const today = moment().format('YYYY-MM-DD');
 
@@ -85,6 +113,20 @@ const getUpcomingAppointments = async (req, res) => {
 
 const getPreviousAppointments = async (req, res) => {
     try {
+
+          // Get doctorId from request
+          const { doctorId } = req.body;
+
+          // Validate doctorId
+          if (!doctorId) {
+              return res.status(400).json({ message: 'doctorId is required.' });
+          }
+  
+          // Check if the doctor exists
+          const doctorExists = await Doctor.findById(doctorId);
+          if (!doctorExists) {
+              return res.status(404).json({ message: 'Doctor not found.' });
+          }
         // Get today's date in 'YYYY-MM-DD' format
         const today = moment().format('YYYY-MM-DD');
 
@@ -120,6 +162,21 @@ const getPreviousAppointments = async (req, res) => {
 
 const getCanceledAppointments = async (req, res) => {
     try {
+
+          // Get doctorId from request
+          const { doctorId } = req.body;
+
+          // Validate doctorId
+          if (!doctorId) {
+              return res.status(400).json({ message: 'doctorId is required.' });
+          }
+  
+          // Check if the doctor exists
+          const doctorExists = await Doctor.findById(doctorId);
+          if (!doctorExists) {
+              return res.status(404).json({ message: 'Doctor not found.' });
+          }
+
         // Find all appointments where status is 'canceled'
         const canceledAppointments = await AppointmentBook.find({
             status: 0
@@ -152,7 +209,18 @@ const getCanceledAppointments = async (req, res) => {
 const deleteAppDateAndTimeSlot = async (req, res) => {
     try {
         // Extract the appointmentId from the request body
-        const { appointmentId } = req.body;
+        const { appointmentId,doctorId } = req.body;
+
+           // Validate doctorId
+           if (!doctorId) {
+               return res.status(400).json({ message: 'doctorId is required.' });
+           }
+           // Check if the doctor exists
+           const doctorExists = await Doctor.findById(doctorId);
+           if (!doctorExists) {
+               return res.status(404).json({ message: 'Doctor not found.' });
+           }
+
 
         // Check if the appointment exists
         const appointment = await AppointmentBook.findById(appointmentId);

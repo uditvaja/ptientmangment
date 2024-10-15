@@ -40,7 +40,7 @@ router.post("/create-cancel-appointment",
 
                     
                 router.get("/doctorflow-today-appointmentbook-date",
-                    // authenticAdmin, 
+                    authenticDoctor, 
                     doctorFlowAppointmentController.getTodayAppointments);
 
                     router.get("/doctorflow-upcoming-appointmentbook-date",
