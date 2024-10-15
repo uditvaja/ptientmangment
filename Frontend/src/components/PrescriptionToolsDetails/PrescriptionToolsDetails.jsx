@@ -3,13 +3,25 @@ import "./PrescriptionToolsDetails.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import DoctorSidebar from "../DoctorSidebar/DoctorSidebar";
 import { Button, Dropdown, Tab, Tabs, Form } from "react-bootstrap";
+import MedicalForm from "../MedicalForm/MedicalForm";
+import PrescriptionForm from "../PrescriptionForm/PrescriptionForm";
 
 const PrescriptionToolsDetails = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("allDocument");
-  const [documents, setDocuments] = useState([]);
-  const [prescriptions, setPrescriptions] = useState([]);
+  const [documents, setDocuments] = useState([
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+  ]);
+  const [prescriptions, setPrescriptions] = useState([
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+  ]);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -99,15 +111,16 @@ const PrescriptionToolsDetails = () => {
             <img src="/assets/images/no_data_found.png" alt="No Data Found" />
           </div>
         ) : (
-          documents.map((doc, index) => (
-            <div key={index} className="document-item">
-              <h4>{doc.title}</h4>
-              <p>Type: {doc.type}</p>
-              <p>Created: {doc.createdDate}</p>
+          <>
+            <div className="row">
+              {documents.map((doc, index) => (
+                <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
+                  <MedicalForm key={doc.id} />
+                </div>
+              ))}
             </div>
-          ))
+          </>
         )}
-        
       </div>
     );
   };
@@ -120,14 +133,22 @@ const PrescriptionToolsDetails = () => {
             <img src="/assets/images/no_data_found.png" alt="No Data Found" />
           </div>
         ) : (
-          prescriptions.map((prescription, index) => (
-            <div key={index} className="prescription-item">
-              <h4>{prescription.medication}</h4>
-              <p>Dosage: {prescription.dosage}</p>
-              <p>Frequency: {prescription.frequency}</p>
-              <p>Created: {prescription.createdDate}</p>
+          <>
+            <div className="text-end">
+              {activeTab === "allPrescription" && (
+                <button type="button" className="create-prescription-btn">
+                  Create Prescription
+                </button>
+              )}
             </div>
-          ))
+            <div className="row">
+              {prescriptions.map((prescription, index) => (
+                <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
+                  <PrescriptionForm key={prescription.id} />
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
     );
@@ -135,34 +156,52 @@ const PrescriptionToolsDetails = () => {
 
   const renderDescriptions = () => {
     const descriptions = [
-      {
-        date: "2 Jan, 2022",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      { 
+        date: '2 Jan, 2022', 
+        content: [
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
       },
-      {
-        date: "2 Jan, 2022",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      { 
+        date: '12 Jan, 2022', 
+        content: [
+         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
       },
-      {
-        date: "2 Jan, 2022",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      { 
+        date: '10 Jan, 2022', 
+        content: [
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
       },
-      {
-        date: "2 Jan, 2022",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      { 
+        date: '20 Jan, 2022', 
+        content: [
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
       },
     ];
 
     return (
       <div className="descriptions-container">
-        {descriptions.map((description, index) => (
-          <div key={index} className="description-item">
-            <p className="description-date">
-              Description Date: {description.date}
-            </p>
-            <p className="description-content">{description.content}</p>
-          </div>
-        ))}
+        <div className="row">
+          {descriptions.map((description, index) => (
+            <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
+              <div className="description-item">
+                <h4 className="description-date">
+                  Description Date <div className="text-end">{description.date}</div>
+                </h4>
+                {description.content.map((paragraph, pIndex) => (
+                <p className="description-content" key={pIndex}>{paragraph}</p>
+              ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   };
@@ -471,12 +510,6 @@ const PrescriptionToolsDetails = () => {
               {renderDescriptions()}
             </Tab>
           </Tabs>
-
-          {activeTab === "allPrescription" && (
-            <Button variant="primary" className="create-prescription-btn">
-              Create Prescription
-            </Button>
-          )}
         </div>
       </div>
     </div>

@@ -51,7 +51,6 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
               className={`nav-link nav-links-3 collapsed ${
                 activeLink.includes("/prescription-tools/") ? "active" : ""
               }`}
-              to={"#billing"}
               data-bs-toggle="collapse"
               aria-expanded="false"
             >
@@ -67,7 +66,10 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
                 <Link
                   to={"/prescription-tools/create"}
                   className={`nav-link ${
-                    activeLink === "/prescription-tools/create" || activeLink === "/prescription-tools/create/details" ? "active" : ""
+                    activeLink === "/prescription-tools/create" ||
+                    activeLink === "/prescription-tools/create/details"
+                      ? "active"
+                      : ""
                   }`}
                 >
                   Create
@@ -88,9 +90,9 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
 
           <li className="nav-item">
             <Link
-              to={"/teleconsultationModule"}
+              to={"/doctorTeleconsultation"}
               className={`nav-link nav-links-4 ${
-                activeLink === "/teleconsultationModule" ? "active" : ""
+                activeLink === "/doctorTeleconsultation" || activeLink === "/patientMeetingConference" ? "active" : ""
               }`}
             >
               Teleconsultation Module
@@ -98,7 +100,7 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
           </li>
           <li className="nav-item">
             <Link
-              to={"/chat"}
+              to={"/doctor-chat"}
               className={`nav-link nav-links-5 ${
                 activeLink === "/doctor-chat" ? "active" : ""
               }`}

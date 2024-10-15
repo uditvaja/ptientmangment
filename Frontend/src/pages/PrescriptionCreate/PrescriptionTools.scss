@@ -1,7 +1,7 @@
 @import "../../css/variables.scss";
 
 .profile-header {
-  background-color: #fff;
+  background-color: $color1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
 
@@ -250,13 +250,13 @@
   }
 }
 
-.doctor-prescription-create-page {
+.doctor-prescription-page {
   background-color: $color1;
   border-radius: 15px;
   margin-top: 30px;
   padding: 40px;
 
-  .doctor-prescription-create-title {
+  .doctor-prescription-title {
     font-weight: 700;
     font-size: 26px;
     color: $color15;
@@ -294,7 +294,7 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f4f4f4;
+    border: 1px solid $color8;
     transition: transform 0.2s;
 
     &:hover {
@@ -349,7 +349,7 @@
       .card-details {
         background-color: $color1;
         padding: 15px;
-        border: 1px solid #f4f4f4;
+        border: 1px solid $color8;
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
 
@@ -397,7 +397,7 @@
     color: $color10;
     white-space: nowrap;
     background-color: $color1;
-    border: 1px solid #d3d3d3;
+    border: 1px solid $color17;
     border-radius: 10px;
     padding: 12px 20px;
   }

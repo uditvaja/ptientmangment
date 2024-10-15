@@ -20,7 +20,7 @@
   }
 
   .file-upload-area {
-    border: 2px dashed #d3d3d3;
+    border: 2px dashed $color17;
     border-radius: 6px;
     padding: 2rem;
     text-align: center;
@@ -119,7 +119,7 @@
     .record-cancle-btn {
         width: 223px;
         height: 48px;
-        border: 1px solid #d3d3d3;
+        border: 1px solid $color17;
         background-color: $color1;
         border-radius: 10px;
         padding: 12px 14px;
@@ -145,7 +145,7 @@
         color: $color1;
         transition: all 0.5s;
         &:hover {
-          background: #f6f8fb;
+          background: $color9;
           color: $color5;
         }
       }
