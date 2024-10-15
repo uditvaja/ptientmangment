@@ -5,7 +5,7 @@ const {   bookapointmentPatientController, doctorFlowAppointmentController } = r
 const authenticPatient = require("../../../middlewares/patientAuth");
 const authenticDoctor = require("../../../middlewares/doctorAuth");
 
-
+// not understand of authentication,and response :-  bookapointmentPatientController,
 
 
 router.post("/create-appointment-book",
