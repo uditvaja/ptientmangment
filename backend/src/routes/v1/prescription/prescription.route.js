@@ -22,8 +22,5 @@ router.get('/list-patient-all-appointment-searchinf-fromdate-todate',prescriptio
 router.get('/prescriptions-patient-id-list',precriptionPatientController.getPrescriptionsByPatientId);
 
 
-
-
-
-
 module.exports = router;
+
