@@ -38,6 +38,7 @@ import PrescriptionCreate from "./pages/PrescriptionCreate/PrescriptionTools";
 import PrescriptionToolsDetails from "./components/PrescriptionToolsDetails/PrescriptionToolsDetails";
 import PrescriptionTools from "./pages/PrescriptionCreate/PrescriptionTools";
 import CreatePrescription from "./pages/CreatePrescription/CreatePrescription";
+import PatientRecordFile from "./components/PatientRecordFile/PatientRecordFile";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
         <Route path="/doctorAppointmentManagement" element={<DoctorAppointment />} />
         <Route path="/doctorAppointmentTimeSlot" element={<DoctorAppointmentTimeSlot />} />
         <Route path="/patientRecordAccess" element={<PatientRecordAccess />} />
+        <Route path="/patientRecordFile" element={<PatientRecordFile />} />
         <Route path="/patientDetails" element={<PatientDetails />} />
         <Route path="/prescription-tools" element={<PrescriptionTools />} />
         <Route path="/prescription-tools/create/details" element={<PrescriptionToolsDetails />} />

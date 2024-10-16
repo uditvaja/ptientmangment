@@ -1,0 +1,301 @@
+@import "../../css/variables.scss";
+
+.patient-record-file {
+  background-color: $color1;
+  border-radius: 15px;
+  margin-top: 30px;
+  padding: 40px;
+  .card {
+    margin: 52px auto;
+    max-width: 830px;
+    background: $color1;
+    border: 1px solid $color7;
+    border-radius: 15px;
+    padding: 20px;
+    .card-header {
+      background-color: $color1;
+      .card-title {
+        font-weight: 700;
+        font-size: 24px;
+        color: $color15;
+      }
+    }
+
+    .card-body {
+      h6 {
+        font-weight: 700;
+        font-size: 20px;
+        color: $color5;
+      }
+
+      .file-item {
+        border: 1px solid $color7;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+
+        i {
+          color: $color6;
+          &:hover {
+            color: $color2;
+          }
+        }
+
+        span {
+          flex-grow: 1;
+          font-weight: 600;
+          font-size: 14px;
+          color: $color15;
+        }
+
+        small {
+          font-weight: 400;
+          font-size: 13px;
+          color: $color6;
+          margin-right: 10px;
+        }
+
+        .show-btn {
+          background: $color9;
+          padding: 5px 10px;
+          border-radius: 5.5px;
+        }
+      }
+
+      .prescription-card {
+        border: 1px solid $color7;
+        border-radius: 10px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+
+        .prescription-content {
+          background-color: $color9;
+          border-radius: 15px;
+          padding: 20px;
+          transition: filter 0.3s ease;
+        }
+
+        .prescription-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+
+          .hospital-info {
+            .hospital-logo {
+              width: 158px;
+            }
+          }
+
+          .doctor-info {
+            text-align: right;
+            .doctor-name {
+              font-size: 24px;
+              font-weight: 700;
+              color: $color2;
+            }
+
+            .doctor-specialty {
+              font-weight: 600;
+              font-size: 14px;
+              color: $color4;
+            }
+          }
+        }
+
+        .prescription-body {
+          p {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: $color4;
+            font-size: 14px;
+            strong {
+              font-weight: 600;
+              font-size: 16px;
+              color: $color10;
+            }
+          }
+
+          .d-ruby {
+            display: ruby-text;
+          }
+        }
+
+        .prescription-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(20, 20, 20, 0.75);
+          backdrop-filter: blur(18.3px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+
+          .prescription-overlay-btn {
+            background-color: $color2;
+            padding: 12px 44px;
+            border-radius: 10px;
+            color: $color1;
+            font-weight: 600;
+            font-size: 20px;
+          }
+        }
+
+        &:hover {
+          .prescription-content {
+            filter: blur(5px);
+          }
+          .prescription-overlay {
+            opacity: 1;
+          }
+        }
+      }
+
+      .description {
+        margin-top: 20px;
+        p {
+          font-weight: 400;
+          font-size: 16px;
+          color: $color5;
+        }
+      }
+    }
+  }
+}
+
+.prescription-preview-modal {
+  .modal-dialog {
+    max-width: 676px;
+  }
+
+  .prescription-preview-header {
+    background-color: $color9;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    .hospital-logo {
+      width: 238px;
+    }
+
+    .doctor-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: $color2;
+    }
+
+    .doctor-specialty {
+      font-weight: 600;
+      font-size: 14px;
+      color: $color4;
+    }
+
+    p {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: $color4;
+      font-size: 14px;
+      strong {
+        font-weight: 600;
+        font-size: 16px;
+        color: $color10;
+      }
+    }
+
+    .d-ruby {
+      display: ruby-text;
+    }
+  }
+
+  table {
+    th {
+      background: $color9;
+      font-weight: 600;
+      font-size: 14px;
+      color: $color15;
+    }
+    tbody {
+      tr {
+        border-bottom: 1px solid $color8;
+        td {
+          font-weight: 600;
+          font-size: 16px;
+          color: $color10;
+        }
+
+        .duration {
+          background: #39973d1a;
+          padding: 6px 14px;
+          border-radius: 30px;
+          color: $color11;
+          font-size: 14px;
+          text-align: center;
+        }
+
+        .whentotake {
+          background: #5678e91a;
+          padding: 6px 14px;
+          border-radius: 30px;
+          color: $color3;
+          font-size: 14px;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .additional-note {
+    label {
+      strong {
+        font-size: 16px;
+        color: $color15;
+      }
+    }
+    p {
+      font-weight: 500;
+      font-size: 14px;
+      color: $color5;
+    }
+  }
+
+  .doctor-signature {
+    p {
+      font-weight: 600;
+      font-size: 14px;
+      color: $color6;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .patient-record-file {
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    .mobile-screen {
+      display: none;
+    }
+  }
+
+  .patient-record-file {
+    .card {
+      .card-body {
+        .prescription-card {
+          .prescription-body {
+            .d-ruby {
+              display: inline-block;
+            }
+          }
+        }
+      }
+    }
+  }
+}

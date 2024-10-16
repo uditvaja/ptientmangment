@@ -525,7 +525,7 @@ const CreatePrescription = () => {
                 </button>
                 <div className="form-floating form-textarea mt-3">
                   <textarea
-                    for="floatingInput"
+                    htmlFor="floatingInput"
                     className="form-control"
                     rows={3}
                     value={additionalNote}

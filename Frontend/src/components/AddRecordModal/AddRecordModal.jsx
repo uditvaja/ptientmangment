@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { Modal, Button, Form, ProgressBar } from "react-bootstrap";
 import { Upload, File, X } from "lucide-react";
 import "./AddRecordModal.scss";
+import { useNavigate } from "react-router-dom";
 
 const AddRecordModal = ({ show, onHide }) => {
   const [file, setFile] = useState(null);
   const [description, setDescription] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -56,6 +59,7 @@ const AddRecordModal = ({ show, onHide }) => {
     // Implement save functionality here
     console.log("File:", file);
     console.log("Description:", description);
+    navigate("/patientRecordFile");
     onHide();
   };
 

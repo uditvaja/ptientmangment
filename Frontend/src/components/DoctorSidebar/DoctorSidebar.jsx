@@ -38,7 +38,8 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
               to={"/patientRecordAccess"}
               className={`nav-link nav-links-2 ${
                 activeLink === "/patientRecordAccess" ||
-                activeLink === "/patientDetails"
+                activeLink === "/patientDetails" ||
+                activeLink === "/patientRecordFile"
                   ? "active"
                   : ""
               }`}
@@ -51,6 +52,7 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
               className={`nav-link nav-links-3 collapsed ${
                 activeLink.includes("/prescription-tools/") ? "active" : ""
               }`}
+              to={"/prescription-tools"}
               data-bs-toggle="collapse"
               aria-expanded="false"
             >

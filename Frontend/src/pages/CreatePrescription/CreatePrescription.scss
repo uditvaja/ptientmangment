@@ -513,23 +513,14 @@
       display: none;
     }
   }
-}
 
-@media (max-width: 768px) {
-  .prescription-form,
-  .prescription-preview {
-    padding: 15px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  h3 {
-    font-size: 16px;
-  }
-
-  .prescription-preview {
-    margin-top: 20px;
+  .doctor-prescription-create-page {
+    .prescription-preview {
+      .prescription-preview-header {
+        .d-ruby {
+          display: inline-block;
+        }
+      }
+    }
   }
 }
