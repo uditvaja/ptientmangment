@@ -94,7 +94,7 @@ const DoctorSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/doctorTeleconsultation"}
               className={`nav-link nav-links-4 ${
-                activeLink === "/doctorTeleconsultation" || activeLink === "/patientMeetingConference" ? "active" : ""
+                activeLink === "/doctorTeleconsultation" || activeLink === "/doctorMeetingConference" ? "active" : ""
               }`}
             >
               Teleconsultation Module

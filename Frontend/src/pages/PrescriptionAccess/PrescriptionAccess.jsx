@@ -3,8 +3,9 @@ import "./PrescriptionAccess.scss";
 import { useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import html2canvas from "html2canvas";
 import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
-import { Card, Col, Dropdown, Form, Row, Button } from "react-bootstrap";
+import { Dropdown, Modal } from "react-bootstrap";
 
 const PrescriptionCard = ({
   doctor,
@@ -14,18 +15,19 @@ const PrescriptionCard = ({
   time,
   imageName,
   imageSize,
+  handlePrescriptionPreview,
 }) => (
-  <Card className="mb-3">
-    <Card.Body>
+  <div className="card mb-3">
+    <div className="card-body">
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h5 className="mb-0">{doctor}</h5>
         <div className="d-flex align-items-center">
-          <Button variant="link" className="p-0 me-2">
+          <button className="btn p-0 me-2">
             <img src="./assets/images/download-icon.svg" alt="Download" />
-          </Button>
-          <Button variant="link" className="p-0">
+          </button>
+          <button className="btn p-0" onClick={handlePrescriptionPreview}>
             <img src="./assets/images/eye-gray.svg" alt="Print" />
-          </Button>
+          </button>
         </div>
       </div>
       <div className="d-flex align-items-center justify-content-between">
@@ -55,8 +57,8 @@ const PrescriptionCard = ({
           <small className="d-block">{imageSize}</small>
         </div>
       </div>
-    </Card.Body>
-  </Card>
+    </div>
+  </div>
 );
 
 const CustomDateRangeSelector = ({
@@ -91,17 +93,17 @@ const CustomDateRangeSelector = ({
         }}
         isClearable={false}
         customInput={
-          <Form.Control as="button" className="date-range-button">
+          <button className="form-control date-range-button">
             {startDate && endDate
               ? `${formatDate(startDate)} - ${formatDate(endDate)}`
               : "Select Date Range"}
-          </Form.Control>
+          </button>
         }
       />
       {startDate && endDate && (
-        <Button variant="link" className="reset-dates-btn" onClick={resetDates}>
+        <button className="btn reset-dates-btn" onClick={resetDates}>
           <img src="./assets/images/cross-icon.svg" alt="Reset" />
-        </Button>
+        </button>
       )}
     </div>
   );
@@ -112,6 +114,9 @@ const PrescriptionAccess = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [startDate, setStartDate] = useState(new Date("2022-01-02"));
   const [endDate, setEndDate] = useState(new Date("2022-01-13"));
+  const [prescriptionPreview, setPrescriptionPreview] = useState(false);
+
+  const modalRef = useRef(null);
   const sidebarRef = useRef(null);
   const location = useLocation();
   //   const navigate = useNavigate();
@@ -177,6 +182,8 @@ const PrescriptionAccess = () => {
     },
   ];
 
+  const noNotificationImage = "/assets/images/no-notification.png";
+
   const prescriptions = [
     {
       doctor: "Dr. Ryan Vetrovs",
@@ -215,6 +222,23 @@ const PrescriptionAccess = () => {
       imageSize: "370 x 218",
     },
   ];
+
+  const handlePrescriptionPreview = () => {
+    setPrescriptionPreview(true);
+  };
+
+  const handlePrescriptionPreviewClose = () => setPrescriptionPreview(false);
+
+  const handleDownload = () => {
+    if (modalRef.current) {
+      html2canvas(modalRef.current).then((canvas) => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "prescription.png";
+        link.click();
+      });
+    }
+  };
 
   return (
     <div className="d-flex">
@@ -440,29 +464,166 @@ const PrescriptionAccess = () => {
         </div>
         <div className="container-fluid prescription-access-page py-4">
           <div className="row mb-4 align-items-center">
-            <Col>
-              <h1 className="prescription-access-title">
-                Prescription Access
-              </h1>
-            </Col>
-            <Col xs="auto">
+            <div className="col">
+              <h1 className="prescription-access-title">Prescription Access</h1>
+            </div>
+            <div className="col-auto">
               <CustomDateRangeSelector
                 startDate={startDate}
                 endDate={endDate}
                 setStartDate={setStartDate}
                 setEndDate={setEndDate}
               />
-            </Col>
+            </div>
           </div>
-          <Row>
+          <div className="row">
             {prescriptions.map((prescription, index) => (
-              <Col key={index} md={6} lg={3}>
-                <PrescriptionCard {...prescription} />
-              </Col>
+              <div key={index} className="col-md-6 col-lg-3">
+                <PrescriptionCard
+                  {...prescription}
+                  handlePrescriptionPreview={handlePrescriptionPreview}
+                />
+              </div>
             ))}
-          </Row>
+          </div>
         </div>
       </div>
+
+      {/* Prescription Preview Modal */}
+      <Modal
+        className="prescription-access-preview-modal"
+        show={prescriptionPreview}
+        onHide={handlePrescriptionPreviewClose}
+        centered
+      >
+        <Modal.Header closeButton>
+          <h2 className="prescription-access-preview-title">Prescription</h2>
+        </Modal.Header>
+        <div className="prescription-access-preview-box" ref={modalRef}>
+          <div className="prescription-preview-header">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <div className="d-flex align-items-center">
+                <img
+                  src="/assets/images/logo.png"
+                  alt="Hospital Logo"
+                  className="hospital-logo img-fluid"
+                />
+              </div>
+              <div className="text-end">
+                <h3 className="m-0 doctor-name">Dr. Bharat Patel</h3>
+                <p className="doctor-specialty">Obstetrics and gynecology</p>
+              </div>
+            </div>
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <p>
+                  <strong>Hospital Name:</strong> Medical Center
+                </p>
+                <p>
+                  <strong>Patient Name:</strong> Alabtrao Bhajirao
+                </p>
+                <p>
+                  <strong>Gender:</strong> Male
+                </p>
+                <p className="d-ruby">
+                  <strong>Address:</strong> B-105 Virat Bungalows Punagam
+                  Motavaracha Jamnagar.
+                </p>
+              </div>
+              <div className="col-md-6">
+                <p>
+                  <strong>Prescription Date:</strong>{" "}
+                  {new Date().toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Age:</strong> 36 Year
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="table-responsive">
+            <table className="table mb-4">
+              <thead>
+                <tr>
+                  <th>Medicine Name</th>
+                  <th>Strength</th>
+                  <th>Dose</th>
+                  <th>Duration</th>
+                  <th>When to take</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Calcium carbonate</td>
+                  <td>100 Mg</td>
+                  <td>1-0-1</td>
+                  <td className="duration">2 Day</td>
+                  <td className="whentotake">Before Food</td>
+                </tr>
+                <tr>
+                  <td>Cyclobenzaprine</td>
+                  <td>200 Mg</td>
+                  <td>1-1-1</td>
+                  <td className="duration">4 Day</td>
+                  <td className="whentotake">With Food</td>
+                </tr>
+                <tr>
+                  <td>Fluticasone Almeterol</td>
+                  <td>150 Mg</td>
+                  <td>0-1-0</td>
+                  <td className="duration">5 Day</td>
+                  <td className="whentotake">Before Food</td>
+                </tr>
+                <tr>
+                  <td>Hydrochlorothiazide</td>
+                  <td>250 Mg</td>
+                  <td>0-0-1</td>
+                  <td className="duration">2 Day</td>
+                  <td className="whentotake">After Food</td>
+                </tr>
+                <tr>
+                  <td>Flonase Allergy Relief</td>
+                  <td>100 Mg</td>
+                  <td>1-0-0</td>
+                  <td className="duration">1 Day</td>
+                  <td className="whentotake">Before Food</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="form-group additional-note mb-4">
+            <label>
+              <strong>Additional Note</strong>
+            </label>
+            <p>
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industry's standard dummy text
+              ever since the{" "}
+            </p>
+          </div>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="doctor-signature">
+              <img
+                src="/assets/images/doctor-sign.png"
+                alt="Doctor Signature"
+              />
+              <p>Doctor Signature</p>
+            </div>
+            <button
+              type="button"
+              className="download-btn"
+              onClick={handleDownload}
+            >
+              <img
+                src="/assets/images/arrow-down.svg"
+                alt="arrow-down"
+                className="img-fluid me-2"
+              />
+              Download
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "./PatientMeetingConference.scss";
 import { useLocation } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
-import DoctorSidebar from "../DoctorSidebar/DoctorSidebar";
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import PatientSidebar from "../PatientSidebar/PatientSidebar";
 
 const PatientMeetingConference = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -124,7 +124,7 @@ const PatientMeetingConference = () => {
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <DoctorSidebar
+        <PatientSidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}

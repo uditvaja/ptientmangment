@@ -32,13 +32,22 @@ import PrescriptionAccess from "./pages/PrescriptionAccess/PrescriptionAccess";
 import PatientRecordAccess from "./pages/PatientRecordAccess/PatientRecordAccess";
 import PatientDetails from "./pages/PatientDetails/PatientDetails";
 import DoctorChat from "./components/DoctorChat/DoctorChat";
-import PatientMeetingConference from "./components/PatientMeetingConference/PatientMeetingConference";
+import DoctorMeetingConference from "./components/DoctorMeetingConference/DoctorMeetingConference";
 import DoctorTeleconsultation from "./pages/DoctorTeleconsultation/DoctorTeleconsultation";
 import PrescriptionCreate from "./pages/PrescriptionCreate/PrescriptionTools";
 import PrescriptionToolsDetails from "./components/PrescriptionToolsDetails/PrescriptionToolsDetails";
 import PrescriptionTools from "./pages/PrescriptionCreate/PrescriptionTools";
 import CreatePrescription from "./pages/CreatePrescription/CreatePrescription";
 import PatientRecordFile from "./components/PatientRecordFile/PatientRecordFile";
+import PrescriptionToolsManage from "./pages/PrescriptionToolsManage/PrescriptionToolsManage";
+import PatientChat from "./components/PatientChat/PatientChat";
+import PatientMeetingConference from "./components/PatientMeetingConference/PatientMeetingConference";
+import DoctorTeleconsulationTimeSlot from "./pages/DoctorTeleconsulationTimeSlot/DoctorTeleconsulationTimeSlot";
+import PatientTeleconsultation from "./pages/PatientTeleconsultation/PatientTeleconsultation";
+import PatientTeleconsulationTimeSlot from "./pages/PatientTeleconsulationTimeSlot/PatientTeleconsulationTimeSlot";
+import PatientBills from "./pages/PatientBills/PatientBills";
+import BillInvoicePage from "./components/BillInvoicePage/BillInvoicePage";
+import PaidBillInvoicePage from "./components/PaidBillInvoicePage/PaidBillInvoicePage";
 
 function App() {
   return (
@@ -53,6 +62,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/adminProfile" element={<AdminProfile />} />
+        <Route path="/billing/monitor-billing" element={<PendingBills />} />
         {/* Doctor */}
         <Route path="/doctor-login" element={<DoctorLogin />} />
         <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />
@@ -61,13 +71,15 @@ function App() {
         <Route path="/doctorProfile" element={<DoctorProfile />} />
         <Route path="/doctorAppointmentManagement" element={<DoctorAppointment />} />
         <Route path="/doctorAppointmentTimeSlot" element={<DoctorAppointmentTimeSlot />} />
+        <Route path="/doctorTeleconsulationAppointmentTimeSlot" element={<DoctorTeleconsulationTimeSlot />} />
         <Route path="/patientRecordAccess" element={<PatientRecordAccess />} />
         <Route path="/patientRecordFile" element={<PatientRecordFile />} />
         <Route path="/patientDetails" element={<PatientDetails />} />
         <Route path="/prescription-tools" element={<PrescriptionTools />} />
         <Route path="/prescription-tools/create/details" element={<PrescriptionToolsDetails />} />
         <Route path="/prescription-tools/create" element={<CreatePrescription />} />
-        <Route path="/patientMeetingConference" element={<PatientMeetingConference />} />
+        <Route path="/prescription-tools/manage" element={<PrescriptionToolsManage />} />
+        <Route path="/doctorMeetingConference" element={<DoctorMeetingConference />} />
         <Route path="/doctorTeleconsultation" element={<DoctorTeleconsultation />} />
         <Route path="/doctor-chat" element={<DoctorChat />} />
         {/* Patient */}
@@ -78,10 +90,16 @@ function App() {
         <Route path="/patient-reset-password" element={<PatientResetPassword />} />
         <Route path="/patientAppointment" element={<PatientAppointment />} />
         <Route path="/patientBookAppointment" element={<PatientBookAppointment />} />
-        <Route path="/billing/monitor-billing" element={<PendingBills />} />
         <Route path="/invoice" element={<InvoicePage />} />
+        <Route path="/billInvoice" element={<BillInvoicePage />} />
+        <Route path="/paidBillInvoice" element={<PaidBillInvoicePage />} />
         <Route path="/appointmentTimeSlot" element={<AppointmentTimeSlot />} />
+        <Route path="/patientTeleconsulationAppointmentTimeSlot" element={<PatientTeleconsulationTimeSlot />} />
         <Route path="/prescriptionAccess" element={<PrescriptionAccess />} />
+        <Route path="/patientMeetingConference" element={<PatientMeetingConference />} />
+        <Route path="/patientTeleconsultationAccess" element={<PatientTeleconsultation />} />
+        <Route path="/patient-chat" element={<PatientChat />} />
+        <Route path="/bills" element={<PatientBills />} />
       </Routes>
       <Toaster position="top-right" />
     </BrowserRouter>

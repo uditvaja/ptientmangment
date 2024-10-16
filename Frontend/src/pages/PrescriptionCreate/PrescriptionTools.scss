@@ -39,13 +39,15 @@
     align-items: center;
 
     .form-control:focus {
-      background-color: transparent;
+      background-color: $color9;
       border-color: transparent;
+      border-radius: 50px;
       outline: 0;
       box-shadow: none;
     }
 
     input {
+      background-color: $color9;
       padding: 13px 50px;
       border-radius: 50px;
     }
@@ -269,16 +271,17 @@
     align-items: center;
 
     .form-control:focus {
-      background-color: transparent;
+      background-color: $color9;
       border-color: transparent;
+      border-radius: 50px;
       outline: 0;
       box-shadow: none;
     }
 
     input {
+      background-color: $color9;
       padding: 13px 50px;
       border-radius: 50px;
-      border: var(--bs-border-width) solid var(--bs-border-color);
     }
 
     .search-icon {

@@ -412,6 +412,9 @@ const PatientRecordFile = () => {
         onHide={handlePrescriptionPreviewClose}
         centered
       >
+        <Modal.Header closeButton>
+            <h2 className="prescription-preview-title">Prescription</h2>
+        </Modal.Header>
         <div className="prescription-preview-header">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div className="d-flex align-items-center">

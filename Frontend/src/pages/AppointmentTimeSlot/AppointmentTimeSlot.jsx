@@ -150,6 +150,8 @@ const AppointmentTimeSlot = () => {
       icon: "payment-cancelled-icon.svg",
     },
   ];
+
+  const noNotificationImage = "/assets/images/no-notification.png";
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -214,89 +216,91 @@ const AppointmentTimeSlot = () => {
                     </button>
                   </nav>
                   <div className="d-flex align-items-center justify-content-center">
-                  <button className="btn" onClick={toggleSearch}>
-                    <img
-                      src="/assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </button>
-                  {isSearchVisible && (
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Quick Search"
-                      style={{ display: isSearchVisible ? "block" : "none" }}
-                    />
-                  )}
-                  <Dropdown className="notification-dropdown mx-3">
-                    <Dropdown.Toggle
-                      variant="link"
-                      className="notification-toggle"
-                    >
+                    <button className="btn" onClick={toggleSearch}>
                       <img
-                        src="/assets/images/notification-bing.svg"
-                        alt="Notification Icon"
-                        className="img-fluid"
+                        src="/assets/images/search.svg"
+                        alt="search"
+                        className="search-icon"
                       />
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu className="notification-menu">
-                      <div className="notification-header d-flex justify-content-between align-items-center">
-                        <span>Notification</span>
-                        <button className="close-btn">&times;</button>
-                      </div>
-                      {notifications.length > 0 ? (
-                        notifications.map((notification) => (
-                          <div
-                            key={notification.id}
-                            className="notification-item d-flex align-items-start"
-                          >
-                            <img
-                              src={`/assets/images/${notification.icon}`}
-                              alt={notification.title}
-                              className="notification-icon"
-                            />
-                            <div className="notification-content">
-                              <h5>{notification.title}</h5>
-                              <p>{notification.description}</p>
-                            </div>
-                            <span className="notification-time">
-                              {notification.time}
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="no-notifications text-center">
-                          <img
-                            src={noNotificationImage}
-                            alt="No Notifications"
-                            className="no-notifications-img"
-                          />
-                        </div>
-                      )}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown>
-                    <Dropdown.Toggle variant="link" id="dropdown-user">
-                      <div className="d-flex align-items-center">
+                    </button>
+                    {isSearchVisible && (
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Quick Search"
+                        style={{ display: isSearchVisible ? "block" : "none" }}
+                      />
+                    )}
+                    <Dropdown className="notification-dropdown mx-3">
+                      <Dropdown.Toggle
+                        variant="link"
+                        className="notification-toggle"
+                      >
                         <img
-                          src="/assets/images/profile.png"
-                          alt="Lincoln Philips"
-                          className="profile-pic img-fluid"
+                          src="/assets/images/notification-bing.svg"
+                          alt="Notification Icon"
+                          className="img-fluid"
                         />
-                        <div className="d-none text-start">
-                          <h3 className="user-name mb-0">Lincoln Philips</h3>
-                          <span className="user-role">Admin</span>
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu className="notification-menu">
+                        <div className="notification-header d-flex justify-content-between align-items-center">
+                          <span>Notification</span>
+                          <button className="close-btn">&times;</button>
                         </div>
-                      </div>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
-                      <Dropdown.Item href="#/settings">Settings</Dropdown.Item>
-                      <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                        {notifications.length > 0 ? (
+                          notifications.map((notification) => (
+                            <div
+                              key={notification.id}
+                              className="notification-item d-flex align-items-start"
+                            >
+                              <img
+                                src={`/assets/images/${notification.icon}`}
+                                alt={notification.title}
+                                className="notification-icon"
+                              />
+                              <div className="notification-content">
+                                <h5>{notification.title}</h5>
+                                <p>{notification.description}</p>
+                              </div>
+                              <span className="notification-time">
+                                {notification.time}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="no-notifications text-center">
+                            <img
+                              src={noNotificationImage}
+                              alt="No Notifications"
+                              className="no-notifications-img"
+                            />
+                          </div>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown>
+                      <Dropdown.Toggle variant="link" id="dropdown-user">
+                        <div className="d-flex align-items-center">
+                          <img
+                            src="/assets/images/profile.png"
+                            alt="Lincoln Philips"
+                            className="profile-pic img-fluid"
+                          />
+                          <div className="d-none text-start">
+                            <h3 className="user-name mb-0">Lincoln Philips</h3>
+                            <span className="user-role">Admin</span>
+                          </div>
+                        </div>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
+                        <Dropdown.Item href="#/settings">
+                          Settings
+                        </Dropdown.Item>
+                        <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </div>
                 </div>
                 <div className="d-lg-flex d-none align-items-center">
@@ -440,64 +444,64 @@ const AppointmentTimeSlot = () => {
               </table>
             </div>
           </div>
-
-          {/* Appointment Modal */}
-          <Modal
-            centered
-            show={showModal}
-            onHide={handleCloseModal}
-            className="custom-modal"
-          >
-            <Modal.Header>
-              <Modal.Title>Reschedule Appointment</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                {/* Appointment Date */}
-                <Form.Group className="form-floating">
-                  <DatePicker
-                    selected={selectedsDate}
-                    onChange={(date) => setSelectedsDate(date)}
-                    className="form-control custom-datepicker"
-                    dateFormat="dd MMMM, yyyy"
-                    id="floatingDate"
-                    placeholderText="Select a date"
-                  />
-                  <label className="date-label" htmlFor="floatingDate">
-                    Select Date
-                  </label>
-                </Form.Group>
-
-                {/* Appointment Time */}
-                <Form.Group className="mb-0 form-floating">
-                  <Form.Select
-                    value={selectedsTime}
-                    onChange={(e) => setSelectedsTime(e.target.value)}
-                    className="custom-select"
-                    id="floatingTime"
-                  >
-                    <option value="">Select a time</option>
-                    {times.map((time) => (
-                      <option key={time} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <label htmlFor="floatingTime">Select Time</label>
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={handleCloseModal} className="cancel-btn">
-                Cancel
-              </Button>
-              <Button type="submit" className="reschedule-btn">
-                Reschedule
-              </Button>
-            </Modal.Footer>
-          </Modal>
         </div>
       </div>
+
+      {/* Appointment Modal */}
+      <Modal
+        centered
+        show={showModal}
+        onHide={handleCloseModal}
+        className="custom-modal"
+      >
+        <Modal.Header>
+          <Modal.Title>Reschedule Appointment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            {/* Appointment Date */}
+            <Form.Group className="form-floating">
+              <DatePicker
+                selected={selectedsDate}
+                onChange={(date) => setSelectedsDate(date)}
+                className="form-control custom-datepicker"
+                dateFormat="dd MMMM, yyyy"
+                id="floatingDate"
+                placeholderText="Select a date"
+              />
+              <label className="date-label" htmlFor="floatingDate">
+                Select Date
+              </label>
+            </Form.Group>
+
+            {/* Appointment Time */}
+            <Form.Group className="mb-0 form-floating">
+              <Form.Select
+                value={selectedsTime}
+                onChange={(e) => setSelectedsTime(e.target.value)}
+                className="custom-select"
+                id="floatingTime"
+              >
+                <option value="">Select a time</option>
+                {times.map((time) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </Form.Select>
+              <label htmlFor="floatingTime">Select Time</label>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleCloseModal} className="cancel-btn">
+            Cancel
+          </Button>
+          <Button type="submit" className="reschedule-btn">
+            Reschedule
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

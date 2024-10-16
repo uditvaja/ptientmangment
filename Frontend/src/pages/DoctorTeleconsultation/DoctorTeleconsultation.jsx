@@ -54,13 +54,88 @@ const CustomDateRangeSelector = ({
   );
 };
 
+const PatientDetailsModal = ({ show, handleClosePatientModal, patient }) => {
+  return (
+    <Modal show={show} onHide={handleClosePatientModal} centered className="patientDetailsModal">
+      <Modal.Header closeButton>
+        <Modal.Title>Patient Details</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="row">
+          <div className="col-md-6 pb-3">
+          <p>Appointment Date</p>
+          </div>
+          <div className="col-md-6 text-end pb-3">
+          <strong>{patient.date}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+          <p>Appointment Time</p>
+          </div>
+          <div className="col-md-6 text-end">
+          <strong>{patient.time}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+          <p>Patient Name</p>
+          </div>
+          <div className="col-md-6 text-end">
+          <strong>{patient.name}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+            <p>Patient Phone Number</p>
+          </div>
+          <div className="col-md-6 text-end pb-3">
+            <strong>{patient.number || "92584 58475"}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+            <p>Patient Age</p>
+          </div>
+          <div className="col-md-6 text-end pb-3">
+            <strong>{patient.age || "27 Years"}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+            <p>Patient Gender</p>
+          </div>
+          <div className="col-md-6 text-end pb-3">
+            <strong>{patient.gender || "Male"}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+            <p>Patient Issue</p>
+          </div>
+          <div className="col-md-6 text-end pb-3">
+            <strong>{patient.patientissue}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+            <p>Disease Name</p>
+          </div>
+          <div className="col-md-6 text-end pb-3">
+            <strong>{patient.diesesname}</strong>
+          </div>
+          <div className="col-md-6 pb-3">
+            <p>Doctor Name</p>
+          </div>
+          <div className="col-md-6 text-end pb-3">
+            <strong>{patient.doctorName || "Dr. Mathew Best"}</strong>
+          </div>
+          <div className="col-md-12">
+            <p>Patient Address</p>
+            <strong>{patient.address || "B-408 Swastik society, Shivaji marg mota varacha rajkot."}</strong>
+          </div>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
 const DoctorTeleconsultation = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showPatientModal, setShowPatientModal] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [startDate, setStartDate] = useState(new Date("2022-01-02"));
   const [endDate, setEndDate] = useState(new Date("2022-01-13"));
+  const [searchTerm, setSearchTerm] = useState("");
 
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -140,8 +215,12 @@ const DoctorTeleconsultation = () => {
   };
 
   const handleVideoModalNavigate = () => {
-    navigate("/patientMeetingConference")
-  }
+    navigate("/doctorMeetingConference");
+  };
+
+  const handleTelAppointmentNavigation = () => {
+    navigate("/doctorTeleconsulationAppointmentTimeSlot");
+  };
 
   const appointments = [
     {
@@ -230,6 +309,52 @@ const DoctorTeleconsultation = () => {
     },
   ];
 
+  const patients = [
+    {
+      name: "Marcus Philips",
+      diesesname: "Viral Infection",
+      patientissue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+      number: "92584 58475",
+      age: "27 Years",
+      gender: "Male",
+      doctorName: "Dr. Mathew Best",
+      address: "B-408 Swastik society, Shivaji marg mota varacha rajkot."
+    },
+    {
+      name: "London Shaffer",
+      diesesname: "Viral Infection",
+      patientissue: "Stomach Ache",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+      number: "92584 58475",
+      age: "35 Years",
+      gender: "Male",
+      doctorName: "Dr. Mathew Best",
+      address: "B-408 Swastik society, Shivaji marg mota varacha rajkot."
+    },
+    {
+      name: "Julianna Warren",
+      diesesname: "Stomach Ache",
+      patientissue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+      number: "92584 58475",
+      age: "30 Years",
+      gender: "FeMale",
+      doctorName: "Dr. Mathew Best",
+      address: "B-408 Swastik society, Shivaji marg mota varacha rajkot."
+    },
+    // Add more patient data as needed
+  ];
+
+  const filteredPatients = patients.filter(
+    (patient) =>
+      patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.number.includes(searchTerm)
+  );
+
   const renderAppointmentCard = (appointment) => (
     <div className="appointment-card">
       <h3>{appointment.name}</h3>
@@ -249,11 +374,29 @@ const DoctorTeleconsultation = () => {
           </div>
         </div>
         <div className="d-flex justify-content-between mt-3">
-          <button type="button" className="join-call-btn" onClick={() => handleJoinClick(appointment)}>
-            <img src="/assets/images/call-calling.svg" alt="call-calling" className="img-fluid me-2" /> Join Call
+          <button
+            type="button"
+            className="join-call-btn"
+            onClick={() => handleJoinClick(appointment)}
+          >
+            <img
+              src="/assets/images/call-calling.svg"
+              alt="call-calling"
+              className="img-fluid me-2"
+            />{" "}
+            Join Call
           </button>
-          <button type="button" className="reschedule-btn">
-          <img src="/assets/images/Reschedule.svg" alt="Reschedule" className="img-fluid me-2" /> Reschedule
+          <button
+            type="button"
+            className="reschedule-btn"
+            onClick={handleTelAppointmentNavigation}
+          >
+            <img
+              src="/assets/images/Reschedule.svg"
+              alt="Reschedule"
+              className="img-fluid me-2"
+            />{" "}
+            Reschedule
           </button>
         </div>
       </div>
@@ -277,37 +420,69 @@ const DoctorTeleconsultation = () => {
       <Modal.Body>
         <h5 className="reminder-title">Reminder</h5>
         <div className="reminder-content">
-            <div className="meet-box">
-                <img src="/assets/images/appointment-yellow.svg" alt="appointment-yellow" className="img-fluyid me-2" /> This patient wants to meet you
+          <div className="meet-box">
+            <img
+              src="/assets/images/appointment-yellow.svg"
+              alt="appointment-yellow"
+              className="img-fluyid me-2"
+            />{" "}
+            This patient wants to meet you
+          </div>
+          <div className="row mb-2">
+            <div className="col-6">
+              <p className="reminder-modal-title">Patient Name</p>
             </div>
-          <div className="row mb-2">
-            <div className="col-6"><p className="reminder-modal-title">Patient Name</p></div>
-            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.name}</p></div>
+            <div className="col-6 text-end">
+              <p className="reminder-modal-text">{appointment?.name}</p>
+            </div>
           </div>
           <div className="row mb-2">
-            <div className="col-6"><p className="reminder-modal-title">Patient Issue</p></div>
-            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.issue}</p></div>
+            <div className="col-6">
+              <p className="reminder-modal-title">Patient Issue</p>
+            </div>
+            <div className="col-6 text-end">
+              <p className="reminder-modal-text">{appointment?.issue}</p>
+            </div>
           </div>
           <div className="row mb-2">
-            <div className="col-6"><p className="reminder-modal-title">Disease Name</p></div>
-            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.disease}</p></div>
+            <div className="col-6">
+              <p className="reminder-modal-title">Disease Name</p>
+            </div>
+            <div className="col-6 text-end">
+              <p className="reminder-modal-text">{appointment?.disease}</p>
+            </div>
           </div>
           <div className="row mb-2">
-            <div className="col-6"><p className="reminder-modal-title">Appointment Time</p></div>
-            <div className="col-6 text-end"><p className="reminder-modal-text">{appointment?.time}</p></div>
+            <div className="col-6">
+              <p className="reminder-modal-title">Appointment Time</p>
+            </div>
+            <div className="col-6 text-end">
+              <p className="reminder-modal-text">{appointment?.time}</p>
+            </div>
           </div>
         </div>
         <div className="d-flex justify-content-end mt-3">
           <button type="button" onClick={onHide} className="cancle-btn me-2">
             Cancel
           </button>
-          <button type="button" onClick={handleVideoModalNavigate} className="join-btn">
+          <button
+            type="button"
+            onClick={handleVideoModalNavigate}
+            className="join-btn"
+          >
             Join
           </button>
         </div>
       </Modal.Body>
     </Modal>
   );
+
+  const handleShowPatientModal = (patient) => {
+    setSelectedPatient(patient);
+    setShowPatientModal(true);
+  };
+
+  const handleClosePatientModal = () => setShowPatientModal(false);
 
   return (
     <div className="d-flex">
@@ -335,7 +510,7 @@ const DoctorTeleconsultation = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Appointment Booking
+                      Teleconsultation Module
                     </li>
                   </ol>
                 </nav>
@@ -543,7 +718,7 @@ const DoctorTeleconsultation = () => {
             >
               <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
                 <h2 className="doctorteleconsultation-title">
-                  Today Appointment
+                  Teleconsultation Module
                 </h2>
                 <CustomDateRangeSelector
                   startDate={startDate}
@@ -560,16 +735,68 @@ const DoctorTeleconsultation = () => {
             >
               <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
                 <h2 className="doctorteleconsultation-title">
-                  Upcoming Appointment
+                  Patient Details
                 </h2>
-                <CustomDateRangeSelector
-                  startDate={startDate}
-                  endDate={endDate}
-                  setStartDate={setStartDate}
-                  setEndDate={setEndDate}
-                />
+                <div className="d-flex flex-lg-row flex-column align-items-center">
+                  <div className="doctor-appointment-search-container mb-lg-0 mb-3">
+                    <input
+                      type="text"
+                      className="form-control me-2"
+                      placeholder="Search Patient"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <img
+                      src="/assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </div>
+                  <CustomDateRangeSelector
+                    startDate={startDate}
+                    endDate={endDate}
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
+                  />
+                </div>
               </div>
-              {renderAppointmentList()}
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Patient Name</th>
+                      <th>Dieses Name</th>
+                      <th>Patient Issue</th>
+                      <th>Appointment Time</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredPatients.map((patient, index) => (
+                      <tr key={index}>
+                        <td>{patient.name}</td>
+                        <td>{patient.diesesname}</td>
+                        <td>{patient.patientissue}</td>
+                        <td>
+                          <span className="badge-time">{patient.time}</span>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="border-0 bg-transparent"
+                          >
+                            <img
+                              src="/assets/images/calendar-blue-tick.svg"
+                              alt="calendar-blue-tick"
+                              className="img-fluid"
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </Tab>
             <Tab
               eventKey="doctorpreviousappointment"
@@ -577,37 +804,142 @@ const DoctorTeleconsultation = () => {
             >
               <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
                 <h2 className="doctorteleconsultation-title">
-                  Previous Appointment
+                  Patient Details
                 </h2>
-                <CustomDateRangeSelector
-                  startDate={startDate}
-                  endDate={endDate}
-                  setStartDate={setStartDate}
-                  setEndDate={setEndDate}
-                />
+                <div className="d-flex flex-lg-row flex-column align-items-center">
+                  <div className="doctor-appointment-search-container mb-lg-0 mb-3">
+                    <input
+                      type="text"
+                      className="form-control me-2"
+                      placeholder="Search Patient"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <img
+                      src="/assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </div>
+                </div>
               </div>
-              {renderAppointmentList()}
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Patient Name</th>
+                      <th>Dieses Name</th>
+                      <th>Patient Issue</th>
+                      <th>Appointment Date</th>
+                      <th>Appointment Time</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredPatients.map((patient, index) => (
+                      <tr key={index}>
+                        <td>{patient.name}</td>
+                        <td>{patient.diesesname}</td>
+                        <td>{patient.patientissue}</td>
+                        <td>{patient.date}</td>
+                        <td>
+                          <span className="badge-time">{patient.time}</span>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="border-0 bg-transparent"
+                            onClick={() => handleShowPatientModal(patient)}
+                          >
+                            <img
+                              src="/assets/images/eye-blue-2.svg"
+                              alt="eye-blue-2"
+                              className="img-fluid"
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </Tab>
             <Tab eventKey="doctorcancelappointment" title="Cancel Appointment">
               <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center my-3">
                 <h2 className="doctorteleconsultation-title">
-                  Cancel Appointment
+                  Patient Details
                 </h2>
-                <CustomDateRangeSelector
-                  startDate={startDate}
-                  endDate={endDate}
-                  setStartDate={setStartDate}
-                  setEndDate={setEndDate}
-                />
+                <div className="d-flex flex-lg-row flex-column align-items-center">
+                  <div className="doctor-appointment-search-container mb-lg-0 mb-3">
+                    <input
+                      type="text"
+                      className="form-control me-2"
+                      placeholder="Search Patient"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <img
+                      src="/assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </div>
+                </div>
               </div>
-              {renderAppointmentList()}
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Patient Name</th>
+                      <th>Dieses Name</th>
+                      <th>Patient Issue</th>
+                      <th>Appointment Date</th>
+                      <th>Appointment Time</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredPatients.map((patient, index) => (
+                      <tr key={index}>
+                        <td>{patient.name}</td>
+                        <td>{patient.diesesname}</td>
+                        <td>{patient.patientissue}</td>
+                        <td>{patient.date}</td>
+                        <td>
+                          <span className="badge-time">{patient.time}</span>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="border-0 bg-transparent"
+                            onClick={() => handleShowPatientModal(patient)}
+                          >
+                            <img
+                              src="/assets/images/eye-blue-2.svg"
+                              alt="eye-blue-2"
+                              className="img-fluid"
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </Tab>
           </Tabs>
         </div>
       </div>
-      <ReminderModal 
-        show={showModal} 
-        onHide={handleCloseModal} 
+      {selectedPatient && (
+        <PatientDetailsModal
+          show={showPatientModal}
+          handleClosePatientModal={handleClosePatientModal}
+          patient={selectedPatient}
+        />
+      )}
+      <ReminderModal
+        show={showModal}
+        onHide={handleCloseModal}
         appointment={selectedAppointment}
       />
     </div>

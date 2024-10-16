@@ -91,6 +91,8 @@ const InvoicePage = () => {
       icon: "payment-cancelled-icon.svg",
     },
   ];
+
+  const noNotificationImage = "/assets/images/no-notification.png";
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">

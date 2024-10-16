@@ -56,9 +56,9 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
           </li>
           <li className="nav-item">
             <Link
-              to={"/teleconsultationAccess"}
+              to={"/patientTeleconsultationAccess"}
               className={`nav-link nav-links-4 ${
-                activeLink === "/teleconsultationAccess" ? "active" : ""
+                activeLink === "/patientTeleconsultationAccess" || activeLink === "/patientMeetingConference" || activeLink === "/patientTeleconsulationAppointmentTimeSlot" ? "active" : ""
               }`}
             >
               Teleconsultation Access
@@ -66,9 +66,9 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
           </li>
           <li className="nav-item">
             <Link
-              to={"/chat"}
+              to={"/patient-chat"}
               className={`nav-link nav-links-5 ${
-                activeLink === "/chat" ? "active" : ""
+                activeLink === "/patient-chat" ? "active" : ""
               }`}
             >
               Chat
@@ -78,7 +78,7 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/bills"}
               className={`nav-link nav-links-7 ${
-                activeLink === "/bills" ? "active" : ""
+                activeLink === "/bills" || activeLink === "/billInvoice" || activeLink === "/paidBillInvoice" ? "active" : ""
               }`}
             >
               Bills
