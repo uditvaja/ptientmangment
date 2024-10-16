@@ -4,18 +4,13 @@ import DoctorSidebar from "../../components/DoctorSidebar/DoctorSidebar";
 import {
   Dropdown,
   Card,
-  Row,
-  Col,
-  Button,
-  Form,
-  InputGroup,
 } from "react-bootstrap";
-import { CalendarDays, Search } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./PrescriptionCreate.scss";
+import "./PrescriptionTools.scss";
 
-const PrescriptionCreate = () => {
+const PrescriptionTools = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -49,6 +44,10 @@ const PrescriptionCreate = () => {
 
   const handleNavigation = () => {
     navigate("/prescription-tools/create/details");
+  }
+
+  const handleCreatePrescription = () => {
+    navigate("/prescription-tools/create/");
   }
 
   useEffect(() => {
@@ -141,7 +140,7 @@ const PrescriptionCreate = () => {
               <p className="mb-0 text-end">{patient.time}</p>
             </div>
           </div>
-          <button type="button" className="create-btn w-100">
+          <button type="button" className="create-btn w-100" onClick={handleCreatePrescription}>
             Create Prescription
           </button>
         </div>
@@ -446,9 +445,9 @@ const PrescriptionCreate = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid doctor-prescription-create-page py-4">
+        <div className="container-fluid doctor-prescription-page py-4">
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h4 className="doctor-prescription-create-title">
+            <h4 className="doctor-prescription-title">
               Today Appointment
             </h4>
             <div className="d-flex align-items-center">
@@ -494,4 +493,4 @@ const PrescriptionCreate = () => {
   );
 };
 
-export default PrescriptionCreate;
+export default PrescriptionTools;

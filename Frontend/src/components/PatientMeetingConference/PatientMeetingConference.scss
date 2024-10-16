@@ -1,7 +1,7 @@
 @import "../../css/variables.scss";
 
 .profile-header {
-  background-color: #fff;
+  background-color: $color1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
 
@@ -259,6 +259,17 @@
 
   .video-call-container {
     border-radius: 10px;
+  }
+  .C7PnSkxqD6bOXhZlRlcc {
+    height: auto;
+    border: none;
+    border-radius: 10px;
+    padding-left: 25px;
+    background: transparent;
+  }
+
+  .E35Jx2Pn0MRpUgKdEqSQ > div {
+    height: auto;
   }
 }
 

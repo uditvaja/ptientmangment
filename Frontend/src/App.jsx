@@ -34,8 +34,11 @@ import PatientDetails from "./pages/PatientDetails/PatientDetails";
 import DoctorChat from "./components/DoctorChat/DoctorChat";
 import PatientMeetingConference from "./components/PatientMeetingConference/PatientMeetingConference";
 import DoctorTeleconsultation from "./pages/DoctorTeleconsultation/DoctorTeleconsultation";
-import PrescriptionCreate from "./pages/PrescriptionCreate/PrescriptionCreate";
+import PrescriptionCreate from "./pages/PrescriptionCreate/PrescriptionTools";
 import PrescriptionToolsDetails from "./components/PrescriptionToolsDetails/PrescriptionToolsDetails";
+import PrescriptionTools from "./pages/PrescriptionCreate/PrescriptionTools";
+import CreatePrescription from "./pages/CreatePrescription/CreatePrescription";
+import PatientRecordFile from "./components/PatientRecordFile/PatientRecordFile";
 
 function App() {
   return (
@@ -59,9 +62,11 @@ function App() {
         <Route path="/doctorAppointmentManagement" element={<DoctorAppointment />} />
         <Route path="/doctorAppointmentTimeSlot" element={<DoctorAppointmentTimeSlot />} />
         <Route path="/patientRecordAccess" element={<PatientRecordAccess />} />
+        <Route path="/patientRecordFile" element={<PatientRecordFile />} />
         <Route path="/patientDetails" element={<PatientDetails />} />
-        <Route path="/prescription-tools/create" element={<PrescriptionCreate />} />
+        <Route path="/prescription-tools" element={<PrescriptionTools />} />
         <Route path="/prescription-tools/create/details" element={<PrescriptionToolsDetails />} />
+        <Route path="/prescription-tools/create" element={<CreatePrescription />} />
         <Route path="/patientMeetingConference" element={<PatientMeetingConference />} />
         <Route path="/doctorTeleconsultation" element={<DoctorTeleconsultation />} />
         <Route path="/doctor-chat" element={<DoctorChat />} />

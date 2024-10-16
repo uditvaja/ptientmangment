@@ -1,7 +1,7 @@
 @import "../../css/variables.scss";
 
 .profile-header {
-  background-color: #fff;
+  background-color: $color1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
 
@@ -265,7 +265,7 @@
     margin-bottom: 20px;
   }
   .bill-card {
-    border: 1px solid #f4f4f4;
+    border: 1px solid $color8;
     background-color: $color1;
     border-radius: 10px;
     .bill-status {
@@ -274,7 +274,7 @@
       justify-content: space-between;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
-      background: #f6f8fb;
+      background: $color9;
       .bill-number {
         font-weight: 400;
         font-size: 18px;

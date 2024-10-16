@@ -1,7 +1,7 @@
 @import "../../css/variables.scss";
 
 .profile-header {
-  background-color: #fff;
+  background-color: $color1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
 
@@ -262,7 +262,7 @@
   }
 
   .patient-info-card {
-    background-color: #fff;
+    background-color: $color1;
     border-radius: 10px;
     padding: 1.5rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -283,15 +283,21 @@
   }
 
   .custom-tabs {
-    margin-bottom: 20px;
+    background-color: $color1;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: none;
 
     .nav-link {
-      color: #888;
-      font-weight: bold;
+      font-weight: 400;
+      font-size: 14px;
+      color: $color18;
 
       &.active {
-        color: #007bff;
-        border-bottom: 2px solid #007bff;
+        color: $color2;
+        border: none;
+        border-bottom: 2px solid $color2;
       }
     }
   }
@@ -314,42 +320,51 @@
   .documents-container,
   .prescriptions-container,
   .descriptions-container {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: $color1;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .description-item {
+    border: 1px solid $color8;
+    border-radius: 10px;
+    padding: 0;
+    .description-date {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      background: $color9;
+      padding: 15px;
+      font-weight: 600;
+      font-size: 18px;
+      color: $color15;
+    }
+    .description-content {
+      padding: 15px;
+      font-weight: 400;
+      font-size: 14px;
+      color: $color5;
+    }
   }
   
   .document-item,
-  .prescription-item,
-  .description-item {
-    background-color: #f8f9fa;
-    border-radius: 5px;
+  .prescription-item {
+    background-color: $color1;
     padding: 15px;
-    margin-bottom: 15px;
-
-    h4 {
-      margin-bottom: 10px;
-    }
-
-    p {
-      margin-bottom: 5px;
-    }
-  }
-
-  .description-date {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 5px;
-  }
-
-  .description-content {
-    font-size: 14px;
-    color: #333;
   }
 
   .create-prescription-btn {
-    margin-top: 20px;
+   background-color: $color2;
+   padding: 10px 14px;
+   color: $color1;
+   border-radius: 10px;
+   border: none;
+   font-weight: 600;
+   font-size: 18px;
   }
 }
 

@@ -1,7 +1,7 @@
 @import "../../css/variables.scss";
 
 .profile-header {
-  background-color: #fff;
+  background-color: $color1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
 
@@ -562,7 +562,7 @@
     width: 160px;
     height: 48px;
     border-radius: 10px;
-    border: 1px solid #d3d3d3;
+    border: 1px solid $color17;
     background-color: $color1;
     color: $color10;
     font-weight: 600;

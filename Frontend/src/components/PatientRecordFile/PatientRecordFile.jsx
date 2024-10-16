@@ -1,27 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PrescriptionToolsDetails.scss";
+import "./PatientRecordFile.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import DoctorSidebar from "../DoctorSidebar/DoctorSidebar";
-import { Button, Dropdown, Tab, Tabs, Form } from "react-bootstrap";
-import MedicalForm from "../MedicalForm/MedicalForm";
-import PrescriptionForm from "../PrescriptionForm/PrescriptionForm";
+import { Dropdown, Modal } from "react-bootstrap";
 
-const PrescriptionToolsDetails = () => {
+const PatientRecordFile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState("allDocument");
-  const [documents, setDocuments] = useState([
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-  ]);
-  const [prescriptions, setPrescriptions] = useState([
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-  ]);
+  const [prescriptionPreview, setPrescriptionPreview] = useState(false);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -90,122 +76,11 @@ const PrescriptionToolsDetails = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  const patientInfo = {
-    name: "Marcus Philips",
-    number: "99130 44537",
-    issue: "Feeling tired",
-    gender: "Male",
-    lastAppointmentDate: "2 Jan, 2022",
-    doctorName: "Dr. Marcus Philips",
-    age: "20 Years",
-    appointmentType: "Online",
-    address: "B-408 Swastik society, mota varachha rajkot.",
-    lastAppointmentTime: "4:30 PM",
+  const handlePrescriptionPreview = () => {
+    setPrescriptionPreview(true);
   };
 
-  const renderDocuments = () => {
-    return (
-      <div className="documents-container">
-        {documents.length === 0 ? (
-          <div className="no-data-found">
-            <img src="/assets/images/no_data_found.png" alt="No Data Found" />
-          </div>
-        ) : (
-          <>
-            <div className="row">
-              {documents.map((doc, index) => (
-                <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
-                  <MedicalForm key={doc.id} />
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    );
-  };
-
-  const renderPrescriptions = () => {
-    return (
-      <div className="prescriptions-container">
-        {prescriptions.length === 0 ? (
-          <div className="no-data-found">
-            <img src="/assets/images/no_data_found.png" alt="No Data Found" />
-          </div>
-        ) : (
-          <>
-            <div className="text-end">
-              {activeTab === "allPrescription" && (
-                <button type="button" className="create-prescription-btn">
-                  Create Prescription
-                </button>
-              )}
-            </div>
-            <div className="row">
-              {prescriptions.map((prescription, index) => (
-                <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
-                  <PrescriptionForm key={prescription.id} />
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    );
-  };
-
-  const renderDescriptions = () => {
-    const descriptions = [
-      { 
-        date: '2 Jan, 2022', 
-        content: [
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
-          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
-        ]
-      },
-      { 
-        date: '12 Jan, 2022', 
-        content: [
-         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
-          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
-        ]
-      },
-      { 
-        date: '10 Jan, 2022', 
-        content: [
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
-          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
-        ]
-      },
-      { 
-        date: '20 Jan, 2022', 
-        content: [
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
-          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
-        ]
-      },
-    ];
-
-    return (
-      <div className="descriptions-container">
-        <div className="row">
-          {descriptions.map((description, index) => (
-            <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
-              <div className="description-item">
-                <h4 className="description-date">
-                  Description Date <div className="text-end">{description.date}</div>
-                </h4>
-                {description.content.map((paragraph, pIndex) => (
-                <p className="description-content" key={pIndex}>{paragraph}</p>
-              ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
+  const handlePrescriptionPreviewClose = () => setPrescriptionPreview(false);
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -232,10 +107,10 @@ const PrescriptionToolsDetails = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item" aria-current="page">
-                      Prescription Tools
+                      Patient Record Access
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Create
+                      Patient Details
                     </li>
                   </ol>
                 </nav>
@@ -431,89 +306,222 @@ const PrescriptionToolsDetails = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid doctor-prescription-create-detials-page py-4">
-          <div className="mb-4">
-            <h1 className="patient-details-title">Patient Details</h1>
-          </div>
-          <div className="patient-info-card mb-4">
-            <div className="row">
-              <div className="col-md-2">
-                <img
-                  src="/assets/images/patient_image.png"
-                  alt={patientInfo.name}
-                  className="patient-image img-fluid rounded-circle"
-                />
+        <div className="container-fluid patient-record-file py-4">
+          <div className="card">
+            <div className="card-header">
+              <h5 className="card-title">All Files</h5>
+            </div>
+            <div className="card-body">
+              <h6 className="mb-3">All Uploaded Files</h6>
+              <div className="row mb-3">
+                {[
+                  "Right Hand Xray.JPG",
+                  "Right Leg Xray.JPG",
+                  "Left Leg Xray.JPG",
+                  "Left Hand Xray.JPG",
+                ].map((file, index) => (
+                  <div key={index} className="col-md-6 mb-2">
+                    <div className="file-item">
+                      <img
+                        src="/assets/images/img-prev.svg"
+                        alt="img-prev"
+                        className="img-fluid me-2"
+                      />
+                      <span>{file}</span>
+                      <small>{(3 + Math.random() * 0.1).toFixed(2)} MB</small>
+                      <button className="show-btn ms-2">
+                        <i className="bi bi-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="col-md-10">
-                <div className="row">
-                  <div className="col-md-2 col-6 mt-md-0 mt-2">
-                    <p className="info-label">Patient Name</p>
-                    <p className="info-value">{patientInfo.name}</p>
+              <h6 className="mb-3">Prescription</h6>
+              <div className="prescription-card">
+                <div className="prescription-content">
+                  <div className="prescription-header">
+                    <div className="hospital-info">
+                      <img
+                        src="/assets/images/logo.png"
+                        alt="Hospital Logo"
+                        className="hospital-logo img-fluid"
+                      />
+                    </div>
+                    <div className="doctor-info">
+                      <h3 className="m-0 doctor-name">Dr. Bharat Patel</h3>
+                      <p className="doctor-specialty">
+                        Obstetrics and gynecology
+                      </p>
+                    </div>
                   </div>
-                  <div className="col-md-2 col-6 mt-md-0 mt-2">
-                    <p className="info-label">Patient Number</p>
-                    <p className="info-value">{patientInfo.number}</p>
-                  </div>
-                  <div className="col-md-2 col-6 mt-md-0 mt-2">
-                    <p className="info-label">Patient Issue</p>
-                    <p className="info-value">{patientInfo.issue}</p>
-                  </div>
-                  <div className="col-md-4 col-6 mt-md-0 mt-2">
-                    <p className="info-label">Patient Gender</p>
-                    <p className="info-value">{patientInfo.gender}</p>
-                  </div>
-                  <div className="col-md-2 col-6 mt-md-0 mt-2">
-                    <p className="info-label">Last Appointment Date</p>
-                    <p className="info-value">
-                      {patientInfo.lastAppointmentDate}
-                    </p>
-                  </div>
-                  <div className="col-md-2 col-6 mt-md-3 mt-2">
-                    <p className="info-label">Doctor Name</p>
-                    <p className="info-value">{patientInfo.doctorName}</p>
-                  </div>
-                  <div className="col-md-2 col-6 mt-md-3 mt-2">
-                    <p className="info-label">Patient Age</p>
-                    <p className="info-value">{patientInfo.age}</p>
-                  </div>
-                  <div className="col-md-2 col-6 mt-md-3 mt-2">
-                    <p className="info-label">Appointment Type</p>
-                    <p className="info-value">{patientInfo.appointmentType}</p>
-                  </div>
-                  <div className="col-md-4 col-6 mt-md-3 mt-2">
-                    <p className="info-label">Patient Address</p>
-                    <p className="info-value">{patientInfo.address}</p>
-                  </div>
-                  <div className="col-md-2 col-6 mt-md-3 mt-2">
-                    <p className="info-label">Last Appointment Time</p>
-                    <p className="info-value">
-                      {patientInfo.lastAppointmentTime}
-                    </p>
+                  <div className="prescription-body">
+                    <div className="row">
+                      <div className="col-md-6">
+                        <p>
+                          <strong>Hospital Name:</strong> Medical Center
+                        </p>
+                        <p>
+                          <strong>Patient Name:</strong> Alokova Bhajirao
+                        </p>
+                        <p>
+                          <strong>Gender:</strong> Male
+                        </p>
+                        <p className="d-ruby">
+                          <strong>Address:</strong> B-105 Virat Bungalows
+                          Punagam Motavaracha Jamnagar.
+                        </p>
+                      </div>
+                      <div className="col-md-6">
+                        <p>
+                          <strong>Prescription Date:</strong> 2 Jan, 2022
+                        </p>
+                        <p>
+                          <strong>Age:</strong> 36 Year
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <div className="prescription-overlay">
+                  <button
+                    className="prescription-overlay-btn"
+                    onClick={handlePrescriptionPreview}
+                  >
+                    View Full Prescription
+                  </button>
+                </div>
+              </div>
+              <div className="description mt-3">
+                <h6>Description</h6>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+                  mattis turpis nulla, feugiat Lorem ipsum dolor sit amet,
+                  consectetur adipiscing elit. Proin mattis turpis nulla,
+                  feugiat...
+                </p>
               </div>
             </div>
           </div>
-
-          <Tabs
-            activeKey={activeTab}
-            onSelect={(k) => setActiveTab(k)}
-            className="custom-tabs"
-          >
-            <Tab eventKey="allDocument" title="All Document">
-              {renderDocuments()}
-            </Tab>
-            <Tab eventKey="allPrescription" title="All Prescription">
-              {renderPrescriptions()}
-            </Tab>
-            <Tab eventKey="description" title="Description">
-              {renderDescriptions()}
-            </Tab>
-          </Tabs>
         </div>
       </div>
+
+      {/* Prescription Preview Modal */}
+      <Modal
+        className="prescription-preview-modal"
+        show={prescriptionPreview}
+        onHide={handlePrescriptionPreviewClose}
+        centered
+      >
+        <div className="prescription-preview-header">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="d-flex align-items-center">
+              <img
+                src="/assets/images/logo.png"
+                alt="Hospital Logo"
+                className="hospital-logo img-fluid"
+              />
+            </div>
+            <div className="text-end">
+              <h3 className="m-0 doctor-name">Dr. Bharat Patel</h3>
+              <p className="doctor-specialty">Obstetrics and gynecology</p>
+            </div>
+          </div>
+          <div className="row mb-4">
+            <div className="col-md-6">
+              <p>
+                <strong>Hospital Name:</strong> Medical Center
+              </p>
+              <p>
+                <strong>Patient Name:</strong> Alabtrao Bhajirao
+              </p>
+              <p>
+                <strong>Gender:</strong> Male
+              </p>
+              <p className="d-ruby">
+                <strong>Address:</strong> B-105 Virat Bungalows Punagam
+                Motavaracha Jamnagar.
+              </p>
+            </div>
+            <div className="col-md-6">
+              <p>
+                <strong>Prescription Date:</strong>{" "}
+                {new Date().toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Age:</strong> 36 Year
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="table-responsive">
+          <table className="table mb-4">
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+                <th>Strength</th>
+                <th>Dose</th>
+                <th>Duration</th>
+                <th>When to take</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Calcium carbonate</td>
+                <td>100 Mg</td>
+                <td>1-0-1</td>
+                <td className="duration">2 Day</td>
+                <td className="whentotake">Before Food</td>
+              </tr>
+              <tr>
+                <td>Cyclobenzaprine</td>
+                <td>200 Mg</td>
+                <td>1-1-1</td>
+                <td className="duration">4 Day</td>
+                <td className="whentotake">With Food</td>
+              </tr>
+              <tr>
+                <td>Fluticasone Almeterol</td>
+                <td>150 Mg</td>
+                <td>0-1-0</td>
+                <td className="duration">5 Day</td>
+                <td className="whentotake">Before Food</td>
+              </tr>
+              <tr>
+                <td>Hydrochlorothiazide</td>
+                <td>250 Mg</td>
+                <td>0-0-1</td>
+                <td className="duration">2 Day</td>
+                <td className="whentotake">After Food</td>
+              </tr>
+              <tr>
+                <td>Flonase Allergy Relief</td>
+                <td>100 Mg</td>
+                <td>1-0-0</td>
+                <td className="duration">1 Day</td>
+                <td className="whentotake">Before Food</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="form-group additional-note mb-4">
+          <label>
+            <strong>Additional Note</strong>
+          </label>
+          <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the{" "}
+          </p>
+        </div>
+        <div className="d-flex justify-content-between align-items-end">
+          <div className="doctor-signature">
+            <img src="/assets/images/doctor-sign.png" alt="Doctor Signature" />
+            <p>Doctor Signature</p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
 
-export default PrescriptionToolsDetails;
+export default PatientRecordFile;
