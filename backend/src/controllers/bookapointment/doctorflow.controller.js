@@ -5,7 +5,7 @@ const Patient = require('../../models/patient.model');
 const Doctor = require('../../models/doctor.model');
 const mongoose = require('mongoose');
 
-
+//  doctor flow appointment management ----today appointment
 const getTodayAppointments = async (req, res) => {
     try {
               // Get doctorId from request

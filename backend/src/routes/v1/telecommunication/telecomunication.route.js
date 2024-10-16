@@ -18,6 +18,8 @@ router.get("/telecom-previous-appointment-search-patient-name", telecommunicatio
 router.get("/telecom-cancel-appointment", telecommunicationController.getCanceledAppointments);
 router.get("/telecom-cancel-appointment-search-patient-name", telecommunicationController.getCanceledAppointmentsSearch);
 router.get("/telecom-after-join-call-appointment-reminder", telecommunicationController.getAppointmentDetailsById);
+router.get("/telecom-after-join-call-appointment-reminder-patient-details", telecommunicationController.getAppointmentDetailsOfPatientById);
+
 router.put('/telecom-create-call', telecommunicationController.updateJoinCall);
 
 

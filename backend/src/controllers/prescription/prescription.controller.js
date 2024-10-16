@@ -78,7 +78,7 @@ const getPrescriptionsByPatientId = async (req, res) => {
         // Sort by app_date and endTime in descending order to get the latest appointment
         .sort({ app_date: -1, endTime: -1 })
         // Populate patient details
-        .populate('patientId', 'first_name last_name phone_number gender age patient_address image')
+        .populate('patientId', 'first_name last_name phone_number gender age patient_address image disease_name')
         // Populate doctor details (assuming you have a Doctor model with name fields)
         .populate('doctorId', 'firstName')
         // Select specific fields from the appointment schema itself
@@ -243,6 +243,7 @@ const getPrescriptionDetailsByPatientId = async (req, res) => {
       }
   };
     
+  
   
 module.exports = {
     createPrescription,

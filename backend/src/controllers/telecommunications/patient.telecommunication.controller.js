@@ -3,7 +3,7 @@ const AppointmentBook = require("../../models/bookAppointment.model");
 
 const moment = require('moment-timezone')
 
-const getTodayAppointments = async (req, res) => {
+const getTodayAppointmentsForPatient = async (req, res) => {
     try {
         // Get today's date in 'YYYY-MM-DD' format
         const today = moment().format('YYYY-MM-DD');
@@ -12,8 +12,8 @@ const getTodayAppointments = async (req, res) => {
         const todayAppointments = await AppointmentBook.find({
             app_date: today
         })
-        .select('appointmentType app_date patient_issue diseas_name startTime endTime') // Select the necessary fields
-        .populate('patientId', 'first_name last_name'); // Populate patient's first and last name
+        .select('appointmentType app_date patient_issue  startTime endTime') // Select the necessary fields
+        .populate('patientId', 'first_name last_name').populate('hospitalId','hospital_name').populate('docotrId','firstName'); // Populate patient's first and last name
 
         // Check if any appointments were found
         if (!todayAppointments.length) {
@@ -42,7 +42,7 @@ const getTodayAppointments = async (req, res) => {
     }
 };
 
-const getUpcomingAppointments = async (req, res) => {
+const getUpcomingAppointmentsForPatient = async (req, res) => {
     try {
         // Extract fromDate and toDate from the request body
         let { fromDate, toDate } = req.body; // Assuming dates are sent in the request body
@@ -91,7 +91,7 @@ const getUpcomingAppointments = async (req, res) => {
     }
 };
 
-const getUpcomingAppointmentsSearch = async (req, res) => {
+const getUpcomingAppointmentsSearchForPatient = async (req, res) => {
     try {
         // Extract fromDate, toDate, and patientName from the request body
         let { fromDate, toDate, patientName } = req.body; // Assuming dates and patient name are sent in the request body
@@ -157,8 +157,7 @@ const getUpcomingAppointmentsSearch = async (req, res) => {
     }
 };
 
-
-const getPreviousAppointments = async (req, res) => {
+const getPreviousAppointmentsForPatient = async (req, res) => {
     try {
         // Get today's date in 'YYYY-MM-DD' format
         const today = moment().format('YYYY-MM-DD');
@@ -192,7 +191,7 @@ const getPreviousAppointments = async (req, res) => {
     }
 };
 
-const getPreviousAppointmentsSearch = async (req, res) => {
+const getPreviousAppointmentsSearchForPatient = async (req, res) => {
     try {
         // Get today's date in 'YYYY-MM-DD' format
         const today = moment().format('YYYY-MM-DD');
@@ -236,7 +235,7 @@ const getPreviousAppointmentsSearch = async (req, res) => {
     }
 };
 
-const getCanceledAppointments = async (req, res) => {
+const getCanceledAppointmentsForPatient = async (req, res) => {
     try {
         // Find all appointments where status is 'canceled'
         const canceledAppointments = await AppointmentBook.find({
@@ -263,7 +262,7 @@ const getCanceledAppointments = async (req, res) => {
     }
 };
 
-const getCanceledAppointmentsSearch = async (req, res) => {
+const getCanceledAppointmentsSearchForPatient = async (req, res) => {
     try {
         // Extract the search parameter from the request query or body
         const { first_name } = req.query; // Assuming you are passing 'first_name' as a query parameter
@@ -304,7 +303,7 @@ const getCanceledAppointmentsSearch = async (req, res) => {
     }
 };
 
-const updateJoinCall = async (req, res) => {
+const updateJoinCallForPatient = async (req, res) => {
     try {
         // Extract appointmentId from the request parameters
         const { appointmentId } = req.body;
@@ -337,7 +336,7 @@ const updateJoinCall = async (req, res) => {
     }
 };
 
-const getAppointmentDetailsById = async (req, res) => {
+const getAppointmentDetailsByIdForPatient = async (req, res) => {
     try {
         // Extract appointmentId from the request body
         const { appointmentId } = req.body; // Assuming appointmentId is sent in the body
@@ -378,10 +377,7 @@ const getAppointmentDetailsById = async (req, res) => {
     }
 };
 
-
-
-
-const getAppointmentDetailsOfPatientById = async (req, res) => {
+const getAppointmentDetailsOfPatientByIdForPatient = async (req, res) => {
     try {
         // Extract appointmentId from the request body
         const { appointmentId } = req.body; // Assuming appointmentId is sent in the body
@@ -439,15 +435,17 @@ const getAppointmentDetailsOfPatientById = async (req, res) => {
 
 
 module.exports = {
-    getTodayAppointments,
-    getUpcomingAppointments,
-    getUpcomingAppointmentsSearch,
-    getPreviousAppointments,
-    getPreviousAppointmentsSearch,
-    getCanceledAppointments,
-    getCanceledAppointmentsSearch,
-    updateJoinCall,
-    getAppointmentDetailsById,
-    getAppointmentDetailsOfPatientById
+    getTodayAppointmentsForPatient,
+    getUpcomingAppointmentsForPatient,
+    getUpcomingAppointmentsSearchForPatient,
+    getPreviousAppointmentsForPatient,
+    getPreviousAppointmentsSearchForPatient,
+    getCanceledAppointmentsForPatient,
+    getCanceledAppointmentsSearchForPatient,
+    updateJoinCallForPatient,
+    getAppointmentDetailsByIdForPatient,
+    getAppointmentDetailsOfPatientByIdForPatient
+
+
 
 };

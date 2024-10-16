@@ -32,7 +32,18 @@ ref: 'appointmentBook',
  },
  additional_notes:{
     type:String
- }
+ },
+ image: {
+   public_id: { type: String },
+   url: { type: String },
+ },
+ description:{
+   type:String,
+ },
+ date: {
+   type: Date,
+   default: Date.now  // Automatically sets the current date
+ },
 });
 
 const Prescription = mongoose.model('prescription', prescriptionSchema);
