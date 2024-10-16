@@ -26,16 +26,16 @@ router.post("/create-cancel-appointment",
         bookapointmentPatientController.doctorList);
 
         router.get("/appointment-previous",
-            // authenticAdmin, 
+            // authenticDoctor, 
             bookapointmentPatientController.appointmentListById);
 
 
             router.get("/appointment-list-cancel-date",
-                // authenticAdmin, 
+                authenticDoctor, 
                 bookapointmentPatientController.appointmentTypeOnlineList);
 
                 router.get("/appointment-list-pending-status-patient",
-                    // authenticAdmin, 
+                    authenticDoctor, 
                     bookapointmentPatientController.appointmentTypeOnlineList);
 
                     
@@ -44,50 +44,50 @@ router.post("/create-cancel-appointment",
                     doctorFlowAppointmentController.getTodayAppointments);
 
                     router.get("/doctorflow-upcoming-appointmentbook-date",
-                        // authenticAdmin, 
+                        authenticDoctor, 
                         doctorFlowAppointmentController.getUpcomingAppointments);
 
                         
                     router.get("/doctorflow-previous-appointmentbook-date",
-                        // authenticAdmin, 
+                        authenticDoctor, 
                         doctorFlowAppointmentController.getPreviousAppointments);
 
                         
                     router.get("/doctorflow-cancel-appointmentbook-date",
-                        // authenticAdmin, 
+                        authenticDoctor, 
                         doctorFlowAppointmentController.getCanceledAppointments);
 
                         router.delete("/doctorflow-delete-appointment-timeslot",
-                            // authenticAdmin, 
+                            authenticDoctor, 
                             doctorFlowAppointmentController.deleteAppDateAndTimeSlot);
 
                             router.put("/doctorflow-update-appointment-timeslot-date",
-                                // authenticAdmin, 
+                                authenticDoctor, 
                                 doctorFlowAppointmentController.updateAppointmentDetails);
 
 
                                 router.get("/searching-fromdate-todate-doctor",
-                                    // authenticAdmin, 
+                                    authenticDoctor, 
                                     doctorFlowAppointmentController.getAppointmentsByDateRange);
 
                                     
                                 router.get("/all-appointment-of-patient",
-                                    // authenticAdmin, 
+                                    authenticDoctor, 
                                     doctorFlowAppointmentController.getAllAppointments);
 
-                                    router.get("/details-of-patient",
-                                        // authenticAdmin, 
-                                        doctorFlowAppointmentController.getAllAppointments);
+                                    // router.get("/details-of-patient",
+                                    //     authenticDoctor, 
+                                    //     doctorFlowAppointmentController.getAllAppointments);
 
 
                                         // docotr flow in dash board
-router.get('/patient-record-access',doctorFlowAppointmentController.getDetailsPatients)
-router.get('/patient-record-access-seraching-month',doctorFlowAppointmentController.getDetailsPatientsSearching)
+router.get('/patient-record-access',authenticDoctor,doctorFlowAppointmentController.getDetailsPatients)
+router.get('/patient-record-access-seraching-month',authenticDoctor,doctorFlowAppointmentController.getDetailsPatientsSearching)
 
 
-router.get('/patient-record-access-doctor-id',doctorFlowAppointmentController.patientDetailFromDoctorIdInDoctorFlowAppointments)
+router.get('/patient-record-access-doctor-id',authenticDoctor,doctorFlowAppointmentController.patientDetailFromDoctorIdInDoctorFlowAppointments)
 
-router.get('/patient-id-their-all-appointment-list',doctorFlowAppointmentController.getAppointmentsByDoctor)
+router.get('/patient-id-their-all-appointment-list',authenticDoctor,doctorFlowAppointmentController.getAppointmentsByDoctor)
 
 
     

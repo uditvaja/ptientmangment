@@ -34,4 +34,4 @@ module.exports.patintFlowBookappointmentController = require("./bookapointment/p
 
 module.exports.precriptionPatientController = require("./prescription/prescription.patient.controller");
 
-// module.exports.favoriteDoctorController = require("./Patient/app/favoritedoctor.controller");
+module.exports.uploadFileOfPrescriptionController = require("./doctor/doctor.flow.dashborad.upload.prescription");

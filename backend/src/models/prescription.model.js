@@ -32,7 +32,14 @@ ref: 'appointmentBook',
  },
  additional_notes:{
     type:String
- }
+ },
+ image: {
+   public_id: { type: String },
+   url: { type: String },
+ },
+ description:{
+   type:String,
+ },
 });
 
 const Prescription = mongoose.model('prescription', prescriptionSchema);
