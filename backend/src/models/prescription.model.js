@@ -40,6 +40,10 @@ ref: 'appointmentBook',
  description:{
    type:String,
  },
+ date: {
+   type: Date,
+   default: Date.now  // Automatically sets the current date
+ },
 });
 
 const Prescription = mongoose.model('prescription', prescriptionSchema);

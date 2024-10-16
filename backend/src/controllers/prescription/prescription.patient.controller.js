@@ -1,4 +1,7 @@
 const AppointmentBook = require("../../models/bookAppointment.model");
+const Doctor = require("../../models/doctor.model");
+const Hospital = require("../../models/hospital.model");
+const Patient = require("../../models/patient.model");
 const Prescription = require("../../models/prescription.model");
 const moment = require('moment-timezone')
 const getPrescriptionsByPatientId = async (req, res) => {
@@ -58,6 +61,159 @@ const getPrescriptionsByPatientId = async (req, res) => {
     }
 };
 
+const fullviewPrescription = async (req, res) => {
+    try {
+      const { prescriptionId } = req.body;
+  
+      // Fetch the prescription and populate the necessary fields
+      const prescription = await Prescription.findById(prescriptionId)
+        .populate({
+          path: 'appointmentId',
+          populate: [
+            {
+              path: 'doctorId',
+              model: Doctor,
+              select: 'firstName specialistType signatureImage', // Fetch doctor's details
+            },
+            {
+              path: 'patientId',
+              model: Patient,
+              select: 'first_name age patient_address gender', // Fetch patient's details
+            },
+            {
+              path: 'hospitalId',
+              model: Hospital,
+              select: 'hospital_name hospital_logo', // Fetch hospital's details
+            },
+          ],
+        })
+        .select('description date additional_notes mdecinename strenght dose duration when_to_take'); // Include prescription fields
+  
+      if (!prescription) {
+        return res.status(404).json({ message: 'Prescription not found' });
+      }
+  
+      // Extract required data from prescription
+      const { appointmentId, description, additional_notes, date, mdecinename, strenght, dose, duration, when_to_take } = prescription;
+      const doctorFirstName = appointmentId.doctorId.firstName;
+      const doctorSpecialistType = appointmentId.doctorId.specialistType;
+      const doctorSignatureImage = appointmentId.doctorId.signatureImage;
+  
+      const patient = appointmentId.patientId;
+      const hospitalName = appointmentId.hospitalId.hospital_name;
+      const hospitalLogo = appointmentId.hospitalId.hospital_logo;
+  
+      // Prepare response data
+      const responseData = {
+        doctorFirstName,
+        doctorSpecialistType,
+        doctorSignatureImage,
+        hospitalName,
+        hospitalLogo,
+        patientFirstName: patient.first_name,
+        patientAge: patient.age,
+        patientAddress: patient.patient_address,
+        patientGender: patient.gender,
+        prescriptionDescription: description,
+        prescriptionAdditionalNotes: additional_notes,
+        prescriptionDate: date,
+        medicineNames: mdecinename, // Medicine names array
+        strengths: strenght, // Strengths array
+        doses: dose, // Doses array
+        durations: duration, // Durations array
+        whenToTake: when_to_take, // When to take medicine array
+      };
+  
+      return res.status(200).json(responseData);
+    } catch (error) {
+      console.error('Error:', error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  const fullviewPrescriptionBySearchDateRangeWise = async (req, res) => {
+    try {
+      const { prescriptionId, fromDate, toDate } = req.body;
+  
+      // Create a date range filter if both fromDate and toDate are provided
+      const dateFilter = {};
+      if (fromDate && toDate) {
+        dateFilter.date = {
+          $gte: new Date(fromDate), // Greater than or equal to fromDate
+          $lte: new Date(toDate), // Less than or equal to toDate
+        };
+      }
+  
+      // Fetch the prescription and populate the necessary fields, apply the date filter
+      const prescription = await Prescription.find({
+        // _id: prescriptionId,
+        ...dateFilter, // Apply the date filter here
+      })
+        .populate({
+          path: 'appointmentId',
+          populate: [
+            {
+              path: 'doctorId',
+              model: Doctor,
+              select: 'firstName specialistType signatureImage', // Fetch doctor's details
+            },
+            {
+              path: 'patientId',
+              model: Patient,
+              select: 'first_name age patient_address gender', // Fetch patient's details
+            },
+            {
+              path: 'hospitalId',
+              model: Hospital,
+              select: 'hospital_name hospital_logo', // Fetch hospital's details
+            },
+          ],
+        })
+        .select('description date additional_notes mdecinename strenght dose duration when_to_take'); // Include prescription fields
+  
+      if (!prescription || prescription.length === 0) {
+        return res.status(404).json({ message: 'Prescription not found in the specified date range' });
+      }
+  
+      // Extract required data from prescription
+      const { appointmentId, description, additional_notes, date, mdecinename, strenght, dose, duration, when_to_take } = prescription[0]; // Access the first prescription if there's more than one
+      const doctorFirstName = appointmentId.doctorId.firstName;
+      const doctorSpecialistType = appointmentId.doctorId.specialistType;
+      const doctorSignatureImage = appointmentId.doctorId.signatureImage;
+  
+      const patient = appointmentId.patientId;
+      const hospitalName = appointmentId.hospitalId.hospital_name;
+      const hospitalLogo = appointmentId.hospitalId.hospital_logo;
+  
+      // Prepare response data
+      const responseData = {
+        doctorFirstName,
+        doctorSpecialistType,
+        doctorSignatureImage,
+        hospitalName,
+        hospitalLogo,
+        patientFirstName: patient.first_name,
+        patientAge: patient.age,
+        patientAddress: patient.patient_address,
+        patientGender: patient.gender,
+        prescriptionDescription: description,
+        prescriptionAdditionalNotes: additional_notes,
+        prescriptionDate: date,
+        medicineNames: mdecinename, // Medicine names array
+        strengths: strenght, // Strengths array
+        doses: dose, // Doses array
+        durations: duration, // Durations array
+        whenToTake: when_to_take, // When to take medicine array
+      };
+  
+      return res.status(200).json(responseData);
+    } catch (error) {
+      console.error('Error:', error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
+  
 module.exports = {
-    getPrescriptionsByPatientId
+    getPrescriptionsByPatientId,fullviewPrescription,fullviewPrescriptionBySearchDateRangeWise
 }
