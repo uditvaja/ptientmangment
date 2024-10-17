@@ -9,7 +9,7 @@ const PatientBookAppointment = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [currentDate, setCurrentDate] = useState(new Date('2022-06-18'));
+  const [currentDate, setCurrentDate] = useState(new Date("2022-06-18"));
   const [weekDays, setWeekDays] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
@@ -47,8 +47,8 @@ const PatientBookAppointment = () => {
   };
 
   const formatDate = (date) => {
-    const options = { weekday: 'short', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
+    const options = { weekday: "short", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
   };
 
   const handlePrevWeek = () => {
@@ -64,7 +64,9 @@ const PatientBookAppointment = () => {
   };
 
   const handleTimeSlotClick = (day, time) => {
-    setSelectedDate(day);
+    const selected = new Date(currentDate);
+    selected.setDate(selected.getDate() + weekDays.indexOf(day));
+    setSelectedDate(selected);
     setSelectedTime(time);
     setShowModal(true);
   };
@@ -78,7 +80,7 @@ const PatientBookAppointment = () => {
   };
 
   const isTimeSlotAvailable = (day, time) => {
-    return day === weekDays[2] && time === '11 AM';
+    return day === weekDays[2] && time === "11 AM";
   };
 
   const handleDoctorSelect = (event) => {
@@ -89,7 +91,7 @@ const PatientBookAppointment = () => {
 
   const handleBookAppointment = () => {
     handleCloseModal();
-    navigate('/invoice');
+    navigate("/invoice");
   };
 
   const toggleSidebar = () => {
@@ -152,6 +154,8 @@ const PatientBookAppointment = () => {
       icon: "payment-cancelled-icon.svg",
     },
   ];
+
+  const noNotificationImage = "/assets/images/no-notification.png";
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -213,89 +217,91 @@ const PatientBookAppointment = () => {
                     </button>
                   </nav>
                   <div className="d-flex align-items-center justify-content-center">
-                  <button className="btn" onClick={toggleSearch}>
-                    <img
-                      src="/assets/images/search.svg"
-                      alt="search"
-                      className="search-icon"
-                    />
-                  </button>
-                  {isSearchVisible && (
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Quick Search"
-                      style={{ display: isSearchVisible ? "block" : "none" }}
-                    />
-                  )}
-                  <Dropdown className="notification-dropdown mx-3">
-                    <Dropdown.Toggle
-                      variant="link"
-                      className="notification-toggle"
-                    >
+                    <button className="btn" onClick={toggleSearch}>
                       <img
-                        src="/assets/images/notification-bing.svg"
-                        alt="Notification Icon"
-                        className="img-fluid"
+                        src="/assets/images/search.svg"
+                        alt="search"
+                        className="search-icon"
                       />
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu className="notification-menu">
-                      <div className="notification-header d-flex justify-content-between align-items-center">
-                        <span>Notification</span>
-                        <button className="close-btn">&times;</button>
-                      </div>
-                      {notifications.length > 0 ? (
-                        notifications.map((notification) => (
-                          <div
-                            key={notification.id}
-                            className="notification-item d-flex align-items-start"
-                          >
-                            <img
-                              src={`/assets/images/${notification.icon}`}
-                              alt={notification.title}
-                              className="notification-icon"
-                            />
-                            <div className="notification-content">
-                              <h5>{notification.title}</h5>
-                              <p>{notification.description}</p>
-                            </div>
-                            <span className="notification-time">
-                              {notification.time}
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="no-notifications text-center">
-                          <img
-                            src={noNotificationImage}
-                            alt="No Notifications"
-                            className="no-notifications-img"
-                          />
-                        </div>
-                      )}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown>
-                    <Dropdown.Toggle variant="link" id="dropdown-user">
-                      <div className="d-flex align-items-center">
+                    </button>
+                    {isSearchVisible && (
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Quick Search"
+                        style={{ display: isSearchVisible ? "block" : "none" }}
+                      />
+                    )}
+                    <Dropdown className="notification-dropdown mx-3">
+                      <Dropdown.Toggle
+                        variant="link"
+                        className="notification-toggle"
+                      >
                         <img
-                          src="/assets/images/profile.png"
-                          alt="Lincoln Philips"
-                          className="profile-pic img-fluid"
+                          src="/assets/images/notification-bing.svg"
+                          alt="Notification Icon"
+                          className="img-fluid"
                         />
-                        <div className="d-none text-start">
-                          <h3 className="user-name mb-0">Lincoln Philips</h3>
-                          <span className="user-role">Admin</span>
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu className="notification-menu">
+                        <div className="notification-header d-flex justify-content-between align-items-center">
+                          <span>Notification</span>
+                          <button className="close-btn">&times;</button>
                         </div>
-                      </div>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
-                      <Dropdown.Item href="#/settings">Settings</Dropdown.Item>
-                      <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                        {notifications.length > 0 ? (
+                          notifications.map((notification) => (
+                            <div
+                              key={notification.id}
+                              className="notification-item d-flex align-items-start"
+                            >
+                              <img
+                                src={`/assets/images/${notification.icon}`}
+                                alt={notification.title}
+                                className="notification-icon"
+                              />
+                              <div className="notification-content">
+                                <h5>{notification.title}</h5>
+                                <p>{notification.description}</p>
+                              </div>
+                              <span className="notification-time">
+                                {notification.time}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="no-notifications text-center">
+                            <img
+                              src={noNotificationImage}
+                              alt="No Notifications"
+                              className="no-notifications-img"
+                            />
+                          </div>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown>
+                      <Dropdown.Toggle variant="link" id="dropdown-user">
+                        <div className="d-flex align-items-center">
+                          <img
+                            src="/assets/images/profile.png"
+                            alt="Lincoln Philips"
+                            className="profile-pic img-fluid"
+                          />
+                          <div className="d-none text-start">
+                            <h3 className="user-name mb-0">Lincoln Philips</h3>
+                            <span className="user-role">Admin</span>
+                          </div>
+                        </div>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
+                        <Dropdown.Item href="#/settings">
+                          Settings
+                        </Dropdown.Item>
+                        <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </div>
                 </div>
                 <div className="d-lg-flex d-none align-items-center">
@@ -468,14 +474,16 @@ const PatientBookAppointment = () => {
                                   key={`${day}-${time}`}
                                   className="time-slot"
                                 >
-                                  {isTimeSlotAvailable(day, time)  ? (
+                                  {isTimeSlotAvailable(day, time) ? (
                                     <Button
                                       variant="primary"
                                       style={{
                                         backgroundColor: "#0EABEB",
                                         borderColor: "#0EABEB",
                                       }}
-                                      onClick={() => handleTimeSlotClick(day, time)}
+                                      onClick={() =>
+                                        handleTimeSlotClick(day, time)
+                                      }
                                     >
                                       Available
                                     </Button>
@@ -584,75 +592,90 @@ const PatientBookAppointment = () => {
               </div>
             )}
           </div>
-
-          {/* Appointment Modal */}
-          <Modal centered show={showModal} onHide={handleCloseModal}>
-            <Modal.Header>
-              <Modal.Title>Appointment</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
-                  <Form.Label>Appointment Type</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value="Online"
-                    readOnly
-                    className="appo-type"
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
-                  <Form.Label>Patient Name</Form.Label>
-                  <Form.Control type="text" defaultValue="John doe" readOnly className="modal-form-control" />
-                </Form.Group>
-                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
-                  <Form.Label>Appointment Date</Form.Label>
-                  <Form.Control type="text" value={selectedDate} readOnly className="modal-form-control" />
-                </Form.Group>
-                <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
-                  <Form.Label>Appointment Time</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={`${selectedTime} - ${
-                      parseInt(selectedTime) + 1
-                    }:00 PM`}
-                    readOnly 
-                    className="modal-form-control"
-                  />
-                </Form.Group>
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    name="PatientIssue"
-                    className={"form-control"}
-                    id="PatientIssue"
-                    placeholder="Enter Patient Issue"
-                  />
-                  <label htmlFor="PatientIssue">Patient Issue</label>
-                </div>
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    name="DiseaseName"
-                    className={"form-control"}
-                    id="DiseaseName"
-                    placeholder="Enter Disease Name"
-                  />
-                  <label htmlFor="DiseaseName">Disease Name (Optional)</label>
-                </div>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <button type="button" className="cancle-btn" onClick={handleCloseModal}>
-                Cancel
-              </button>
-              <button type="submit" className="submit-btn" onClick={handleBookAppointment}>
-                Book Appointment
-              </button>
-            </Modal.Footer>
-          </Modal>
         </div>
       </div>
+      {/* Appointment Modal */}
+      <Modal centered show={showModal} onHide={handleCloseModal} className="patient-appo-modal">
+        <Modal.Header>
+          <Modal.Title>Appointment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
+              <Form.Label>Appointment Type</Form.Label>
+              <Form.Control
+                type="text"
+                value="Online"
+                readOnly
+                className="appo-type"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
+              <Form.Label>Patient Name</Form.Label>
+              <Form.Control
+                type="text"
+                defaultValue="John doe"
+                readOnly
+                className="modal-form-control"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
+              <Form.Label>Appointment Date</Form.Label>
+              <Form.Control
+                type="text"
+                value={selectedDate ? selectedDate.toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' }) : ""}
+                readOnly
+                className="modal-form-control"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3 d-flex align-items-center justify-content-between">
+              <Form.Label>Appointment Time</Form.Label>
+              <Form.Control
+                type="text"
+                value={`${selectedTime} - ${parseInt(selectedTime) + 1}:00 PM`}
+                readOnly
+                className="modal-form-control"
+              />
+            </Form.Group>
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="PatientIssue"
+                className={"form-control"}
+                id="PatientIssue"
+                placeholder="Enter Patient Issue"
+              />
+              <label htmlFor="PatientIssue">Patient Issue</label>
+            </div>
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="DiseaseName"
+                className={"form-control"}
+                id="DiseaseName"
+                placeholder="Enter Disease Name"
+              />
+              <label htmlFor="DiseaseName">Disease Name (Optional)</label>
+            </div>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            type="button"
+            className="cancle-btn"
+            onClick={handleCloseModal}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="submit-btn"
+            onClick={handleBookAppointment}
+          >
+            Book Appointment
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

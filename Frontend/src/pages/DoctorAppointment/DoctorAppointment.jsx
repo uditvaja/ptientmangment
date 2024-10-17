@@ -429,7 +429,7 @@ const DoctorAppointment = () => {
                       className="search-icon"
                     />
                   </div>
-                  <button type="button"  onClick={() => setShowDateRangeModal(true)} className="calendar-btn me-2 mt-lg-0 mt-2">
+                  <button type="button"  onClick={() => setShowDateRangeModal(true)} className="calendar-btn">
                     <Calendar size={16} /> Any Date
                   </button>
                   <button type="button" className="clock-btn mt-lg-0 mt-2">

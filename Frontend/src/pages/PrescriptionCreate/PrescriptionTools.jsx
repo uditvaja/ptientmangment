@@ -47,7 +47,7 @@ const PrescriptionTools = () => {
   }
 
   const handleCreatePrescription = () => {
-    navigate("/prescription-tools/create/");
+    navigate("/prescription-tools/create");
   }
 
   useEffect(() => {
@@ -90,63 +90,6 @@ const PrescriptionTools = () => {
   ];
 
   const noNotificationImage = "/assets/images/no-notification.png";
-
-  const AppointmentCard = ({ patient }) => (
-    <Card className="mb-3">
-      <Card.Body>
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <h5 className="card-title">{patient.name}</h5>
-          <div className="d-flex align-items-center">
-          <span
-            className={`badge ${
-              patient.status === "New"
-                ? "bage-info"
-                : patient.status === "Old"
-                ? "bage-success"
-                : "bage-info"
-            }`}
-          >
-            {patient.status}
-          </span>
-          <button type="button" className="eyebtn" onClick={handleNavigation} >
-          <img src="/assets/images/eye-blue-2.svg" alt="eye-blue" className="img-fluid eye-icon" />
-          </button>
-          </div>
-        </div>
-        <div className="card-details">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <small>Appointment Type</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end appo-type">{patient.appointmentType}</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Patient Age</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.age} Years</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Patient Gender</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.gender}</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Appointment Time</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.time}</p>
-            </div>
-          </div>
-          <button type="button" className="create-btn w-100" onClick={handleCreatePrescription}>
-            Create Prescription
-          </button>
-        </div>
-      </Card.Body>
-    </Card>
-  );
 
   const patients = [
     {
@@ -213,8 +156,64 @@ const PrescriptionTools = () => {
       gender: "Female",
       time: "10:10 AM",
     },
-    // ... add more patients here
   ];
+
+  const AppointmentCard = ({ patient }) => (
+    <Card className="mb-3">
+      <Card.Body>
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <h5 className="card-title">{patient.name}</h5>
+          <div className="d-flex align-items-center">
+          <span
+            className={`badge ${
+              patient.status === "New"
+                ? "bage-info"
+                : patient.status === "Old"
+                ? "bage-success"
+                : "bage-info"
+            }`}
+          >
+            {patient.status}
+          </span>
+          <button type="button" className="eyebtn" onClick={handleNavigation} >
+          <img src="/assets/images/eye-blue-2.svg" alt="eye-blue" className="img-fluid eye-icon" />
+          </button>
+          </div>
+        </div>
+        <div className="card-details">
+          <div className="row mb-2">
+            <div className="col-sm-6">
+              <small>Appointment Type</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end appo-type">{patient.appointmentType}</p>
+            </div>
+            <div className="col-sm-6">
+              <small>Patient Age</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end">{patient.age} Years</p>
+            </div>
+            <div className="col-sm-6">
+              <small>Patient Gender</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end">{patient.gender}</p>
+            </div>
+            <div className="col-sm-6">
+              <small>Appointment Time</small>
+            </div>
+            <div className="col-sm-6">
+              <p className="mb-0 text-end">{patient.time}</p>
+            </div>
+          </div>
+          <button type="button" className="create-btn w-100" onClick={handleCreatePrescription}>
+            Create Prescription
+          </button>
+        </div>
+      </Card.Body>
+    </Card>
+  );
 
   const filteredPatients = patients.filter((patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())
