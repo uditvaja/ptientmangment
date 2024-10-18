@@ -18,13 +18,13 @@ router.get("/bookappointement-previous-list-appointement-book",authenticPatient,
 router.get("/searching-bookappointement-previous-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getPreviousAppointmentsForPatientInRange);
 router.get("/bookappointement-previous-appointement-doctor-details-list",authenticPatient, patintFlowBookappointmentController.getPatientAppointmentsWithDoctorPrevious);
 
-router.get("/bookappointement-cancel-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getCanceledAppointments);
+router.get("/bookappointement-cancel-list-appointement-book",patintFlowBookappointmentController.getCanceledAppointments);
 // router.get("/searching-bookappointement-cancel-list-appointement-book", patintFlowBookappointmentController.getCanceledAppointmentsInRange);
 router.get("/bookappointement-cancel-appointement-doctor-details-list",authenticPatient, patintFlowBookappointmentController.getPatientAppointmentsWithDoctorcancel);
 
 
 router.get("/bookappointement-pending-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getPendingAppointments);
-router.get("/searching-bookappointement-pending-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getPendingAppointmentsInRange);
+router.get("/searching-bookappointement-pending-list-appointement-book", patintFlowBookappointmentController.getPendingAppointmentsInRange);
 router.get("/bookappointement-pending-appointement-doctor-details-list",authenticPatient, patintFlowBookappointmentController.getPatientAppointmentsWithDoctorPending);
 
 
