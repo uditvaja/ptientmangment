@@ -54,6 +54,10 @@ import PersonalHealthTestReports from "./pages/PersonalHealthTestReports/Persona
 import PersonalHealthMedicalRecord from "./pages/PersonalHealthMedicalRecord/PersonalHealthMedicalRecord";
 import PersonalHealthMedicalRecordDetails from "./pages/PersonalHealthMedicalRecordDetails/PersonalHealthMedicalRecordDetails";
 import BookingInvoice from "./components/BookingInvoice/BookingInvoice";
+import ReportingAndAnalytics from "./pages/ReportingAndAnalytics/ReportingAndAnalytics";
+import DoctorManagement from "./pages/DoctorManagement/DoctorManagement";
+import AddDoctorForm from "./pages/DoctorManagement/AddDoctorForm";
+import EditDoctor from "./pages/DoctorManagement/EditDoctor";
 
 function App() {
   return (
@@ -68,8 +72,12 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/adminProfile" element={<AdminProfile />} />
+        <Route path="/doctor-management" element={<DoctorManagement />} />
+        <Route path="/add-new-doctor" element={<AddDoctorForm />} />
+        <Route path="/edit-doctor/:id" element={<EditDoctor />} />
         <Route path="/billing/monitor-billing" element={<PendingBills />} />
         <Route path="/billing/monitor-billing/invoice" element={<BookingInvoice />} />
+        <Route path="/analytics" element={<ReportingAndAnalytics />} />
         {/* Doctor */}
         <Route path="/doctor-login" element={<DoctorLogin />} />
         <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />

@@ -33,13 +33,13 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/doctor-management"}
               className={`nav-link nav-links-2 ${
-                activeLink === "/doctor-management" ? "active" : ""
+                activeLink === "/doctor-management" || activeLink === "/add-new-doctor" || activeLink === "/edit-doctor/:id" ? "active" : ""
               }`}
             >
               Doctor Management
             </Link>
           </li>
-          <li className="nav-item">
+          <li className="nav-item mb-3">
             <Link
               to={"/patient-management"}
               className={`nav-link nav-links-3 ${
@@ -51,14 +51,14 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
           </li>
           <li className="nav-item">
             <Link
-              className={`nav-link nav-links-3 collapsed ${
+              className={`nav-link nav-links-4 collapsed ${
                 activeLink.includes("/billing/") ? "active" : ""
               }`}
               to={"#billing"}
               data-bs-toggle="collapse"
               aria-expanded="false"
             >
-              Prescription Tools
+              Billing And Payments
             </Link>
             <ul
               id="billing"
@@ -98,7 +98,7 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
               </li>
             </ul>
           </li>
-          <li className="nav-item">
+          <li className="nav-item mb-3">
             <Link
               to={"/analytics"}
               className={`nav-link nav-links-5 ${
