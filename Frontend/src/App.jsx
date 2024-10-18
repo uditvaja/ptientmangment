@@ -34,7 +34,6 @@ import PatientDetails from "./pages/PatientDetails/PatientDetails";
 import DoctorChat from "./components/DoctorChat/DoctorChat";
 import DoctorMeetingConference from "./components/DoctorMeetingConference/DoctorMeetingConference";
 import DoctorTeleconsultation from "./pages/DoctorTeleconsultation/DoctorTeleconsultation";
-import PrescriptionCreate from "./pages/PrescriptionCreate/PrescriptionTools";
 import PrescriptionToolsDetails from "./components/PrescriptionToolsDetails/PrescriptionToolsDetails";
 import PrescriptionTools from "./pages/PrescriptionCreate/PrescriptionTools";
 import CreatePrescription from "./pages/CreatePrescription/CreatePrescription";
@@ -48,6 +47,13 @@ import PatientTeleconsulationTimeSlot from "./pages/PatientTeleconsulationTimeSl
 import PatientBills from "./pages/PatientBills/PatientBills";
 import BillInvoicePage from "./components/BillInvoicePage/BillInvoicePage";
 import PaidBillInvoicePage from "./components/PaidBillInvoicePage/PaidBillInvoicePage";
+import PersonalHealthRecord from "./pages/PersonalHealthRecord/PersonalHealthRecord";
+import PatientDetailsEdit from "./pages/PatientDetailsEdit/PatientDetailsEdit";
+import PersonalHealthRecordPrescription from "./pages/PersonalHealthRecordPrescription/PersonalHealthRecordPrescription";
+import PersonalHealthTestReports from "./pages/PersonalHealthTestReports/PersonalHealthTestReports";
+import PersonalHealthMedicalRecord from "./pages/PersonalHealthMedicalRecord/PersonalHealthMedicalRecord";
+import PersonalHealthMedicalRecordDetails from "./pages/PersonalHealthMedicalRecordDetails/PersonalHealthMedicalRecordDetails";
+import BookingInvoice from "./components/BookingInvoice/BookingInvoice";
 
 function App() {
   return (
@@ -63,6 +69,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/adminProfile" element={<AdminProfile />} />
         <Route path="/billing/monitor-billing" element={<PendingBills />} />
+        <Route path="/billing/monitor-billing/invoice" element={<BookingInvoice />} />
         {/* Doctor */}
         <Route path="/doctor-login" element={<DoctorLogin />} />
         <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />
@@ -88,6 +95,12 @@ function App() {
         <Route path="/patient-forgot-password" element={<PatientForgotPassword />} />
         <Route path="/patient-otp-verification" element={<PatientOtpScreen />} />
         <Route path="/patient-reset-password" element={<PatientResetPassword />} />
+        <Route path="/personalHealthRecord" element={<PersonalHealthRecord />} />
+        <Route path="/patientDetailsEdit" element={<PatientDetailsEdit />} />
+        <Route path="/personalHealthRecordPrescription" element={<PersonalHealthRecordPrescription />} />
+        <Route path="/personalHealthTestReport" element={<PersonalHealthTestReports />} />
+        <Route path="/personalHealthMedicalHistory" element={<PersonalHealthMedicalRecord />} />
+        <Route path="/personalHealthMedicalHistoryDetails" element={<PersonalHealthMedicalRecordDetails />} />
         <Route path="/patientAppointment" element={<PatientAppointment />} />
         <Route path="/patientBookAppointment" element={<PatientBookAppointment />} />
         <Route path="/invoice" element={<InvoicePage />} />

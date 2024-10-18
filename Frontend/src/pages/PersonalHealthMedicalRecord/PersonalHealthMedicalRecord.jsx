@@ -1,10 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Card, Dropdown, Tab, Tabs } from "react-bootstrap";
 import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
-import "./PatientBills.scss";
+import { Dropdown } from "react-bootstrap";
+import "./PersonalHealthMedicalRecord.scss";
 
-const PatientBills = () => {
+const PrescriptionCard = ({ doctor, patientIssue, date, handleDetailnavigate }) => (
+  <div className="card mb-3">
+    <div className="card-body">
+      <div className="d-flex justify-content-between align-items-center prescrption-head mb-2">
+        <h5 className="mb-0">{doctor}</h5>
+        <div className="d-flex align-items-center">
+          <button className="btn p-0" onClick={handleDetailnavigate}>
+            <img src="./assets/images/eye-gray.svg" alt="Print" />
+          </button>
+        </div>
+      </div>
+      <div className="prescrption-body">
+        <div className="d-flex align-items-center justify-content-between">
+          <strong>Date</strong>
+          <span>{date}</span>
+        </div>
+        <div className="mt-2">
+          <strong>Patient Issue</strong>
+          <span>{patientIssue}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const PersonalHealthMedicalRecord = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
@@ -75,205 +100,36 @@ const PatientBills = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  const handleNavigation = () => {
-    navigate("/billInvoice");
-  };
-
-  const handlePaidNavigation = () => {
-    navigate("/paidBillInvoice");
-  };
-
-  const doctors = [
+  const prescriptions = [
     {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctor: "Dr. Ryan Vetrovs",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
     },
     {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctor: "Marcus Septimus",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
     },
     {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctor: "Ahmad Arcand",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
     },
     {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctor: "Dr. Ryan Vetrovs",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
     },
   ];
 
-  const UnpaidCard = ({ doctors, handleNavigation }) => {
-    return (
-      <>
-        {doctors?.map((doctor, index) => (
-          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-            <Card className="mb-3">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h5 className="card-title">{doctor?.name}</h5>
-                  <button type="button" className="eyebtn">
-                    <img
-                      src="/assets/images/eye-blue-2.svg"
-                      alt="eye-blue"
-                      className="img-fluid eye-icon"
-                    />
-                  </button>
-                </div>
-                <div className="card-details">
-                  <div className="row mb-2">
-                    <div className="col-sm-6">
-                      <small>Hospital Name</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Date</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">
-                        {doctor?.billCreatedDate} Years
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Time</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Total Bill Amount</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end total-amount">
-                        {doctor?.totalBillAmount}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="create-btn w-100"
-                    onClick={handleNavigation}
-                  >
-                    Pay Now
-                  </button>
-                </div>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
-      </>
-    );
-  };
-
-  const PaidBillCard = ({ doctors, handlePaidNavigation }) => {
-    return (
-      <>
-        {doctors?.map((doctor, index) => (
-          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-            <Card className="mb-3">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h5 className="card-title">{doctor?.name}</h5>
-                  <button
-                    type="button"
-                    className="eyebtn"
-                    onClick={handlePaidNavigation}
-                  >
-                    <img
-                      src="/assets/images/eye-blue-2.svg"
-                      alt="eye-blue"
-                      className="img-fluid eye-icon"
-                    />
-                  </button>
-                </div>
-                <div className="card-details">
-                  <div className="row mb-2">
-                    <div className="col-sm-6">
-                      <small>Hospital Name</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Date</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">
-                        {doctor?.billCreatedDate} Years
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Time</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Total Bill Amount</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end total-amount-paid">
-                        {doctor?.totalBillAmount}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
-      </>
-    );
-  };
+  const handleDetailnavigate = () => {
+    navigate("/personalHealthMedicalHistoryDetails")
+  }
 
   return (
     <div className="d-flex">
@@ -300,8 +156,11 @@ const PatientBills = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Personal Health Record
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Bills
+                      Medical History
                     </li>
                   </ol>
                 </nav>
@@ -497,39 +356,23 @@ const PatientBills = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patients-bills py-4">
-          <Tabs
-            defaultActiveKey="unpaidbills"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-          >
-            <Tab eventKey="unpaidbills" title="Unpaid Bills">
-              <div className="my-3">
-                <h2 className="patients-bills-title">Unpaid Bills</h2>
+        <div className="container-fluid personal_health_medical_record-page py-4">
+          <div className="row mb-4 align-items-center">
+            <div className="col">
+              <h1 className="prescription-access-title">Medical History</h1>
+            </div>
+          </div>
+          <div className="row">
+            {prescriptions.map((prescription, index) => (
+              <div key={index} className="col-md-6 col-lg-3">
+                <PrescriptionCard {...prescription} handleDetailnavigate={handleDetailnavigate} />
               </div>
-              <div className="row">
-                <UnpaidCard
-                  doctors={doctors}
-                  handleNavigation={handleNavigation}
-                />
-              </div>
-            </Tab>
-            <Tab eventKey="paidbills" title="Paid Bills">
-              <div className="my-3">
-                <h2 className="patients-bills-title">Paid Bills</h2>
-              </div>
-              <div className="row">
-                <PaidBillCard
-                  doctors={doctors}
-                  handlePaidNavigation={handlePaidNavigation}
-                />
-              </div>
-            </Tab>
-          </Tabs>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientBills;
+export default PersonalHealthMedicalRecord;

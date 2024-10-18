@@ -1,27 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Card, Dropdown, Tab, Tabs } from "react-bootstrap";
-import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
-import "./PatientBills.scss";
+import { Dropdown } from "react-bootstrap";
+import "./BookingInvoice.scss";
+import { useLocation } from "react-router-dom";
+import Sidebar from "../Sidebar/Sidebar";
 
-const PatientBills = () => {
+const BookingInvoice = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
   };
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
   };
 
   const handleClickOutside = (event) => {
@@ -75,210 +74,10 @@ const PatientBills = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  const handleNavigation = () => {
-    navigate("/billInvoice");
-  };
-
-  const handlePaidNavigation = () => {
-    navigate("/paidBillInvoice");
-  };
-
-  const doctors = [
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-    {
-      name: "Dr. Nolan George",
-      hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
-    },
-  ];
-
-  const UnpaidCard = ({ doctors, handleNavigation }) => {
-    return (
-      <>
-        {doctors?.map((doctor, index) => (
-          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-            <Card className="mb-3">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h5 className="card-title">{doctor?.name}</h5>
-                  <button type="button" className="eyebtn">
-                    <img
-                      src="/assets/images/eye-blue-2.svg"
-                      alt="eye-blue"
-                      className="img-fluid eye-icon"
-                    />
-                  </button>
-                </div>
-                <div className="card-details">
-                  <div className="row mb-2">
-                    <div className="col-sm-6">
-                      <small>Hospital Name</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Date</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">
-                        {doctor?.billCreatedDate} Years
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Time</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Total Bill Amount</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end total-amount">
-                        {doctor?.totalBillAmount}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="create-btn w-100"
-                    onClick={handleNavigation}
-                  >
-                    Pay Now
-                  </button>
-                </div>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
-      </>
-    );
-  };
-
-  const PaidBillCard = ({ doctors, handlePaidNavigation }) => {
-    return (
-      <>
-        {doctors?.map((doctor, index) => (
-          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-            <Card className="mb-3">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h5 className="card-title">{doctor?.name}</h5>
-                  <button
-                    type="button"
-                    className="eyebtn"
-                    onClick={handlePaidNavigation}
-                  >
-                    <img
-                      src="/assets/images/eye-blue-2.svg"
-                      alt="eye-blue"
-                      className="img-fluid eye-icon"
-                    />
-                  </button>
-                </div>
-                <div className="card-details">
-                  <div className="row mb-2">
-                    <div className="col-sm-6">
-                      <small>Hospital Name</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Date</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">
-                        {doctor?.billCreatedDate} Years
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Time</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Total Bill Amount</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end total-amount-paid">
-                        {doctor?.totalBillAmount}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
-      </>
-    );
-  };
-
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <PatientSidebar
+        <Sidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -300,8 +99,11 @@ const PatientBills = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Billing And Payments
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Bills
+                      Monitor Billing
                     </li>
                   </ol>
                 </nav>
@@ -497,39 +299,196 @@ const PatientBills = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patients-bills py-4">
-          <Tabs
-            defaultActiveKey="unpaidbills"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-          >
-            <Tab eventKey="unpaidbills" title="Unpaid Bills">
-              <div className="my-3">
-                <h2 className="patients-bills-title">Unpaid Bills</h2>
-              </div>
-              <div className="row">
-                <UnpaidCard
-                  doctors={doctors}
-                  handleNavigation={handleNavigation}
+        <div className="container-fluid book-invoice-page py-4">
+          <div className="invoice-container">
+            <div className="invoice-header">
+              <div className="logo">
+                <img
+                  src="/assets/images/logo.png"
+                  alt="logo"
+                  className="img-fluid"
                 />
               </div>
-            </Tab>
-            <Tab eventKey="paidbills" title="Paid Bills">
-              <div className="my-3">
-                <h2 className="patients-bills-title">Paid Bills</h2>
+              <h2 className="invoice-title">Invoice</h2>
+            </div>
+
+            <div className="book-doctor-info">
+              <div className="row align-items-center justify-content-between">
+                <div className="col-md-6">
+                  <h3>Dr. Bharat Patel</h3>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Proin mattis turpis nisl, viverra scelerisque porta eu.
+                  </p>
+                </div>
+                <div className="col-md-6 text-lg-end mt-lg-0 mt-4">
+                  <p className="doctor-info-contentbox">
+                    <strong className="doctor-info-title">Bill No</strong>
+                    <span className="doctor-info-dot">:</span> 1234
+                  </p>
+                  <p className="doctor-info-contentbox">
+                    <strong className="doctor-info-title">Bill Date</strong>
+                    <span className="doctor-info-dot">:</span> 20 June, 2020
+                  </p>
+                  <p className="doctor-info-contentbox">
+                    <strong className="doctor-info-title">Bill Time</strong>
+                    <span className="doctor-info-dot">:</span> 10:45 PM
+                  </p>
+                </div>
               </div>
+            </div>
+
+            <div className="book-invoice-details book-invoice-details-spacing">
               <div className="row">
-                <PaidBillCard
-                  doctors={doctors}
-                  handlePaidNavigation={handlePaidNavigation}
-                />
+                <div className="col-md-6">
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">Name</strong>
+                    <span className="invoice-details-dot">:</span> Miracle
+                    Kenter
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">Gender</strong>
+                    <span className="invoice-details-dot">:</span> Male
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">Age</strong>
+                    <span className="invoice-details-dot">:</span> 36 Years
+                  </p>
+                  <p className="invoice-details-contentbox text-lg-nowrap">
+                    <strong className="invoice-details-title">Address</strong>
+                    <span className="invoice-details-dot">:</span> B-105 Vimal
+                    Bungalows Purnaam Mogavira, Jamalpur
+                  </p>
+                </div>
+                <div className="col-md-6">
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">
+                      Disease Name
+                    </strong>
+                    <span className="invoice-details-dot">:</span> Jasuam Saris
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">
+                      Phone Number
+                    </strong>
+                    <span className="invoice-details-dot">:</span> 9757766557
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">
+                      Payment Type
+                    </strong>
+                    <span className="invoice-details-dot">:</span>{" "}
+                    <span className="text-blue">Insurance</span>
+                  </p>
+                </div>
               </div>
-            </Tab>
-          </Tabs>
+            </div>
+
+            <div className="table-responsive">
+              <table className="table align-middle invoice-table">
+                <thead>
+                  <tr>
+                    <th className="rounded-end-0">Description</th>
+                    <th className="rounded-0">Amount</th>
+                    <th className="rounded-0">Qty.</th>
+                    <th className="rounded-start-0 text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Neuromuscular blockers</td>
+                    <td>₹ 13,000.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 26,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>Neuromuscular blockers</td>
+                    <td>₹ 800.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 1,600.00</td>
+                  </tr>
+                  <tr>
+                    <td>Levocarvin with high dose methoxarate (HDMTX)</td>
+                    <td>₹ 1000.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 2000.00</td>
+                  </tr>
+                  <tr>
+                    <td>Hydroxyurea for sickle cell disease</td>
+                    <td>₹ 20.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 40.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="book-insurance-details">
+              <div className="row">
+                <div className="col-md-6">
+                  <p className="book-insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Insurance Company
+                    </strong>
+                    <span className="insurance-details-dot">:</span> HDFC life
+                    Insurance
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Insurance Plan
+                    </strong>
+                    <span className="insurance-details-dot">:</span> Health
+                    Insurance
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Claim Amount
+                    </strong>
+                    <span className="insurance-details-dot">:</span> ₹ 2,000.00
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Claimed Amount
+                    </strong>
+                    <span className="insurance-details-dot">:</span> ₹ 2,500.00
+                  </p>
+                </div>
+                <div className="col-md-6 text-lg-end mt-lg-0 mt-4">
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">Amount</strong>
+                    <span className="insurance-details-dot">:</span> ₹ 25,840.00
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Discount 5%
+                    </strong>
+                    <span className="insurance-details-dot">:</span> ₹ 1,292.00
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">Tax</strong>
+                    <span className="insurance-details-dot">:</span> ₹ 120.00
+                  </p>
+                  <p className="insurance-total-contentbox">
+                    <strong className="insurance-total-title">
+                      Total Amount
+                    </strong>
+                    <span className="insurance-total-dot">:</span> ₹ 24,668.00
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="invoice-footer">
+              <div className="contact-info">
+                <p>Call: +91604 22394</p>
+                <p>Email: Hello@Gmail.com</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientBills;
+export default BookingInvoice;

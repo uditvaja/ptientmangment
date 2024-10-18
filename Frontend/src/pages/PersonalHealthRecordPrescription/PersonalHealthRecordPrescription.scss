@@ -251,7 +251,7 @@
   }
 }
 
-.prescription-access-page {
+.personal_health_record_pres-page {
   background-color: $color1;
   border-radius: 15px;
   margin-top: 30px;
@@ -261,6 +261,44 @@
     font-size: 26px;
     color: $color15;
     margin-bottom: 0;
+  }
+  .personal_health_record_pres_search-container {
+    position: relative;
+    width: 335px;
+    background-color: transparent;
+
+    .form-control:focus {
+      background-color: $color9;
+      border-color: transparent;
+      border-radius: 50px;
+      outline: 0;
+      box-shadow: none;
+    }
+
+    input {
+      background-color: $color9;
+      padding: 13px 50px;
+      border-radius: 50px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .dropdown-toggle {
+      &::after {
+        display: inline-block;
+      }
+    }
+
+    .btn-link {
+      font-weight: 400;
+      font-size: 16px;
+      color: $color6;
+      text-decoration: none;
+    }
   }
   .card {
     border: none;
@@ -315,45 +353,6 @@
           font-size: 13px;
           color: $color6;
         }
-      }
-    }
-  }
-
-  .custom-date-selector {
-    position: relative;
-    display: inline-block;
-
-    .date-range-button {
-      background-color: $color1;
-      border: 1px solid $color17;
-      border-radius: 10px;
-      padding: 8px 14px;
-      text-align: left;
-      width: auto;
-      min-width: 278px;
-      font-weight: 600;
-      font-size: 17px;
-      color: $color10;
-      cursor: pointer;
-
-      &:hover,
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    .reset-dates-btn {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      padding: 0;
-      background: none;
-      border: none;
-
-      img {
-        width: 24px;
-        height: 24px;
       }
     }
   }
@@ -496,33 +495,8 @@
   }
 }
 
-// Override react-datepicker styles
-.react-datepicker-popper {
-  z-index: 9999 !important;
-}
-
-.react-datepicker {
-  font-family: inherit;
-  border-radius: 10px;
-  border: 1px solid #ced4da;
-}
-
-.react-datepicker__header {
-  background-color: $color9;
-  border-bottom: 1px solid #ced4da;
-}
-
-.react-datepicker__day--selected,
-.react-datepicker__day--in-selecting-range,
-.react-datepicker__day--in-range {
-  background-color: $color2;
-  font-weight: 600;
-  border-radius: 10px;
-  color: $color1;
-}
-
 @media (max-width: 992px) {
-  .prescription-access-page {
+  .personal_health_record_pres-page {
     padding: 20px;
   }
 }
@@ -538,7 +512,7 @@
     }
   }
 
-  .prescription-access-page {
+  .personal_health_record_pres-page {
     .prescription-access-title {
       margin-bottom: 20px;
     }

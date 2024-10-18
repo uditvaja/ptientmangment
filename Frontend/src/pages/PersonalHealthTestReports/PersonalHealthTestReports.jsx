@@ -1,20 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PrescriptionAccess.scss";
 import { useLocation } from "react-router-dom";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import html2canvas from "html2canvas";
 import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
 import { Dropdown, Modal } from "react-bootstrap";
+import "./PersonalHealthTestReports.scss";
 
 const PrescriptionCard = ({
   doctor,
-  hospital,
+  testReportName,
   disease,
   date,
-  time,
-  imageName,
-  imageSize,
   handlePrescriptionPreview,
 }) => (
   <div className="card mb-3">
@@ -22,9 +17,6 @@ const PrescriptionCard = ({
       <div className="d-flex justify-content-between align-items-center prescrption-head mb-2">
         <h5 className="mb-0">{doctor}</h5>
         <div className="d-flex align-items-center">
-          <button className="btn p-0 me-2">
-            <img src="./assets/images/download-icon.svg" alt="Download" />
-          </button>
           <button className="btn p-0" onClick={handlePrescriptionPreview}>
             <img src="./assets/images/eye-gray.svg" alt="Print" />
           </button>
@@ -32,96 +24,30 @@ const PrescriptionCard = ({
       </div>
       <div className="prescrption-body">
         <div className="d-flex align-items-center justify-content-between">
-          <strong>Hospital Name:</strong>
-          <span>{hospital}</span>
-        </div>
-        <div className="d-flex align-items-center justify-content-between">
-          <strong>Disease Name:</strong>
+          <strong>Disease Name</strong>
           <span>{disease}</span>
         </div>
         <div className="d-flex align-items-center justify-content-between">
-          <strong>Date:</strong>
-          <span>{date}</span>
+          <strong>Test Report Name</strong>
+          <span>{testReportName}</span>
         </div>
         <div className="d-flex align-items-center justify-content-between">
-          <strong>Time:</strong>
-          <span>{time}</span>
-        </div>
-        <div className="prescription-images-box mt-3">
-          <img
-            src="./assets/images/prescription-placeholder.png"
-            alt="Prescription"
-            className="img-fluid"
-          />
-          <div>
-            <span>{imageName}</span>
-            <small className="d-block">{imageSize}</small>
-          </div>
+          <strong>Report Date</strong>
+          <span>{date}</span>
         </div>
       </div>
     </div>
   </div>
 );
 
-const CustomDateRangeSelector = ({
-  startDate,
-  endDate,
-  setStartDate,
-  setEndDate,
-}) => {
-  const formatDate = (date) => {
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
-  const resetDates = () => {
-    setStartDate(null);
-    setEndDate(null);
-  };
-
-  return (
-    <div className="custom-date-selector">
-      <DatePicker
-        selectsRange={true}
-        startDate={startDate}
-        endDate={endDate}
-        onChange={(update) => {
-          const [start, end] = update;
-          setStartDate(start);
-          setEndDate(end);
-        }}
-        isClearable={false}
-        customInput={
-          <button className="form-control date-range-button">
-            {startDate && endDate
-              ? `${formatDate(startDate)} - ${formatDate(endDate)}`
-              : "Select Date Range"}
-          </button>
-        }
-      />
-      {startDate && endDate && (
-        <button className="btn reset-dates-btn" onClick={resetDates}>
-          <img src="./assets/images/cross-icon.svg" alt="Reset" />
-        </button>
-      )}
-    </div>
-  );
-};
-
-const PrescriptionAccess = () => {
+const PersonalHealthTestReports = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [startDate, setStartDate] = useState(new Date("2022-01-02"));
-  const [endDate, setEndDate] = useState(new Date("2022-01-13"));
   const [prescriptionPreview, setPrescriptionPreview] = useState(false);
 
   const modalRef = useRef(null);
   const sidebarRef = useRef(null);
   const location = useLocation();
-  //   const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -189,39 +115,27 @@ const PrescriptionAccess = () => {
   const prescriptions = [
     {
       doctor: "Dr. Ryan Vetrovs",
-      hospital: "Artemis Hospital",
       disease: "Viral Infection",
       date: "2 Jan, 2022",
-      time: "10:10 AM",
-      imageName: "Prescription.JPG",
-      imageSize: "370 x 218",
+      testReportName: "Blood Test",
     },
     {
       doctor: "Marcus Septimus",
-      hospital: "Artemis Hospital",
       disease: "Viral Infection",
       date: "2 Jan, 2022",
-      time: "10:10 AM",
-      imageName: "Prescription.JPG",
-      imageSize: "370 x 218",
+      testReportName: "Blood Test",
     },
     {
       doctor: "Ahmad Arcand",
-      hospital: "Artemis Hospital",
       disease: "Viral Infection",
       date: "2 Jan, 2022",
-      time: "10:10 AM",
-      imageName: "Prescription.JPG",
-      imageSize: "370 x 218",
+      testReportName: "Blood Test",
     },
     {
       doctor: "Dr. Ryan Vetrovs",
-      hospital: "Artemis Hospital",
       disease: "Viral Infection",
       date: "2 Jan, 2022",
-      time: "10:10 AM",
-      imageName: "Prescription.JPG",
-      imageSize: "370 x 218",
+      testReportName: "Blood Test",
     },
   ];
 
@@ -241,7 +155,6 @@ const PrescriptionAccess = () => {
       });
     }
   };
-
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -267,8 +180,11 @@ const PrescriptionAccess = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Personal Health Record
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Prescription Access
+                      Test Reports
                     </li>
                   </ol>
                 </nav>
@@ -464,18 +380,10 @@ const PrescriptionAccess = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid prescription-access-page py-4">
+        <div className="container-fluid personal_health_test_record-page py-4">
           <div className="row mb-4 align-items-center">
             <div className="col">
-              <h1 className="prescription-access-title">Prescription Access</h1>
-            </div>
-            <div className="col-auto">
-              <CustomDateRangeSelector
-                startDate={startDate}
-                endDate={endDate}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-              />
+              <h1 className="prescription-access-title">Test Reports</h1>
             </div>
           </div>
           <div className="row">
@@ -493,136 +401,306 @@ const PrescriptionAccess = () => {
 
       {/* Prescription Preview Modal */}
       <Modal
-        className="prescription-access-preview-modal"
+        className="personal_health_test-preview-modal"
         show={prescriptionPreview}
         onHide={handlePrescriptionPreviewClose}
         centered
       >
         <Modal.Header closeButton>
-          <h2 className="prescription-access-preview-title">Prescription</h2>
+          <h2 className="prescription-access-preview-title">Test Reports</h2>
         </Modal.Header>
-        <div className="prescription-access-preview-box" ref={modalRef}>
-          <div className="prescription-preview-header">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <div className="d-flex align-items-center">
+        <div className="test-report card" ref={modalRef}>
+          <div className="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <img
+                src="/assets/images/test-logo.png"
+                alt="DRLOGY PATHOLOGY LAB"
+                className="logo me-3"
+              />
+              <div>
+                <h1 className="mb-0">
+                  <span>DRLOGY</span> PATHOLOGY LAB
+                </h1>
+                <p className="mb-0">
+                  <img
+                    src="/assets/images/telecop.png"
+                    alt="telecop"
+                    className="me-2 img-fluid"
+                  />{" "}
+                  <small>Accurate | Caring | Instant</small>
+                </p>
+              </div>
+            </div>
+            <div className="contact-info text-end">
+              <p className="mb-0">
                 <img
-                  src="/assets/images/logo.png"
-                  alt="Hospital Logo"
-                  className="hospital-logo img-fluid"
+                  src="/assets/images/phone-icon.png"
+                  alt="phone-icon"
+                  className="img-fluid test-icon"
+                />{" "}
+                <small>01234567890 | 09123456789</small>
+              </p>
+              <p className="mb-0">
+                <img
+                  src="/assets/images/email-icon.png"
+                  alt="email-icon"
+                  className="img-fluid test-icon"
+                />{" "}
+                <small>drlogypathlab@drlogy.com</small>
+              </p>
+            </div>
+          </div>
+          <p className="mb-0 address">
+            105-108, SMART VISION COMPLEX, HEALTHCARE ROAD, OPPOSITE HEALTHCARE
+            COMPLEX. MUMBAI - 689578
+          </p>
+          <img
+            src="/assets/images/test-report-border.png"
+            alt="test-report-border"
+            className="img-fluid my-2"
+          />
+          <div className="card-body">
+            <div className="row mb-3">
+              <div className="col-lg-4">
+                <div className="row">
+                  <div className="col-6">
+                    <h2>Yash M. Patel</h2>
+                    <p className="mb-0">Age: 21 Years</p>
+                    <p className="mb-0">Sex: Male</p>
+                    <p className="mb-0">PID: 555</p>
+                  </div>
+                  <div className="col-6">
+                    <img
+                      src="/assets/images/qr-code.png"
+                      alt="QR Code"
+                      className="qr-code"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4">
+                <p className="mb-0">
+                  <strong>Sample Collected At:</strong> 125, Shivam Bungalow, S
+                  G Road, Mumbai
+                </p>
+                <p className="mb-0">
+                  <strong>Ref. By Dr. Hiren Shah</strong>
+                </p>
+              </div>
+              <div className="col-lg-4">
+                <img
+                  src="/assets/images/barcode_img.png"
+                  alt="barcode_img"
+                  className="img-fluid"
                 />
-              </div>
-              <div className="text-end">
-                <h3 className="m-0 doctor-name">Dr. Bharat Patel</h3>
-                <p className="doctor-specialty">Obstetrics and gynecology</p>
-              </div>
-            </div>
-            <div className="row mb-4">
-              <div className="col-md-6">
-                <p>
-                  <strong>Hospital Name:</strong> Medical Center
+                <p className="mb-0">
+                  <small>Registered on: 02:31 PM 02 Dec, 2X</small>
                 </p>
-                <p>
-                  <strong>Patient Name:</strong> Alabtrao Bhajirao
+                <p className="mb-0">
+                  <small>Collected on: 03:11 PM 02 Dec, 2X</small>
                 </p>
-                <p>
-                  <strong>Gender:</strong> Male
-                </p>
-                <p className="d-ruby">
-                  <strong>Address:</strong> B-105 Virat Bungalows Punagam
-                  Motavaracha Jamnagar.
-                </p>
-              </div>
-              <div className="col-md-6">
-                <p>
-                  <strong>Prescription Date:</strong>{" "}
-                  {new Date().toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Age:</strong> 36 Year
+                <p className="mb-0">
+                  <small>Reported on: 04:35 PM 02 Dec, 2X</small>
                 </p>
               </div>
             </div>
-          </div>
-          <div className="table-responsive">
-            <table className="table mb-4">
-              <thead>
-                <tr>
-                  <th>Medicine Name</th>
-                  <th>Strength</th>
-                  <th>Dose</th>
-                  <th>Duration</th>
-                  <th>When to take</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Calcium carbonate</td>
-                  <td>100 Mg</td>
-                  <td>1-0-1</td>
-                  <td className="duration">2 Day</td>
-                  <td className="whentotake">Before Food</td>
-                </tr>
-                <tr>
-                  <td>Cyclobenzaprine</td>
-                  <td>200 Mg</td>
-                  <td>1-1-1</td>
-                  <td className="duration">4 Day</td>
-                  <td className="whentotake">With Food</td>
-                </tr>
-                <tr>
-                  <td>Fluticasone Almeterol</td>
-                  <td>150 Mg</td>
-                  <td>0-1-0</td>
-                  <td className="duration">5 Day</td>
-                  <td className="whentotake">Before Food</td>
-                </tr>
-                <tr>
-                  <td>Hydrochlorothiazide</td>
-                  <td>250 Mg</td>
-                  <td>0-0-1</td>
-                  <td className="duration">2 Day</td>
-                  <td className="whentotake">After Food</td>
-                </tr>
-                <tr>
-                  <td>Flonase Allergy Relief</td>
-                  <td>100 Mg</td>
-                  <td>1-0-0</td>
-                  <td className="duration">1 Day</td>
-                  <td className="whentotake">Before Food</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="form-group additional-note mb-4">
-            <label>
-              <strong>Additional Note</strong>
-            </label>
+            <h3 className="mb-3 test-table-header">
+              Complete Blood Count (CBC) with Absolute Count
+            </h3>
+            <div className="table-responsive">
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Investigation</th>
+                    <th>Result</th>
+                    <th>Reference Value</th>
+                    <th>Unit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Primary Sample Type</td>
+                    <td>Blood</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      HEMOGLOBIN
+                      <br />
+                      Hemoglobin (Hb)
+                    </td>
+                    <td className="text-primary">12.5</td>
+                    <td>
+                      <span className="text-muted">Low</span> 13.0 - 17.0
+                    </td>
+                    <td>g/dL</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      RBC COUNT
+                      <br />
+                      Total RBC count
+                    </td>
+                    <td>5.2</td>
+                    <td>4.5 - 5.5</td>
+                    <td>mill/cumm</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      BLOOD INDICES
+                      <br />
+                      Packed Cell Volume (PCV)
+                    </td>
+                    <td className="text-danger">57.5</td>
+                    <td>
+                      <span className="text-muted">High</span> 40 - 50
+                    </td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td>Mean Corpuscular Volume (MCV)</td>
+                    <td>87.75</td>
+                    <td>83 - 101</td>
+                    <td>fL</td>
+                  </tr>
+                  <tr>
+                    <td>MCH</td>
+                    <td>27.2</td>
+                    <td>27 - 32</td>
+                    <td>pg</td>
+                  </tr>
+                  <tr>
+                    <td>MCHC</td>
+                    <td>32.8</td>
+                    <td>32.5 - 34.5</td>
+                    <td>g/dL</td>
+                  </tr>
+                  <tr>
+                    <td>RDW</td>
+                    <td>13.6</td>
+                    <td>11.6 - 14.0</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      WBC COUNT
+                      <br />
+                      Total WBC count
+                    </td>
+                    <td>9000</td>
+                    <td>4000-11000</td>
+                    <td>cumm</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="4">DIFFERENTIAL COUNT</td>
+                  </tr>
+                  <tr>
+                    <td>Neutrophils</td>
+                    <td>60</td>
+                    <td>50 - 62</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td>Lymphocytes</td>
+                    <td>31</td>
+                    <td>20 - 40</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td>Eosinophils</td>
+                    <td>1</td>
+                    <td>00 - 06</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td>Monocytes</td>
+                    <td>7</td>
+                    <td>00 - 10</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td>Basophils</td>
+                    <td>1</td>
+                    <td>00 - 02</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="4">ABSOLUTE COUNT</td>
+                  </tr>
+                  <tr>
+                    <td>Absolute Neutrophils</td>
+                    <td>6000</td>
+                    <td>1500 - 7500</td>
+                    <td>cells/mcL</td>
+                  </tr>
+                  <tr>
+                    <td>Absolute Lymphocytes</td>
+                    <td>3100</td>
+                    <td>1300 - 3500</td>
+                    <td>cells/mcL</td>
+                  </tr>
+                  <tr>
+                    <td>Absolute Eosinophils</td>
+                    <td>100</td>
+                    <td>00 - 500</td>
+                    <td>cells/mcL</td>
+                  </tr>
+                  <tr>
+                    <td>Absolute Monocytes</td>
+                    <td>700</td>
+                    <td>200 - 950</td>
+                    <td>cells/mcL</td>
+                  </tr>
+                  <tr>
+                    <td>Absolute Basophils</td>
+                    <td>100</td>
+                    <td>00 - 300</td>
+                    <td>cells/mcL</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      PLATELET COUNT
+                      <br />
+                      Platelet Count
+                    </td>
+                    <td>320000</td>
+                    <td>150000 - 410000</td>
+                    <td>cumm</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the{" "}
+              <small>
+                Instruments: Fully automated cell counter - Mindray 300
+              </small>
             </p>
           </div>
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="doctor-signature">
-              <img
-                src="/assets/images/doctor-sign.png"
-                alt="Doctor Signature"
-              />
-              <p>Doctor Signature</p>
+          <div className="card-footer bg-white border-top-0 text-center">
+            <p className="mb-0">
+              <small>***End of Report***</small>
+            </p>
+            <div className="row mt-3">
+              <div className="col">
+                <p className="mb-0">Medical Lab Technician</p>
+                <p>
+                  <small>(DMLT, BMLT)</small>
+                </p>
+              </div>
+              <div className="col">
+                <p className="mb-0">Dr. Payal Shah</p>
+                <p>
+                  <small>(MD, Pathologist)</small>
+                </p>
+              </div>
+              <div className="col">
+                <p className="mb-0">Dr. Vimal Shah</p>
+                <p>
+                  <small>(MD, Pathologist)</small>
+                </p>
+              </div>
             </div>
-            <button
-              type="button"
-              className="download-btn"
-              onClick={handleDownload}
-            >
-              <img
-                src="/assets/images/arrow-down.svg"
-                alt="arrow-down"
-                className="img-fluid me-2"
-              />
-              Download
-            </button>
           </div>
         </div>
       </Modal>
@@ -630,4 +708,4 @@ const PrescriptionAccess = () => {
   );
 };
 
-export default PrescriptionAccess;
+export default PersonalHealthTestReports;
