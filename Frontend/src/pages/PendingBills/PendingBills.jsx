@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./PendingBills.scss";
 
 const billsData = [
@@ -82,6 +82,7 @@ const PendingBills = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -145,6 +146,10 @@ const PendingBills = () => {
   ];
 
   const noNotificationImage = "/assets/images/no-notification.png";
+
+  const handleInvoice = () => {
+    navigate("/billing/monitor-billing/invoice");
+  }
   return (
     <>
       <div className="d-flex">
@@ -392,12 +397,13 @@ const PendingBills = () => {
                           Bill No:{" "}
                           <span className="bill-count">{bill.billNumber}</span>
                         </span>
-                        <span
-                          className={`status-icon ${
+                        <button
+                          className={`status-icon bg-transparent border-0 ${
                             bill.status === "complete"
                               ? "status-complete"
                               : "status-pending"
                           }`}
+                          onClick={handleInvoice}
                         >
                           {bill.status === "complete" ? (
                             <img
@@ -412,7 +418,7 @@ const PendingBills = () => {
                               className="img-fluid"
                             />
                           )}
-                        </span>
+                        </button>
                       </div>
                       <div className="bill-details">
                         <div className="d-flex align-items-center justify-content-between">

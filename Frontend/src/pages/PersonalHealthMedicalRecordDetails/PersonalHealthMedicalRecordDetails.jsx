@@ -1,16 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Dropdown, Tab, Tabs } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Card, Dropdown, Tab, Tabs } from "react-bootstrap";
+import "./PersonalHealthMedicalRecordDetails.scss";
 import PatientSidebar from "../../components/PatientSidebar/PatientSidebar";
-import "./PatientBills.scss";
+import MedicalForm from "../../components/MedicalForm/MedicalForm";
+import PrescriptionForm from "../../components/PrescriptionForm/PrescriptionForm";
 
-const PatientBills = () => {
+const PersonalHealthMedicalRecordDetails = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState("AllAppointment");
+  const [documents, setDocuments] = useState([
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+  ]);
+  const [prescriptions, setPrescriptions] = useState([
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+  ]);
+
 
   const sidebarRef = useRef(null);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -75,204 +90,282 @@ const PatientBills = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  const handleNavigation = () => {
-    navigate("/billInvoice");
-  };
-
-  const handlePaidNavigation = () => {
-    navigate("/paidBillInvoice");
-  };
-
-  const doctors = [
+  const appointments = [
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Ryan Vetrovs",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Marcus Septimus",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Alfonso Dokidis",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Davis Korsgaard",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Ryan Botosh",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Nolan Dias",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Ahmad Arcand",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
     {
-      name: "Dr. Nolan George",
+      type: "Online",
       hospitalname: "Shamuba Hospital",
-      appointmentType: "Onsite",
-      billCreatedTime: "10:20 AM",
-      totalBillAmount: "₹ 24,668",
-      billCreatedDate: "2 Jan, 2022",
+      doctorspeciality: "MBBS",
+      name: "Dr. Wilson Arcand",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      type: "Online",
+      hospitalname: "Shamuba Hospital",
+      doctorspeciality: "MBBS",
+      name: "Dr. Jaylon Korsgaard",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      type: "Online",
+      hospitalname: "Shamuba Hospital",
+      doctorspeciality: "MBBS",
+      name: "Dr. Abram Stanton",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      type: "Online",
+      hospitalname: "Shamuba Hospital",
+      doctorspeciality: "MBBS",
+      name: "Dr. James Saris",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+    },
+    {
+      type: "Online",
+      hospitalname: "Shamuba Hospital",
+      doctorspeciality: "MBBS",
+      name: "Dr. Leo Lipshutz",
+      issue: "Feeling Tired",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
     },
   ];
 
-  const UnpaidCard = ({ doctors, handleNavigation }) => {
-    return (
-      <>
-        {doctors?.map((doctor, index) => (
-          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-            <Card className="mb-3">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h5 className="card-title">{doctor?.name}</h5>
-                  <button type="button" className="eyebtn">
-                    <img
-                      src="/assets/images/eye-blue-2.svg"
-                      alt="eye-blue"
-                      className="img-fluid eye-icon"
-                    />
-                  </button>
-                </div>
-                <div className="card-details">
-                  <div className="row mb-2">
-                    <div className="col-sm-6">
-                      <small>Hospital Name</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Date</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">
-                        {doctor?.billCreatedDate} Years
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Time</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Total Bill Amount</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end total-amount">
-                        {doctor?.totalBillAmount}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="create-btn w-100"
-                    onClick={handleNavigation}
-                  >
-                    Pay Now
-                  </button>
-                </div>
-              </Card.Body>
-            </Card>
+  const renderAppointmentCard = (appointment) => (
+    <div className="appointment-card">
+      <div className="d-flex align-items-center justify-content-between">
+        <h3>{appointment.name}</h3>
+      </div>
+      <div className="appointment-card-details">
+        <div className="row">
+          <div className="col-6">
+            <p className="appo-card-details-title">Hospital Name</p>
+            <p className="appo-card-details-title">Appointment Type</p>
+            <p className="appo-card-details-title">Appointment Date</p>
+            <p className="appo-card-details-title">Appointment Time</p>
+            <p className="appo-card-details-title">Patient Issue</p>
+            <p className="appo-card-details-title">Disease Name</p>
+          </div>
+          <div className="col-6 text-end">
+            <p>{appointment.hospitalname}</p>
+            <p className="appo-card-details-type">{appointment.type}</p>
+            <p>{appointment.date}</p>
+            <p>{appointment.time}</p>
+            <p>{appointment.issue}</p>
+            <p>{appointment.disease}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAppointmentList = () => (
+    <div className="appointment-list">
+      <div className="row">
+        {appointments.map((appointment, index) => (
+          <div className="col-lg-3 col-md-6 col-12 mb-4" key={index}>
+            {renderAppointmentCard(appointment)}
           </div>
         ))}
-      </>
+      </div>
+    </div>
+  );
+
+  const renderDocuments = () => {
+    return (
+      <div className="documents-container">
+        {documents.length === 0 ? (
+          <div className="no-data-found">
+            <img src="/assets/images/no_data_found.png" alt="No Data Found" />
+          </div>
+        ) : (
+          <>
+            <div className="row">
+              {documents.map((doc, index) => (
+                <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
+                  <MedicalForm key={doc.id} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     );
   };
 
-  const PaidBillCard = ({ doctors, handlePaidNavigation }) => {
+  const renderPrescriptions = () => {
     return (
-      <>
-        {doctors?.map((doctor, index) => (
-          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-            <Card className="mb-3">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h5 className="card-title">{doctor?.name}</h5>
-                  <button
-                    type="button"
-                    className="eyebtn"
-                    onClick={handlePaidNavigation}
-                  >
-                    <img
-                      src="/assets/images/eye-blue-2.svg"
-                      alt="eye-blue"
-                      className="img-fluid eye-icon"
-                    />
-                  </button>
-                </div>
-                <div className="card-details">
-                  <div className="row mb-2">
-                    <div className="col-sm-6">
-                      <small>Hospital Name</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Date</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">
-                        {doctor?.billCreatedDate} Years
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Bill Created Time</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small>Total Bill Amount</small>
-                    </div>
-                    <div className="col-sm-6">
-                      <p className="mb-0 text-end total-amount-paid">
-                        {doctor?.totalBillAmount}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
+      <div className="prescriptions-container">
+        {prescriptions.length === 0 ? (
+          <div className="no-data-found">
+            <img src="/assets/images/no_data_found.png" alt="No Data Found" />
           </div>
-        ))}
-      </>
+        ) : (
+          <>
+            <div className="row">
+              {prescriptions.map((prescription, index) => (
+                <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
+                  <PrescriptionForm key={prescription.id} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     );
+  };
+
+  const renderDescriptions = () => {
+    const descriptions = [
+      { 
+        date: '2 Jan, 2022', 
+        content: [
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
+      },
+      { 
+        date: '12 Jan, 2022', 
+        content: [
+         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
+      },
+      { 
+        date: '10 Jan, 2022', 
+        content: [
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
+      },
+      { 
+        date: '20 Jan, 2022', 
+        content: [
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages",
+          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+        ]
+      },
+    ];
+
+    return (
+      <div className="descriptions-container">
+        <div className="row">
+          {descriptions.map((description, index) => (
+            <div className="col-xl-3 col-lg-4 col-md-6 col-12" key={index}>
+              <div className="description-item">
+                <h4 className="description-date">
+                  Description Date <div className="text-end">{description.date}</div>
+                </h4>
+                {description.content.map((paragraph, pIndex) => (
+                <p className="description-content" key={pIndex}>{paragraph}</p>
+              ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const handleTabSelect = (key) => {
+    setActiveTab(key);
+  };
+
+  const getBreadcrumbTitle = () => {
+    switch (activeTab) {
+      case "AllAppointment":
+        return "All Appointment";
+      case "AllDocument":
+        return "All Document";
+      case "AllPrescription":
+        return "All Prescription";
+      case "AllDescription":
+        return "All Description";
+      default:
+        return "All Appointment";
+    }
   };
 
   return (
@@ -300,8 +393,14 @@ const PatientBills = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Personal Health Record
+                    </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Medical History
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Bills
+                    {getBreadcrumbTitle()}
                     </li>
                   </ol>
                 </nav>
@@ -497,33 +596,24 @@ const PatientBills = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patients-bills py-4">
+        <div className="container-fluid personal_medical_details-page py-4">
           <Tabs
-            defaultActiveKey="unpaidbills"
+            defaultActiveKey="AllAppointment"
             id="uncontrolled-tab-example"
             className="mb-3"
+            onSelect={handleTabSelect}
           >
-            <Tab eventKey="unpaidbills" title="Unpaid Bills">
-              <div className="my-3">
-                <h2 className="patients-bills-title">Unpaid Bills</h2>
-              </div>
-              <div className="row">
-                <UnpaidCard
-                  doctors={doctors}
-                  handleNavigation={handleNavigation}
-                />
-              </div>
+            <Tab eventKey="AllAppointment" title="All Appointment">
+              {renderAppointmentList()}
             </Tab>
-            <Tab eventKey="paidbills" title="Paid Bills">
-              <div className="my-3">
-                <h2 className="patients-bills-title">Paid Bills</h2>
-              </div>
-              <div className="row">
-                <PaidBillCard
-                  doctors={doctors}
-                  handlePaidNavigation={handlePaidNavigation}
-                />
-              </div>
+            <Tab eventKey="allDocument" title="All Document">
+              {renderDocuments()}
+            </Tab>
+            <Tab eventKey="allPrescription" title="All Prescription">
+              {renderPrescriptions()}
+            </Tab>
+            <Tab eventKey="description" title="All Description">
+              {renderDescriptions()}
             </Tab>
           </Tabs>
         </div>
@@ -532,4 +622,4 @@ const PatientBills = () => {
   );
 };
 
-export default PatientBills;
+export default PersonalHealthMedicalRecordDetails;

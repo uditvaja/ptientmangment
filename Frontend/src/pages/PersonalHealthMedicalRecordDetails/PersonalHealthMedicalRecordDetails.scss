@@ -51,6 +51,7 @@
       padding: 13px 50px;
       border-radius: 50px;
     }
+
     .search-icon {
       position: absolute;
       left: 20px;
@@ -251,278 +252,172 @@
   }
 }
 
-.prescription-access-page {
+.personal_medical_details-page {
   background-color: $color1;
   border-radius: 15px;
   margin-top: 30px;
   padding: 40px;
-  .prescription-access-title {
-    font-weight: 700;
-    font-size: 26px;
-    color: $color15;
-    margin-bottom: 0;
-  }
-  .card {
+
+  .nav-tabs {
     border: none;
-    .prescrption-body {
-      border: 1px solid $color8;
-      border-top: none;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-      padding: 15px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    width: 100%;
+    .nav-link {
+      display: inline-block;
+      font-weight: 400;
+      font-size: 14px;
+      color: $color18;
+      &.active {
+        font-weight: 400;
+        font-size: 14px;
+        color: $color2;
+        border: none;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom: 3px solid $color2;
+      }
     }
-    .prescrption-head {
-      background-color: $color9;
+  }
+
+  .appointment-list {
+    .appointment-card {
+      background-color: #f8f9fa;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
-      padding: 8px;
-    }
-    .card-body {
-      h5 {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      h3 {
+        padding: 20px 15px 0;
         font-weight: 600;
         font-size: 18px;
+        margin-bottom: 15px;
         color: $color15;
       }
-      strong {
-        display: block;
-        font-weight: 700;
-        font-size: 16px;
-        color: $color5;
-      }
-      span {
-        font-weight: 400;
-        font-size: 16px;
-        color: $color5;
-      }
-      .prescription-images-box {
-        border: 1px solid #d9d9d9;
+
+      .appointment-card-details {
         background-color: $color1;
-        padding: 10px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        img {
-          margin-right: 16px;
-          margin-left: 16px;
-        }
-        span {
-          font-weight: 600;
-          font-size: 14px;
-          color: $color15;
-        }
-        small {
+        padding: 15px;
+        border: 1px solid $color8;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+
+        .appo-card-details-title {
           font-weight: 400;
-          font-size: 13px;
-          color: $color6;
-        }
-      }
-    }
-  }
-
-  .custom-date-selector {
-    position: relative;
-    display: inline-block;
-
-    .date-range-button {
-      background-color: $color1;
-      border: 1px solid $color17;
-      border-radius: 10px;
-      padding: 8px 14px;
-      text-align: left;
-      width: auto;
-      min-width: 278px;
-      font-weight: 600;
-      font-size: 17px;
-      color: $color10;
-      cursor: pointer;
-
-      &:hover,
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    .reset-dates-btn {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      padding: 0;
-      background: none;
-      border: none;
-
-      img {
-        width: 24px;
-        height: 24px;
-      }
-    }
-  }
-}
-
-.prescription-access-preview-modal {
-  .modal-dialog {
-    max-width: 676px;
-
-    .modal-content {
-      padding: 20px;
-
-      .modal-header {
-        padding: 0;
-        border: none;
-      }
-    }
-  }
-  .prescription-access-preview-title {
-    font-weight: 700;
-    font-size: 24px;
-    color: $color15;
-  }
-  .prescription-access-preview-box {
-    border: 2px solid $color8;
-    padding: 20px;
-    border-radius: 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    .prescription-preview-header {
-      background-color: $color9;
-      border-radius: 15px;
-      padding: 20px;
-      .hospital-logo {
-        width: 238px;
-      }
-
-      .doctor-name {
-        font-size: 24px;
-        font-weight: 700;
-        color: $color2;
-      }
-
-      .doctor-specialty {
-        font-weight: 600;
-        font-size: 14px;
-        color: $color4;
-      }
-
-      p {
-        font-weight: 600;
-        margin-bottom: 5px;
-        color: $color4;
-        font-size: 14px;
-        strong {
-          font-weight: 600;
           font-size: 16px;
-          color: $color10;
+          color: $color4;
         }
-      }
 
-      .d-ruby {
-        display: ruby-text;
-      }
-    }
-
-    table {
-      th {
-        background: $color9;
-        font-weight: 600;
-        font-size: 14px;
-        color: $color15;
-      }
-      tbody {
-        tr {
-          border-bottom: 1px solid $color8;
-          td {
-            font-weight: 600;
-            font-size: 16px;
-            color: $color10;
-          }
-
-          .duration {
-            background: #39973d1a;
-            padding: 6px 14px;
-            border-radius: 30px;
-            color: $color11;
-            font-size: 14px;
-            text-align: center;
-          }
-
-          .whentotake {
-            background: #5678e91a;
-            padding: 6px 14px;
-            border-radius: 30px;
-            color: $color3;
-            font-size: 14px;
-            text-align: center;
-          }
-        }
-      }
-    }
-
-    .additional-note {
-      label {
-        strong {
+        p {
+          font-weight: 700;
           font-size: 16px;
-          color: $color15;
+          color: $color5;
+        }
+
+        .appo-card-details-type {
+          color: $color14;
         }
       }
-      p {
-        font-weight: 500;
-        font-size: 14px;
+
+      .join-call-btn,
+      .cancle-btn {
+        font-weight: 600;
+        font-size: 18px;
+        color: $color1;
+        width: 163px;
+        height: 48px;
+        border-radius: 10px;
+      }
+
+      .join-call-btn {
+        background-color: $color11;
+        border-color: $color11;
+
+        &:hover {
+          background-color: #218838;
+          border-color: #1e7e34;
+        }
+      }
+
+      .cancle-btn {
+        background-color: transparent;
+        border: 1px solid $color17;
         color: $color5;
       }
     }
+  }
 
-    .doctor-signature {
-      p {
-        font-weight: 600;
-        font-size: 14px;
-        color: $color6;
-      }
+  .no-data-found {
+    text-align: center;
+    padding: 50px 0;
+
+    img {
+      max-width: 200px;
+      margin-bottom: 20px;
     }
 
-    .download-btn {
-      padding: 10px 50px;
-      border-radius: 10px;
-      background-color: $color2;
-      border-color: $color2;
-      color: $color1;
-      font-weight: 600;
-      font-size: 17px;
-      transition: all 0.5s;
-      &:hover {
-        background-color: #019bb3;
-        border-color: #019bb3;
-      }
+    p {
+      font-size: 18px;
+      color: #888;
     }
   }
-}
 
-// Override react-datepicker styles
-.react-datepicker-popper {
-  z-index: 9999 !important;
-}
+  .documents-container,
+  .prescriptions-container,
+  .descriptions-container {
+    background-color: $color1;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
 
-.react-datepicker {
-  font-family: inherit;
-  border-radius: 10px;
-  border: 1px solid #ced4da;
-}
+  .description-item {
+    border: 1px solid $color8;
+    border-radius: 10px;
+    padding: 0;
+    .description-date {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      background: $color9;
+      padding: 15px;
+      font-weight: 600;
+      font-size: 18px;
+      color: $color15;
+    }
+    .description-content {
+      padding: 15px;
+      font-weight: 400;
+      font-size: 14px;
+      color: $color5;
+    }
+  }
 
-.react-datepicker__header {
-  background-color: $color9;
-  border-bottom: 1px solid #ced4da;
-}
+  .document-item,
+  .prescription-item {
+    background-color: $color1;
+    padding: 15px;
+  }
 
-.react-datepicker__day--selected,
-.react-datepicker__day--in-selecting-range,
-.react-datepicker__day--in-range {
-  background-color: $color2;
-  font-weight: 600;
-  border-radius: 10px;
-  color: $color1;
+  @media (max-width: 767px) {
+    .appointment-card {
+      margin-bottom: 20px;
+    }
+  }
 }
 
 @media (max-width: 992px) {
-  .prescription-access-page {
+  .personal_medical_details-page {
     padding: 20px;
   }
 }
@@ -535,12 +430,6 @@
     }
     .mobile-screen {
       display: none;
-    }
-  }
-
-  .prescription-access-page {
-    .prescription-access-title {
-      margin-bottom: 20px;
     }
   }
 }

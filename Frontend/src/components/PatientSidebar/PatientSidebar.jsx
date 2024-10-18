@@ -1,8 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./PatientSidebar.scss";
 
 const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
+  const navigate = useNavigate ();
+
+  const handleBookAppointment = () => {
+    navigate("/patientAppointment")
+  }
   return (
     <>
       <div
@@ -23,7 +28,7 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
             <Link
               to={"/personalHealthRecord"}
               className={`nav-link nav-links-1 ${
-                activeLink === "/personalHealthRecord" ? "active" : ""
+                activeLink === "/personalHealthRecord" || activeLink === "/patientDetailsEdit" || activeLink === "/personalHealthRecordPrescription" || activeLink === "/personalHealthTestReport" || activeLink === "/personalHealthMedicalHistory" || activeLink === "/personalHealthMedicalHistoryDetails" ? "active" : ""
               }`}
             >
               Personal Health Record
@@ -93,7 +98,7 @@ const PatientSidebar = ({ isOpen, sidebarRef, activeLink }) => {
           />
           <h6>Hospital appointment</h6>
           <p>You have to fill up the form to be admitted to the hospital.</p>
-          <button type="button" className="appontment-btn">
+          <button type="button" className="appontment-btn" onClick={handleBookAppointment}>
             <img
               src="/assets/images/calendar-white.svg"
               alt="calendar-white"
