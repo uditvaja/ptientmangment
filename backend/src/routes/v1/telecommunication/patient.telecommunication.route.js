@@ -15,12 +15,12 @@ router.get("/telecom-upcomming-appointment-patient", telecommunicationController
 router.get("/telecom-upcomming-appointment-search-patient-name-patient-flow", telecommunicationControllerPatientFlow.getUpcomingAppointmentsSearchForPatient);
 router.get("/telecom-previous-appointment-patient", telecommunicationControllerPatientFlow.getPreviousAppointmentsForPatient);
 router.get("/telecom-previous-appointment-search-patient-name-patient-flow", telecommunicationControllerPatientFlow.getPreviousAppointmentsSearchForPatient);
-router.get("/telecom-cancel-appointment", telecommunicationControllerPatientFlow.getCanceledAppointmentsForPatient);
+router.get("/telecom-cancel-appointment-patient", telecommunicationControllerPatientFlow.getCanceledAppointmentsForPatient);
 router.get("/telecom-cancel-appointment-search-patient-name", telecommunicationControllerPatientFlow.getCanceledAppointmentsSearchForPatient);
-router.get("/telecom-after-join-call-appointment-reminder", telecommunicationControllerPatientFlow.getAppointmentDetailsByIdForPatient);
+router.get("/telecom-after-join-call-appointment-reminder-patient", telecommunicationControllerPatientFlow.getAppointmentDetailsByIdForPatient);
 router.get("/telecom-after-join-call-appointment-reminder-patient-details", telecommunicationControllerPatientFlow.getAppointmentDetailsOfPatientByIdForPatient);
 
-router.put('/telecom-create-call', telecommunicationControllerPatientFlow.updateJoinCall);
+router.put('/telecom-create-call-patient', telecommunicationControllerPatientFlow.updateJoinCall);
 
 
 
