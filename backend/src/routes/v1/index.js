@@ -25,6 +25,10 @@ const telecommunicationRoute = require("./telecommunication/telecomunication.rou
 const personalHealthRecordRoute = require("./personal health records/personal.health.record.route")
 const bookappointementPatientFlowRoute = require("./bookappointment/book.appointement.doctor.route")
 const dashboardAdminFlowRoute = require("./admin/dashboard/dashboard.route")
+const videoCallRoute = require("./videocall/tokenRoute")
+const chatRoute = require("./chat/chat.route")
+
+
 
 
 
@@ -46,10 +50,12 @@ router.use("/patient-flow-personal-health-record", personalHealthRecordRoute);
 router.use("/bookappointment-patientFlow", bookappointementPatientFlowRoute);
 
 router.use("/dashboard-adminFlow", dashboardAdminFlowRoute);
+router.use("/video", videoCallRoute);
+router.use("/chat", chatRoute);
 
 
 
-// router.use("/specialist", specialistRoute);
+
 // router.use("/faq", faqRoute);
 // router.use("/faq-patient", faqPatientRoute);
 

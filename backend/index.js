@@ -37,20 +37,24 @@ app.use(errorHandler);
 connectDB();
 
 // Socket.IO connection event handler
-io.on("connection", (socket) => {
-  console.log("New user connected:", socket.id);
+io.on('connection', (socket) => {
+  console.log('New user connected:', socket.id);
 
+  // Listen for the 'send_message' event
   socket.on('send_message', async (data) => {
-    // Emit the message to other users (doctor)
-    socket.broadcast.emit('receive_message', data);
+    // Emit the message to everyone (including sender and receiver)
+    io.emit('receive_message', data); // Broadcast to both patient and doctor
 
     // Save the message in the database
-    await chatController.saveMessage(data);  // Call your saveMessage function here
+    await chatController.saveMessage(data);
   });
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+
+  // Handle disconnection
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
   });
 });
+
 
 // Start the server
 server.listen(config.port, () => {
