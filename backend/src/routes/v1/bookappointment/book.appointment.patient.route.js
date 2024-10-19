@@ -68,7 +68,7 @@ router.get("/doctorflow-cancel-appointmentbook-date",
 
 
 router.post("/create-appointment-book",
-    authenticPatient, 
+    // authenticPatient, 
     bookapointmentPatientController.bookAppointment);
 
     

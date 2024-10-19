@@ -1,16 +1,9 @@
 const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema({
-//  doctorid:{
-//     type:String,
-//  },
-// hospitalid:{
-
-// },
 patientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'patient',  // Reference to the Patient model
-  
 },
 add_notes:{
    type:String,
@@ -18,18 +11,15 @@ add_notes:{
 doctorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'doctor',  // Reference to the Patient model
-  
 },
 
 // doctorTimeSlot:{
 //    type: mongoose.Schema.Types.ObjectId,
 //    ref: 'doctimeslot',  // Reference to the Patient model
-  
 // },
 hospitalId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'hospital',  // Reference to the Patient model
-  
 },
 patient_issue:{
 type:String,
@@ -64,7 +54,8 @@ city:{
   specialist:{
 type:String,
   },
-  status: {
+//   1-cancel,0-update when bookappointment,
+  status: { 
     type: Number,
     default: 0, //0-Pending,1-Completed,2-Cancelled,3-Accepted
   },
@@ -73,13 +64,15 @@ type:String,
   cancel_appointment: {
     type: String,
   },
-  
+
  join_call:{
 type:String,
 default:"",
  },
  cancel_date: { type: String }, // To store cancellation date
     cancel_time: { type: String },
+   // ,0-schedule,1-previous,2-cancel,3-pending
+telecomunicationStatus:{type:String,default:"0"},
 });
 
 const AppointmentBook = mongoose.model('appointmentBook', bookSchema);

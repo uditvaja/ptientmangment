@@ -7,6 +7,8 @@ const hospitalSchema = new mongoose.Schema({
  hospital_adress:{
    type:String,
  },
+ phoneNumber:{type:Number},
+ email:{type:String},
  country:{
    type:String, 
  },
@@ -24,7 +26,8 @@ const hospitalSchema = new mongoose.Schema({
     default:false,
  },
  hospital_logo:{
-    type:String,
+  public_id: { type: String },
+  url: { type: String },
  },
 
 });

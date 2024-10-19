@@ -13,6 +13,7 @@ const authenticPatient = require("../../../middlewares/patientAuth");
 router.get("/bookappointement-today-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getTodaysAppointmentsForPatient);
 router.get("/searching-bookappointement-today-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getAppointmentsForPatientInRange);
 router.get("/bookappointement-today-appointement-doctor-details-list",authenticPatient, patintFlowBookappointmentController.getPatientAppointmentsWithDoctor);
+router.post("/bookappointement-cancel", patintFlowBookappointmentController.cancelAppointment);
 
 router.get("/bookappointement-previous-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getPreviousAppointmentsForPatient);
 router.get("/searching-bookappointement-previous-list-appointement-book",authenticPatient, patintFlowBookappointmentController.getPreviousAppointmentsForPatientInRange);

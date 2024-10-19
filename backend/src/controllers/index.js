@@ -38,3 +38,6 @@ module.exports.uploadFileOfPrescriptionController = require("./prescription/doct
 
 module.exports.telecommunicationControllerPatientFlow = require("./telecommunications/patient.telecommunication.controller");
 
+module.exports.billCreateController = require("./bill/bill.controller");
+
+

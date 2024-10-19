@@ -12,4 +12,6 @@ router.get("/search-doctor-and-patient-list",
     dashboardController.searchDoctorAndPatientist);
 
 
+
+
 module.exports = router;

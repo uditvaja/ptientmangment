@@ -7,7 +7,7 @@ const express = require("express");
 // const favoriteRoute = require("./patient/app/favoritedoctor.route");
 // const appointmentRoute = require("./patient/app/appointmentbook.route");
 // const helpDoctorRoute = require("./patient/web/help.route");
-// const notificationRoute = require("./patient/app/notification.route");
+const billCreateRoute = require("./bill/bill.route");
 
 /* ---------------------------- DOCTOR ROUTE PATH --------------------------- */
 
@@ -22,6 +22,8 @@ const bookingappointmentRoute = require("./bookappointment/book.appointment.pati
 const prescriptionRoute = require("./prescription/prescription.route");
 
 const telecommunicationRoute = require("./telecommunication/telecomunication.route")
+const telecommunicationPatientRoute = require("./telecommunication/patient.telecommunication.route")
+
 const personalHealthRecordRoute = require("./personal health records/personal.health.record.route")
 const bookappointementPatientFlowRoute = require("./bookappointment/book.appointement.doctor.route")
 const dashboardAdminFlowRoute = require("./admin/dashboard/dashboard.route")
@@ -46,6 +48,9 @@ router.use("/prescription", prescriptionRoute);
 
 router.use("/telecomunication", telecommunicationRoute);
 
+router.use("/telecomunication-patient", telecommunicationPatientRoute);
+
+
 router.use("/patient-flow-personal-health-record", personalHealthRecordRoute);
 router.use("/bookappointment-patientFlow", bookappointementPatientFlowRoute);
 
@@ -56,7 +61,7 @@ router.use("/chat", chatRoute);
 
 
 
-// router.use("/faq", faqRoute);
+router.use("/bill", billCreateRoute);
 // router.use("/faq-patient", faqPatientRoute);
 
 // router.use("/help", helpRoute);
