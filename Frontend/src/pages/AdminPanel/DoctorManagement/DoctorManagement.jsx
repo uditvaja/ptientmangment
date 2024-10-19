@@ -1,33 +1,33 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
-import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import { Dropdown } from "react-bootstrap";
+import DeleteDoctorModal from "../../../components/modals/DeleteDoctorModal";
+import DoctorDetailsDrawer from "../../../components/Drawer/DoctorDetailsDrawer";
+import { useLocation, useNavigate } from "react-router-dom";
+import Sidebar from "../../../components/Sidebar/Sidebar";
+import "./DoctorManagement.scss";
 
-const PatientChat = () => {
+const DoctorManagement = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
   };
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
   };
 
   const handleClickOutside = (event) => {
@@ -47,85 +47,6 @@ const PatientChat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
 
   const notifications = [
     {
@@ -160,10 +81,158 @@ const PatientChat = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
+  const handleDrawerOpen = (doctor) => {
+    setSelectedDoctor(doctor);
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
+  const handleDeleteClick = (doctor) => {
+    setSelectedDoctor(doctor);
+    setOpenDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleDeleteDoctor = () => {
+    console.log("Deleting doctor:", selectedDoctor);
+    setOpenDeleteModal(false);
+  };
+
+  const doctors = [
+    {
+      id: 1,
+      name: "Dr. Marcus Philips",
+      gender: "male-gender.png",
+      qualification: "MBBS",
+      specialty: "Internal Medicine",
+      workingTime: "6 Hour",
+      checkupTime: "4 Hour",
+      breakTime: "1 Hour",
+      age: "36 Years",
+      email: "kenzi.lawson@example.com",
+      phone: "89564 25462",
+      consultationRate: "₹ 1,000",
+      country: "India",
+      state: "Gujarat",
+      city: "Gandhinagar",
+      zipCode: "382002",
+      address: "B-105 Virat Bungalows Punagam Motavaracha Jamnagar.",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      signature: "/assets/images/signature.png",
+      profilePicture: "/assets/images/Avatar-2.png",
+      status: "Onsite",
+    },
+    {
+      id: 2,
+      name: "Dr. Sophia Patel",
+      gender: "female-gender.png",
+      qualification: "MD",
+      specialty: "Pediatrics",
+      workingTime: "5 Hour",
+      checkupTime: "3 Hour",
+      breakTime: "30 Minutes",
+      age: "32 Years",
+      email: "sophia.patel@example.com",
+      phone: "98765 43210",
+      consultationRate: "₹ 800",
+      country: "India",
+      state: "Maharashtra",
+      city: "Mumbai",
+      zipCode: "400001",
+      address: "A-101, Rosewood Apartments, Andheri East.",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      signature: "/assets/images/signature.png",
+      profilePicture: "/assets/images/Avatar-2.png",
+      status: "Online",
+      hospitalName: "Artemis Hospital",
+      website: "https://sample.edu/railway",
+      emergencyContact: "48555-20103",
+      hospitalAddress:
+        "151-152 ,gopinath doc, manik chowk, Satelight road, Mota varacha Jamnagar.",
+    },
+    {
+      id: 3,
+      name: "Dr. Emma Taylor",
+      gender: "female-gender.png",
+      qualification: "MS",
+      specialty: "Gynecology",
+      workingTime: "7 Hour",
+      checkupTime: "5 Hour",
+      breakTime: "1.5 Hours",
+      age: "40 Years",
+      email: "emma.taylor@example.com",
+      phone: "12345 67890",
+      consultationRate: "₹ 1,200",
+      country: "India",
+      state: "Karnataka",
+      city: "Bengaluru",
+      zipCode: "560001",
+      address: "C-202, Silver Oak Apartments, Koramangala.",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      signature: "/assets/images/signature.png",
+      profilePicture: "/assets/images/Avatar-2.png",
+    },
+    {
+      id: 4,
+      name: "Dr. Liam Brown",
+      gender: "male-gender.png",
+      qualification: "MBBS",
+      specialty: "Orthopedics",
+      workingTime: "6 Hour",
+      checkupTime: "4 Hour",
+      breakTime: "1 Hour",
+      age: "35 Years",
+      email: "liam.brown@example.com",
+      phone: "45678 90123",
+      consultationRate: "₹ 900",
+      country: "India",
+      state: "Tamil Nadu",
+      city: "Chennai",
+      zipCode: "600001",
+      address: "D-101, Greenwood Apartments, Adyar.",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      signature: "/assets/images/signature.png",
+      profilePicture: "/assets/images/Avatar-2.png",
+    },
+    {
+      id: 5,
+      name: "Dr. Ava Lee",
+      gender: "female-gender.png",
+      qualification: "MD",
+      specialty: "Cardiology",
+      workingTime: "7 Hour",
+      checkupTime: "5 Hour",
+      breakTime: "1.5 Hours",
+      age: "38 Years",
+      email: "ava.lee@example.com",
+      phone: "65432 10987",
+      consultationRate: "₹ 1,100",
+      country: "India",
+      state: "Delhi",
+      city: "New Delhi",
+      zipCode: "110001",
+      address: "E-101, Park View Apartments, Vasant Kunj.",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      signature: "/assets/images/signature.png",
+      profilePicture: "/assets/images/Avatar-2.png",
+    },
+  ];
+
+  // Filter doctors based on the search term
+  const filteredDoctors = doctors.filter((doctor) =>
+    doctor.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <PatientSidebar
+        <Sidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -186,7 +255,7 @@ const PatientChat = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Doctor Management
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +451,125 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
-            >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
-              />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+        <div className="container-fluid doctor_management_page py-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h2 className="doctor_management-title">Doctor Management</h2>
+            <div className="d-flex align-items-center">
+              <div className="doctor_management_search-container me-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search Doctor"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <img
+                  src="/assets/images/search.svg"
+                  alt="search"
+                  className="search-icon"
+                />
+              </div>
+              <button
+                type="button"
+                className="add-btn"
+                onClick={() => navigate("/add-new-doctor")}
+              >
+                + Add New Doctor
+              </button>
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="table-responsive">
+            {filteredDoctors.length === 0 ? (
+              <div className="text-center">
+                <img
+                  src="/assets/images/no-doctor-found-2.png"
+                  alt="No Data Found"
+                  className="img-fluid"
+                />
+              </div>
+            ) : (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th className="rounded-end-0">Doctor Name</th>
+                    <th className="rounded-end-0 rounded-start-0">Gender</th>
+                    <th className="rounded-end-0 rounded-start-0">
+                      Qualification
+                    </th>
+                    <th className="rounded-end-0 rounded-start-0">Specialty</th>
+                    <th className="rounded-end-0 rounded-start-0">
+                      Working Time
+                    </th>
+                    <th className="rounded-end-0 rounded-start-0">
+                      Patient Check Up Time
+                    </th>
+                    <th className="rounded-end-0 rounded-start-0">
+                      Break Time
+                    </th>
+                    <th className="rounded-start-0">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredDoctors.map((doctor, index) => (
+                    <tr key={index}>
+                      <td>
+                        <img
+                          src={doctor.profilePicture}
+                          alt={doctor.name}
+                          className="me-3 img-fluid profile_img"
+                        />
+                        {doctor.name}
+                      </td>
+                      <td>
+                        <img
+                          src={`./assets/images/${doctor.gender}`}
+                          alt={doctor.name}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            marginRight: "10px",
+                          }}
+                          className="img-fluid"
+                        />
+                      </td>
+                      <td>{doctor.qualification}</td>
+                      <td>{doctor.specialty}</td>
+                      <td><div className="date-box">{doctor.workingTime}</div></td>
+                      <td><div className="date-box">{doctor.checkupTime}</div></td>
+                      <td><div className="date-box">{doctor.breakTime}</div></td>
+                      <td className="d-flex">
+                        <button type="button" className="edit-button me-3 bg-transparent" onClick={() => navigate(`/edit-doctor/${doctor.id}`)}>
+                            <img src="/assets/images/edit-icon-box.svg" alt="edit-icon-box" className="img-fluid" />
+                        </button>
+                        <button type="button" className="view-button me-3 bg-transparent" onClick={() => handleDrawerOpen(doctor)}>
+                            <img src="/assets/images/view-icon-box.svg" alt="view-icon-box" className="img-fluid" />
+                        </button>
+                        <button type="button" className="delete-button bg-transparent" onClick={() => handleDeleteClick(doctor)}>
+                            <img src="/assets/images/delete-icon-box.svg" alt="delete-icon-box" className="img-fluid" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </div>
+      <DoctorDetailsDrawer
+        open={drawerOpen}
+        onClose={handleDrawerClose}
+        doctor={selectedDoctor}
+      />
+      <DeleteDoctorModal
+        open={openDeleteModal}
+        handleClose={handleCloseDeleteModal}
+        handleDelete={handleDeleteDoctor}
+      />
     </div>
   );
 };
 
-export default PatientChat;
+export default DoctorManagement;

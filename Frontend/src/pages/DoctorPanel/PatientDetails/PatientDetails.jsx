@@ -1,19 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
+import "./PatientDetails.scss";
+import { Badge, Dropdown, Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import DoctorSidebar from "../../../components/DoctorSidebar/DoctorSidebar";
+import AddRecordModal from "../../../components/modals/AddRecordModal/AddRecordModal";
 
-const PatientChat = () => {
+const PatientDetails = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showAddRecordModal, setShowAddRecordModal] = useState(false);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -48,85 +43,6 @@ const PatientChat = () => {
     };
   }, [isSidebarOpen]);
 
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
-
   const notifications = [
     {
       id: 1,
@@ -160,10 +76,81 @@ const PatientChat = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
+  const patientInfo = {
+    name: "Marcus Philips",
+    number: "99130 44537",
+    issue: "Feeling tired",
+    gender: "Male",
+    lastAppointmentDate: "2 Jan, 2022",
+    doctorName: "Dr. Marcus Philips",
+    age: "20 Years",
+    appointmentType: "Online",
+    address: "B-408 Swastik society, mota varachha rajkot.",
+    lastAppointmentTime: "4:30 PM",
+  };
+
+  const appointments = [
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+      type: "Online",
+    },
+    {
+      name: "London Shaffer",
+      issue: "Stomach Ache",
+      date: "2 Jan, 2022",
+      time: "5:00 PM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "1:30 PM",
+      type: "Online",
+    },
+    {
+      name: "London Shaffer",
+      issue: "Stomach Ache",
+      date: "2 Jan, 2022",
+      time: "8:00 AM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "2 Jan, 2022",
+      time: "5:00 PM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "7 Jan, 2022",
+      time: "4:30 PM",
+      type: "Online",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "8 Jan, 2022",
+      time: "4:30 PM",
+      type: "Onsite",
+    },
+    {
+      name: "Marcus Philips",
+      issue: "Feeling Tired",
+      date: "8 Jan, 2022",
+      time: "4:30 PM",
+      type: "Online",
+    },
+  ];
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <PatientSidebar
+        <DoctorSidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -185,8 +172,11 @@ const PatientChat = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Patient Record Access
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Patient Details
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +372,125 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
+        <div className="container-fluid patient-details-page py-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h1 className="patient-details-title">Patient Details</h1>
+            <button
+              type="button"
+              className="add-btn"
+              onClick={() => setShowAddRecordModal(true)}
             >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
+              <img
+                src="/assets/images/add.svg"
+                alt="add"
+                className="img-fluid me-3"
               />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
+              Add Record
+            </button>
+          </div>
+          <div className="patient-info-card mb-4">
+            <div className="row">
+              <div className="col-md-2">
+                <img
+                  src="/assets/images/patient_image.png"
+                  alt={patientInfo.name}
+                  className="patient-image img-fluid rounded-circle"
+                />
+              </div>
+              <div className="col-md-10">
+                <div className="row">
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Name</p>
+                    <p className="info-value">{patientInfo.name}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Number</p>
+                    <p className="info-value">{patientInfo.number}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Issue</p>
+                    <p className="info-value">{patientInfo.issue}</p>
+                  </div>
+                  <div className="col-md-4 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Patient Gender</p>
+                    <p className="info-value">{patientInfo.gender}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-0 mt-2">
+                    <p className="info-label">Last Appointment Date</p>
+                    <p className="info-value">
+                      {patientInfo.lastAppointmentDate}
+                    </p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Doctor Name</p>
+                    <p className="info-value">{patientInfo.doctorName}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Patient Age</p>
+                    <p className="info-value">{patientInfo.age}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Appointment Type</p>
+                    <p className="info-value">{patientInfo.appointmentType}</p>
+                  </div>
+                  <div className="col-md-4 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Patient Address</p>
+                    <p className="info-value">{patientInfo.address}</p>
+                  </div>
+                  <div className="col-md-2 col-6 mt-md-3 mt-2">
+                    <p className="info-label">Last Appointment Time</p>
+                    <p className="info-value">
+                      {patientInfo.lastAppointmentTime}
+                    </p>
+                  </div>
                 </div>
-              )}
-            </Col>
-          </Row>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="appointments-title mb-3">All Appointments</h2>
+          <Table responsive className="appointments-table">
+            <thead>
+              <tr>
+                <th>Dieses Name</th>
+                <th>Patient Issue</th>
+                <th>Appointment Date</th>
+                <th>Appointment Time</th>
+                <th>Appointment Type</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((appointment, index) => (
+                <tr key={index}>
+                  <td>{appointment.name}</td>
+                  <td>{appointment.issue}</td>
+                  <td>{appointment.date}</td>
+                  <td className="text-blue">{appointment.time}</td>
+                  <td className="appo-badge">
+                    <Badge
+                      bg={appointment.type === "Online" ? "warning" : "primary"}
+                    >
+                      {appointment.type}
+                    </Badge>
+                  </td>
+                  <td>
+                    <button className="btn btn-link p-0">
+                      <img src="/assets/images/eye-blue.svg" alt="More" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </div>
       </div>
+      <AddRecordModal
+        show={showAddRecordModal}
+        onHide={() => setShowAddRecordModal(false)}
+      />
     </div>
   );
 };
 
-export default PatientChat;
+export default PatientDetails;

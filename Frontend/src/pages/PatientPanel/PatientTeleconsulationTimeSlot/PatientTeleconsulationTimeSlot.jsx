@@ -1,33 +1,105 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
-import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import { Button, Dropdown, Form, Modal } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "./PatientTeleconsulationTimeSlot.scss"
+import PatientSidebar from "../../../components/PatientSidebar/PatientSidebar";
 
-const PatientChat = () => {
+const PatientTeleconsulationTimeSlot = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
+  const [currentDate, setCurrentDate] = useState(new Date("2022-06-18"));
+  const [weekDays, setWeekDays] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedsDate, setSelectedsDate] = useState(new Date());
+  const [selectedsTime, setSelectedsTime] = useState("3:00 PM");
   const sidebarRef = useRef(null);
-  const location = useLocation();
+
+  const timeSlots = [
+    "08 AM",
+    "09 AM",
+    "10 AM",
+    "11 AM",
+    "12 PM",
+    "01 PM",
+    "02 PM",
+    "03 PM",
+    "04 PM",
+    "05 PM",
+  ];
+
+  const times = [
+    "08:00 AM - 09:00 AM",
+    "09:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "12:00 PM - 01:00 PM",
+    "01:00 PM - 02:00 PM",
+    "02:00 PM - 03:00 PM",
+    "03:00 PM - 04:00 PM",
+    "04:00 PM - 05:00 PM",
+  ];
+
+  useEffect(() => {
+    updateWeekDays();
+  }, [currentDate]);
+
+  const updateWeekDays = () => {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(currentDate);
+      day.setDate(currentDate.getDate() + i);
+      days.push(formatDate(day));
+    }
+    setWeekDays(days);
+  };
+
+  const formatDate = (date) => {
+    const options = { weekday: "short", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  };
+
+  const handlePrevWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() - 7);
+    setCurrentDate(newDate);
+  };
+
+  const handleNextWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() + 7);
+    setCurrentDate(newDate);
+  };
+
+  const handleTimeSlotClick = (day, time) => {
+    setSelectedDate(day);
+    setSelectedTime(time);
+    setShowModal(true);
+  };
+
+  const getDateRange = () => {
+    const endDate = new Date(currentDate);
+    endDate.setDate(currentDate.getDate() + 6);
+    return `${formatDate(currentDate)} - ${formatDate(endDate)}`;
+  };
+
+  const isTimeSlotAvailable = (day, time) => {
+    return day === weekDays[2] && time === "11 AM";
+  };
+
+  const handleCloseModal = () => setShowModal(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
   };
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
   };
 
   const handleClickOutside = (event) => {
@@ -47,85 +119,6 @@ const PatientChat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
 
   const notifications = [
     {
@@ -159,7 +152,6 @@ const PatientChat = () => {
   ];
 
   const noNotificationImage = "/assets/images/no-notification.png";
-
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -185,8 +177,11 @@ const PatientChat = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                    Teleconsultation Module
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Appointment Time Slot
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +377,132 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
-            >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
-              />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+        <div className="container-fluid patientTelAppointmenttime-page py-4">
+          <h4 className="appointmenttime-title">Appointment Time Slot</h4>
+          <div className="schedule-table">
+            <div className="d-flex justify-content-center align-items-center mb-3 date-selection">
+              <Button variant="link" onClick={handlePrevWeek}>
+                <img
+                  src="/assets/images/left-arrow.svg"
+                  alt="left-arrow"
+                  className="left-arrow img-fluid"
+                />
+              </Button>
+              <span>{getDateRange()}</span>
+              <Button variant="link" onClick={handleNextWeek}>
+                <img
+                  src="/assets/images/right-arrow.svg"
+                  alt="right-arrow"
+                  className="right-arrow img-fluid"
+                />
+              </Button>
+            </div>
+
+            {/* Calendar Table */}
+            <div className="table-responsive calendar-container">
+              <table className="table calendar-table">
+                <thead>
+                  <tr>
+                    <th className="text-blue">Time</th>
+                    {weekDays.map((day) => (
+                      <th
+                        key={day}
+                        className={`${
+                          day === selectedDate ? "text-blue-head" : ""
+                        }`}
+                      >
+                        {day}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {timeSlots.map((time) => (
+                    <tr key={time}>
+                      <td className="text-blue">{time}</td>
+                      {weekDays.map((day) => (
+                        <td key={`${day}-${time}`} className="time-slot">
+                          {isTimeSlotAvailable(day, time) ? (
+                            <Button
+                              variant="primary"
+                              style={{
+                                backgroundColor: "#0EABEB",
+                                borderColor: "#0EABEB",
+                              }}
+                              onClick={() => handleTimeSlotClick(day, time)}
+                            >
+                              Available
+                            </Button>
+                          ) : (
+                            <span className="unavailable">Not Available</span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
+      {/* Appointment Modal */}
+      <Modal
+        centered
+        show={showModal}
+        onHide={handleCloseModal}
+        className="doctorTelAppointmenttime-modal"
+      >
+        <Modal.Header>
+          <Modal.Title>Reschedule Appointment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            {/* Appointment Date */}
+            <Form.Group className="form-floating">
+              <DatePicker
+                selected={selectedsDate}
+                onChange={(date) => setSelectedsDate(date)}
+                className="form-control custom-datepicker"
+                dateFormat="dd MMMM, yyyy"
+                id="floatingDate"
+                placeholderText="Select a date"
+              />
+              <label className="date-label" htmlFor="floatingDate">
+                Select Date
+              </label>
+            </Form.Group>
+
+            {/* Appointment Time */}
+            <Form.Group className="mb-0 form-floating">
+              <Form.Select
+                value={selectedsTime}
+                onChange={(e) => setSelectedsTime(e.target.value)}
+                className="custom-select"
+                id="floatingTime"
+              >
+                <option value="">Select a time</option>
+                {times.map((time) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </Form.Select>
+              <label htmlFor="floatingTime">Select Time</label>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleCloseModal} className="cancel-btn">
+            Cancel
+          </Button>
+          <Button type="submit" className="reschedule-btn">
+            Reschedule
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
-};
+}
 
-export default PatientChat;
+export default PatientTeleconsulationTimeSlot

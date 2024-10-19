@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Dropdown, Modal, Button, Form } from "react-bootstrap";
 import PatientSidebar from "../PatientSidebar/PatientSidebar";
-import PaymentSuccessModal from "../PaymentSuccessModal/PaymentSuccessModal";
+import PaymentSuccessModal from "../modals/PaymentSuccessModal/PaymentSuccessModal";
 import "./BillInvoicePage.scss";
 
 const BillInvoicePage = () => {

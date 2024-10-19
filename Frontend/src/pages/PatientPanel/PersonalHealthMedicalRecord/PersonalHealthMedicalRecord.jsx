@@ -1,22 +1,41 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
-import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import { useLocation, useNavigate } from "react-router-dom";
+import PatientSidebar from "../../../components/PatientSidebar/PatientSidebar";
+import { Dropdown } from "react-bootstrap";
+import "./PersonalHealthMedicalRecord.scss";
 
-const PatientChat = () => {
+const PrescriptionCard = ({ doctor, patientIssue, date, handleDetailnavigate }) => (
+  <div className="card mb-3">
+    <div className="card-body">
+      <div className="d-flex justify-content-between align-items-center prescrption-head mb-2">
+        <h5 className="mb-0">{doctor}</h5>
+        <div className="d-flex align-items-center">
+          <button className="btn p-0" onClick={handleDetailnavigate}>
+            <img src="./assets/images/eye-gray.svg" alt="Print" />
+          </button>
+        </div>
+      </div>
+      <div className="prescrption-body">
+        <div className="d-flex align-items-center justify-content-between">
+          <strong>Date</strong>
+          <span>{date}</span>
+        </div>
+        <div className="mt-2">
+          <strong>Patient Issue</strong>
+          <span>{patientIssue}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const PersonalHealthMedicalRecord = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -47,85 +66,6 @@ const PatientChat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
 
   const notifications = [
     {
@@ -160,6 +100,37 @@ const PatientChat = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
+  const prescriptions = [
+    {
+      doctor: "Dr. Ryan Vetrovs",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
+    },
+    {
+      doctor: "Marcus Septimus",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
+    },
+    {
+      doctor: "Ahmad Arcand",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
+    },
+    {
+      doctor: "Dr. Ryan Vetrovs",
+      patientIssue:
+        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-.",
+      date: "2 Jan, 2022",
+    },
+  ];
+
+  const handleDetailnavigate = () => {
+    navigate("/personalHealthMedicalHistoryDetails")
+  }
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -185,8 +156,11 @@ const PatientChat = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Personal Health Record
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Medical History
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +356,23 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
-            >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
-              />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+        <div className="container-fluid personal_health_medical_record-page py-4">
+          <div className="row mb-4 align-items-center">
+            <div className="col">
+              <h1 className="prescription-access-title">Medical History</h1>
+            </div>
+          </div>
+          <div className="row">
+            {prescriptions.map((prescription, index) => (
+              <div key={index} className="col-md-6 col-lg-3">
+                <PrescriptionCard {...prescription} handleDetailnavigate={handleDetailnavigate} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientChat;
+export default PersonalHealthMedicalRecord;
