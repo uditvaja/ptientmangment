@@ -115,9 +115,48 @@ function multiFileUpload(basePath, allowedMimes, fileSize, name) {
 }
 
 
+const singleFileUploadPdf = (basePath, name) => {
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      const dynamicPath = path.join(__dirname, "../public" + basePath);
+
+      // Check if the path exists, if not, create it
+      if (!fs.existsSync(dynamicPath)) {
+        fs.mkdirSync(dynamicPath, { recursive: true });
+      }
+      cb(null, dynamicPath);
+    },
+
+    filename: function (req, file, cb) {
+      cb(
+        null,
+        Date.now() + "-" + file.originalname.replace(/\s/g, "-").toLowerCase()
+      );
+    },
+  });
+
+  const fileFilter = (req, file, cb) => {
+    // Allow only PDFs
+    const allowedMimes = ['application/pdf'];
+
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      const error = new Error("Invalid file type. Only PDFs are allowed.");
+      error.httpStatusCode = 422;
+      cb(error);
+    }
+  };
+
+  return multer({
+    storage: storage,
+    fileFilter: fileFilter,
+  }).single(name);
+};
+
 
 module.exports = {
   singleFileUpload,
   multiDiffFileUpload,
-  multiFileUpload,
+  multiFileUpload,singleFileUploadPdf
 };

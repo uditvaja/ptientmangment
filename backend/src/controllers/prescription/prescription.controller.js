@@ -3,17 +3,47 @@ const moment = require('moment-timezone')
 const AppointmentBook = require("../../models/bookAppointment.model");
 const Prescription = require("../../models/prescription.model");
 /* ------------------------------- CREATE Hospital  ------------------------------- */
-const createPrescription= async (req, res) => {
+const createPrescription = async (req, res) => {
   try {
-    const reqBody = req.body;   
+    const { medicinePrices } = req.body; // Assuming this contains an array of price objects
+
+    // Calculate total price for all medicines
+    const overallTotalPrice = medicinePrices.reduce((acc, curr) => acc + curr.price, 0);
+
+    // Calculate total price for each medicine
+    const medicineTotalPrices = medicinePrices.map(medicine => ({
+      medicineName: medicine.medicineName,
+      totalPrice: medicine.price // You can customize this if you have quantities or other calculations
+    }));
+
+    // Calculate claimAmount (e.g., 80% of the total price)
+    const claimAmount = overallTotalPrice * 0.8; // Change this percentage as per your requirement
+    // Calculate claimedAmount (initially set to 0 or could be the claimAmount)
+    const claimedAmount = 0; // Or you could set this to claimAmount if it's an initial claim
+
+    // Prepare the request body to save to the database
+    const reqBody = {
+      ...req.body,
+      totalPrice: overallTotalPrice, // Include overall total price in the request body
+      claimAmount, // Add the calculated claim amount
+      claimedAmount // Add the calculated claimed amount
+    };
+
+    // Create the prescription in the database
     const prescription = await Prescription.create(reqBody);
     if (!prescription) {
       throw new Error("Failed to create prescription");
     }
+
+    // Return the response with calculated values
     res.status(200).json({
-      status:200,
+      status: 200,
       message: "Successfully created a new prescription",
       success: true,
+      medicineTotalPrices, // Include the total prices for each medicine
+      overallTotalPrice,
+      claimAmount, // Include the calculated claim amount
+      claimedAmount, // Include the calculated claimed amount
       data: prescription,
     });
   } catch (error) {
@@ -21,13 +51,14 @@ const createPrescription= async (req, res) => {
   }
 };
 
+
 const getPrescriptionsByPatientId = async (req, res) => {
     try {
       const { patientId } = req.body; // Get patientId from the request body
-  
+
       // Fetch all appointments for the given patientId
       const appointments = await AppointmentBook.find({ patientId });
-  
+
       if (!appointments || appointments.length === 0) {
         return res.status(404).json({
           status: 404,
@@ -35,13 +66,13 @@ const getPrescriptionsByPatientId = async (req, res) => {
           success: false,
         });
       }
-  
+
       // Get all appointment IDs
       const appointmentIds = appointments.map(appointment => appointment._id);
-  
+
       // Fetch prescriptions that match any of the appointment IDs
       const prescriptions = await Prescription.find({ appointmentId: { $in: appointmentIds } });
-  
+
       if (!prescriptions || prescriptions.length === 0) {
         return res.status(404).json({
           status: 404,
@@ -49,7 +80,6 @@ const getPrescriptionsByPatientId = async (req, res) => {
           success: false,
         });
       }
-  
       res.status(200).json({
         status: 200,
         message: "Successfully fetched all prescriptions",

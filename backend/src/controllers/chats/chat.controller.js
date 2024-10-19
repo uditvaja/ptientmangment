@@ -1,6 +1,8 @@
 const Chat = require('../../models/chat.model');
 const cloudinary = require('cloudinary').v2;
 
+const mongoose = require('mongoose')
+
 // Fetch all chat messages between a specific patient and doctor
 // exports.getAllMessages = async (req, res) => {
 //   const { patientId, doctorId } = req.query;
@@ -74,76 +76,173 @@ exports.getAllMessages = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch messages' });
   }
 };
-exports.updateimageSenderId = async (req, res) => {
+exports. updateimageSenderId = async (req, res) => {
   try {
-    const reqbody = req.body;
+    const { chatId } = req.body;
 
-    // Find the chat by ID
-    const chat = await Chat.findById(reqbody.chatId); 
+    // Validate required fields
+    if (!chatId) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: 'chatId is a required field!',
+      });
+    }
+
+    // Fetch the admin's current profile
+    const chat = await Chat.findById(chatId);
     if (!chat) {
-      return res.status(404).json({ status: 404, success: false, message: "chat not found!" });
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: 'chat not found!',
+      });
     }
 
-    // Function to handle image uploads to Cloudinary
-    const uploadImage = async (fileBuffer, folder) => {
-      if (fileBuffer) {
-        // If the chat has an existing image, delete it from Cloudinary
-        if (chat[folder] && chat[folder].public_id) {
-          await cloudinary.uploader.destroy(chat[folder].public_id);
-        }
+    // Initialize an empty object for storing updates
+    let updateData = {};
 
-        // Upload the new image buffer to Cloudinary
-        const uploadResponse = await cloudinary.uploader.upload_stream({ 
-          folder: folder, 
-          resource_type: 'image' // Specify that this is an image
-        }, (error, result) => {
-          if (error) {
-            throw new Error("Cloudinary upload failed: " + error.message);
-          }
-          return result;
-        }).end(fileBuffer); // End the stream and send the buffer
-
-        // Return the new image details
-        return {
-          public_id: uploadResponse.public_id,
-          url: uploadResponse.secure_url,
-        };
+    // Check if there is a new file uploaded
+    if (req.file) {
+      console.log('Uploaded file:', req.file);
+      
+      // If there's an existing image, delete it from Cloudinary
+      if (chat.image && chat.image.public_id) {
+        await cloudinary.uploader.destroy(chat.image.public_id);
       }
-      return null; // Return null if no file is provided
-    };
 
-    // Check if image file exists in the request
-    const imageFile = req.files && req.files['image'] ? req.files['image'][0] : null;
+      // Upload the new image to Cloudinary
+      const uploadResponse = await cloudinary.uploader.upload(req.file.path);
+      // console.log('uploadResponse:', uploadResponse);
 
-    // Upload the image if it exists
-    const newImage = imageFile ? await uploadImage(imageFile.buffer, 'chatImg') : null;
-
-    if (newImage) {
-      reqbody.image = newImage; // Update reqbody with new image details
+      // Update image field in updateData
+      updateData.image = {
+        public_id: uploadResponse.public_id,
+        url: uploadResponse.secure_url,
+      };
+      console.log('Updated image data:line number-121 chat update', updateData.image);
     }
 
-    // Define fields to update
-    const fieldsToUpdate = {
-      image: reqbody.image // Retain existing image if no new image is uploaded
-    };
+    // Add other fields from req.body to updateData
+    for (let key in req.body) {
+      if (req.body[key]) {
+        updateData[key] = req.body[key];
+      }
+    }
 
-    // Update the chat profile in the database
-    const updatedChat = await Chat.findByIdAndUpdate(
-      reqbody.chatId,
-      { $set: fieldsToUpdate },
-      { new: true }
-    );
+    // Update the admin profile with new image and other fields
+    const updatedPatient = await Chat.findByIdAndUpdate(chatId, { $set: updateData }, { new: true });
 
-    // Respond with success
+    // Return the updated admin profile
+    return res.status(200).json({
+      status: 200,
+      success: true,
+      updateData: updatedPatient,
+      message: "Profile updated successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+};
+exports.updatepdfSenderId = async (req, res) => {
+  try {
+    const { chatId } = req.body;
+
+    // Validate required fields
+    if (!chatId) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: 'chatId is a required field!',
+      });
+    }
+
+    // Fetch the chat's current record
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: 'chat not found!',
+      });
+    }
+
+    // Initialize an empty object for storing updates
+    let updateData = {};
+
+    // Check if there is a new file uploaded (PDF)
+    if (req.file) {
+      console.log('Uploaded file:', req.file);
+
+      // If there's an existing PDF, delete it from Cloudinary
+      if (chat.pdf && chat.pdf.public_id) {
+        await cloudinary.uploader.destroy(chat.pdf.public_id, { resource_type: "raw" });
+      }
+
+      // Upload the new PDF to Cloudinary with resource_type as "raw"
+      const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "raw", // This ensures Cloudinary knows it's not an image, but a PDF or other file type
+      });
+
+      // Update the PDF field in updateData
+      updateData.pdf = {
+        public_id: uploadResponse.public_id,
+        url: uploadResponse.secure_url,
+      };
+      console.log('Updated PDF data:', updateData.pdf);
+    }
+
+    // Add other fields from req.body to updateData
+    for (let key in req.body) {
+      if (req.body[key]) {
+        updateData[key] = req.body[key];
+      }
+    }
+
+    // Update the chat record with the new PDF and other fields
+    const updatedChat = await Chat.findByIdAndUpdate(chatId, { $set: updateData }, { new: true });
+
+    // Return the updated chat record
     return res.status(200).json({
       status: 200,
       success: true,
       updateData: updatedChat,
-      message: "Chat updated successfully",
+      message: "Profile updated successfully",
     });
-
   } catch (err) {
-    // Handle errors
-    return res.status(400).json({ success: false, error: err.message });
+    console.error(err);
+    return res.status(500).json({ success: false, error: err.message });
   }
 };
+// exports.getLatestMessages = async (req, res) => {
+//   const { patientId, doctorId } = req.query;
+
+//   try {
+//     const latestMessages = await Chat.aggregate([
+//       {
+//         $match: {
+//           $or: [
+//             { patientId: new mongoose.Types.ObjectId(patientId), doctorId: new mongoose.Types.ObjectId(doctorId) },
+//             { patientId: new mongoose.Types.ObjectId(doctorId), doctorId: new mongoose.Types.ObjectId(patientId) }
+//           ]
+//         }
+//       },
+//       {
+//         $sort: { timestamp: -1 }
+//       },
+//       {
+//         $group: {
+//           _id: { patientId: "$patientId", doctorId: "$doctorId" },
+//           latestMessage: { $first: "$$ROOT" }
+//         }
+//       }
+//     ]);
+
+//     res.status(200).json(latestMessages.map(group => group.latestMessage));
+//   } catch (error) {
+//     console.error('Failed to fetch latest messages:', error);
+//     res.status(500).json({ error: 'Failed to fetch latest messages' });
+//   }
+// };
+

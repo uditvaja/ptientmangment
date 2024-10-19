@@ -139,6 +139,49 @@ if (!patient) {
     }
 };
 
+const cancelAppointment = async (req, res) => {
+    try {
+        const { appointmentId } = req.body; // Get appointmentId from request body
+
+        // Validate appointmentId
+        if (!appointmentId) {
+            return res.status(400).json({ message: 'Appointment ID is required.' });
+        }
+
+        // Find the appointment by appointmentId
+        const appointment = await AppointmentBook.findById(appointmentId);
+
+        // Check if appointment exists
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found.' });
+        }
+
+        // Update the telecommunicationStatus to "1" (canceled)
+        appointment.status = 1;  // Update status to canceled
+
+        // Mark the appointment as canceled (if you want to remove from scheduling but not delete from the DB)
+        appointment.isCanceled = true; // Assuming you have an 'isCanceled' flag
+        
+        // Set the cancellation date and time
+        appointment.cancel_date = new Date(); // Current date
+        appointment.cancel_time = new Date().toLocaleTimeString(); // Current time
+
+        // Save the updated appointment
+        await appointment.save();
+
+        // Return success response
+        return res.status(200).json({ 
+            message: 'Appointment canceled successfully.',
+            appointmentId: appointment._id,
+            status: 'canceled',
+            cancel_date: appointment.cancel_date,
+            cancel_time: appointment.cancel_time
+        });
+    } catch (error) {
+        console.error('Error canceling appointment:', error);
+        return res.status(500).json({ message: 'An error occurred while canceling the appointment.' });
+    }
+};
 
 // Function to fetch all appointments for a particular patient with a specific doctor
 const getPatientAppointmentsWithDoctor = async (req, res) => {
@@ -411,37 +454,33 @@ const getCanceledAppointments = async (req, res) => {
         }
 
         // Build the query for canceled appointments
-        const query = { status: '0' };
-
-        // If a patientId is provided, add it to the query
-        if (patientId) {
-            query.patientId = patientId;
-        }
+        const query = { status: '1', patientId }; // Directly add patientId to the query
 
         // Find all canceled appointments and populate doctor and hospital details
         const canceledAppointments = await AppointmentBook.find(query)
-            .populate('doctorId', 'firstName')
-            .populate('hospitalId', 'hospitalName');
+            .populate('doctorId', 'firstName') // Populates only firstName
+            .populate('hospitalId', 'hospital_name'); // Populates only hospitalName
 
         if (!canceledAppointments || canceledAppointments.length === 0) {
             return res.status(404).json({ message: 'No canceled appointments found.' });
         }
 
-        // Format the cancel_date and cancel_time
-        const formattedAppointments = canceledAppointments.map(appointment => {
-            const formattedCancelDate = moment(appointment.cancel_date).tz("Asia/Kolkata").format("YYYY-MM-DD");
-            const formattedCancelTime = moment(appointment.cancel_time).tz("Asia/Kolkata").format("h:mm A");
-
-            return {
-                appointmentId: appointment._id,
-                appointmentType: appointment.appointmentType,
-                hospitalName: appointment.hospitalId.hospitalName, // Populated hospital name
-                cancel_date: formattedCancelDate,
-                cancel_time: formattedCancelTime,
-                doctorFirstName: appointment.doctorId.firstName,
-                status: appointment.status,
-            };
-        });
+        // Prepare the response including all required fields
+        const formattedAppointments = canceledAppointments.map(appointment => ({
+            appointmentId: appointment._id, // ID of the appointment
+            appointmentType: appointment.appointmentType, // Type of the appointment
+            doctorId: appointment.doctorId._id, // Doctor ID
+            doctorFirstName: appointment.doctorId.firstName, // Doctor's first name
+            hospitalId: appointment.hospitalId._id, // Hospital ID
+            hospitalName: appointment.hospitalId.hospital_name, // Hospital's name
+            cancel_date: appointment.cancel_date, // Cancel date
+            cancel_time: appointment.cancel_time, // Cancel time
+            status: appointment.status, // Status of the appointment
+            app_date: appointment.app_date, // Appointment date
+            startTime: appointment.startTime, // Start time of the appointment
+            endTime: appointment.endTime, // End time of the appointment
+            patientIssues: appointment.patient_issue, // Patient issues
+        }));
 
         // Return the list of canceled appointments
         return res.status(200).json({
@@ -454,6 +493,8 @@ const getCanceledAppointments = async (req, res) => {
         return res.status(500).json({ message: 'An error occurred while fetching canceled appointments.' });
     }
 };
+
+
 
 const getPatientAppointmentsWithDoctorcancel = async (req, res) => {
     try {
@@ -793,6 +834,7 @@ module.exports = {
     getCanceledAppointments,
     getPatientAppointmentsWithDoctorcancel,
     // getCanceledAppointmentsInRange
+    cancelAppointment,
 
     getPendingAppointments,
     getPatientAppointmentsWithDoctorPending,

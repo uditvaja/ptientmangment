@@ -17,23 +17,23 @@ const bookAppointment = async (req, res) => {
             return res.status(400).json({ message: 'All fields are required.' });
         }
          
-            // Check if the doctor exists in the database
-            const doctor = await Doctor.findById(doctorId);
-            if (!doctor) {
-                return res.status(404).json({ message: 'Doctor not found.' });
-            }
+        // Check if the doctor exists in the database
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found.' });
+        }
 
-                // Check if the patient exists in the database
-                const patient  = await Patient.findById(patientId);
-                if (!patient) {
-                    return res.status(404).json({ message: 'patient not found.' });
-                }
+        // Check if the patient exists in the database
+        const patient  = await Patient.findById(patientId);
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found.' });
+        }
 
-                   // Check if the hospital exists in the database
-                   const hospital  = await Hospital.findById(hospitalId);
-                   if (!hospital) {
-                       return res.status(404).json({ message: 'hospital not found.'});
-                   }
+        // Check if the hospital exists in the database
+        const hospital  = await Hospital.findById(hospitalId);
+        if (!hospital) {
+            return res.status(404).json({ message: 'Hospital not found.'});
+        }
 
         // Ensure the date is parsed correctly by explicitly specifying the format
         const formattedAppDate = moment(app_date, "DD MMM YYYY", true).format("YYYY-MM-DD"); // For example, '11 Nov 2024'
@@ -68,6 +68,7 @@ const bookAppointment = async (req, res) => {
             app_date: formattedAppDate,    // Keeping formatted date in 'YYYY-MM-DD' format
             startTime: formattedStartTime, // Storing start time in ISO format (IST)
             endTime: formattedEndTime,     // Storing end time in ISO format (IST)
+            telecommunicationStatus: "1"     // Automatically setting telecommunicationStatus to 1
         });
 
         // Save the appointment to the database
@@ -92,6 +93,9 @@ const bookAppointment = async (req, res) => {
         return res.status(500).json({ message: 'An error occurred while booking the appointment.' });
     }
 };
+
+
+
 
 
 // Controller to get a simple list of doctors

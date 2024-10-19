@@ -5,42 +5,147 @@ const moment = require('moment-timezone')
 
 const getTodayAppointmentsForPatient = async (req, res) => {
     try {
-        // Get today's date in 'YYYY-MM-DD' format
-        const today = moment().format('YYYY-MM-DD');
-
-        // Find all appointments where app_date matches today
-        const todayAppointments = await AppointmentBook.find({
-            app_date: today
+        // Find all appointments where telecommunicationStatus is "0"
+        const appointments = await AppointmentBook.find({
+            telecomunicationStatus: "0"  // Fetch appointments with telecommunicationStatus = "0"
         })
-        .select('appointmentType app_date patient_issue  startTime endTime') // Select the necessary fields
-        .populate('patientId', 'first_name last_name').populate('hospitalId','hospital_name').populate('docotrId','firstName'); // Populate patient's first and last name
+        .select('appointmentType app_date patient_issue startTime endTime') // Select the necessary fields
+        .populate('patientId', 'first_name last_name')  // Populate patient's first and last name
+        .populate('hospitalId', 'hospital_name')  // Populate hospital name
+        .populate('doctorId', 'firstName');  // Populate doctor's first name
 
         // Check if any appointments were found
-        if (!todayAppointments.length) {
-            return res.status(404).json({ message: 'No appointments found for today.' });
+        if (!appointments.length) {
+            return res.status(404).json({ message: 'No appointments found with telecommunication status "0".' });
         }
 
         // Format the startTime and endTime to Indian Standard Time (IST) for each appointment
-        const formattedAppointments = todayAppointments.map(appointment => {
-            const startTimeIST = moment(appointment.startTime).tz('Asia/Kolkata').format('h:mm A'); // Convert to IST
-            const endTimeIST = moment(appointment.endTime).tz('Asia/Kolkata').format('h:mm A'); // Convert to IST
+        const formattedAppointments = appointments.map(appointment => {
+            const startTimeIST = moment(appointment.startTime).tz('Asia/Kolkata').format('h:mm A');  // Convert to IST
+            const endTimeIST = moment(appointment.endTime).tz('Asia/Kolkata').format('h:mm A');  // Convert to IST
             return {
                 ...appointment.toObject(),
                 startTime: startTimeIST,  // Overwrite startTime with formatted IST time
-                endTime: endTimeIST       // Add formatted endTime in IST
+                endTime: endTimeIST       // Overwrite endTime with formatted IST time
             };
         });
 
-        // Return the list of today's appointments with formatted time and selected fields
+        // Return the list of appointments with telecommunicationStatus "0" and formatted times
         return res.status(200).json({
-            message: 'Today\'s appointments retrieved successfully.',
+            message: 'Appointments with telecommunication status "0" retrieved successfully.',
             appointments: formattedAppointments
         });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'An error occurred while retrieving today\'s appointments.' });
+        return res.status(500).json({ message: 'An error occurred while retrieving appointments.' });
     }
 };
+
+const getAppointmentsWithinDateRange = async (req, res) => {
+    try {
+        // Extract fromDate and toDate from the query parameters
+        const { fromDate, toDate } = req.query;
+
+        // Validate that both fromDate and toDate are provided
+        if (!fromDate || !toDate) {
+            return res.status(400).json({ message: 'Both fromDate and toDate are required.' });
+        }
+
+        // Parse the fromDate and toDate and check for valid dates
+        const startDate = moment(fromDate, 'YYYY-MM-DD', true);
+        const endDate = moment(toDate, 'YYYY-MM-DD', true);
+
+        // Validate the parsed dates
+        if (!startDate.isValid() || !endDate.isValid()) {
+            return res.status(400).json({ message: 'Invalid date format. Please use "YYYY-MM-DD".' });
+        }
+
+        // Ensure startDate is not after endDate
+        if (startDate.isAfter(endDate)) {
+            return res.status(400).json({ message: 'fromDate cannot be after toDate.' });
+        }
+
+        // Log for debugging
+        console.log("Fetching appointments from", startDate.format('YYYY-MM-DD'), "to", endDate.format('YYYY-MM-DD'));
+
+        // Find all appointments where telecommunicationStatus is "0" and app_date is within the specified range
+        const appointments = await AppointmentBook.find({
+            telecomunicationStatus: "0",  // Check telecommunicationStatus
+            app_date: {
+                $gte: startDate.format('YYYY-MM-DD'),  // From date
+                $lte: endDate.format('YYYY-MM-DD')     // To date
+            }
+        })
+        .select('appointmentType app_date patient_issue startTime endTime')  // Select necessary fields
+        .populate('patientId', 'first_name last_name')  // Populate patient's name
+        .populate('hospitalId', 'hospital_name')  // Populate hospital name
+        .populate('doctorId', 'firstName');  // Populate doctor's name
+
+        // Check if any appointments were found
+        if (!appointments.length) {
+            return res.status(404).json({ message: 'No appointments found with telecommunication status "0" in the given date range.' });
+        }
+
+        // Format the startTime and endTime to IST (Indian Standard Time)
+        const formattedAppointments = appointments.map(appointment => {
+            const startTimeIST = moment(appointment.startTime).tz('Asia/Kolkata').format('h:mm A');  // Convert to IST
+            const endTimeIST = moment(appointment.endTime).tz('Asia/Kolkata').format('h:mm A');  // Convert to IST
+            return {
+                ...appointment.toObject(),
+                startTime: startTimeIST,  // Overwrite startTime with formatted IST time
+                endTime: endTimeIST       // Overwrite endTime with formatted IST time
+            };
+        });
+
+        // Return the list of appointments
+        return res.status(200).json({
+            message: 'Appointments with telecommunication status "0" in the specified date range retrieved successfully.',
+            appointments: formattedAppointments
+        });
+    } catch (error) {
+        console.error("Error fetching appointments:", error);  // Log any error
+        return res.status(500).json({ message: 'An error occurred while retrieving appointments.' });
+    }
+};
+
+const cancelAppointment = async (req, res) => {
+    try {
+        const { appointmentId } = req.body; // Get appointmentId from request body
+
+        // Validate appointmentId
+        if (!appointmentId) {
+            return res.status(400).json({ message: 'Appointment ID is required.' });
+        }
+
+        // Find the appointment by appointmentId
+        const appointment = await AppointmentBook.findById(appointmentId);
+
+        // Check if appointment exists
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found.' });
+        }
+
+        // Update the telecommunicationStatus to "1" (canceled)
+        appointment.telecomunicationStatus = "1";  // Update status to canceled
+
+        // Mark the appointment as canceled (if you want to remove from scheduling but not delete from the DB)
+        appointment.isCanceled = true; // Assuming you have an 'isCanceled' flag
+
+        // Save the updated appointment
+        await appointment.save();
+
+        // Return success response
+        return res.status(200).json({ 
+            message: 'Appointment canceled successfully.',
+            appointmentId: appointment._id,
+            status: 'canceled'
+        });
+    } catch (error) {
+        console.error('Error canceling appointment:', error);
+        return res.status(500).json({ message: 'An error occurred while canceling the appointment.' });
+    }
+};
+
 
 const getUpcomingAppointmentsForPatient = async (req, res) => {
     try {
@@ -391,7 +496,7 @@ const getAppointmentDetailsOfPatientByIdForPatient = async (req, res) => {
         const appointment = await AppointmentBook.findById(appointmentId)
             .select('patient_issue diseas_name startTime endTime app_date') // Select specific fields from appointment
             .populate('patientId', 'first_name last_name phone_number age gender patient_address') // Populate patient details
-            .populate('doctorId', 'firstName lastName phone_number'); // Populate doctor details (added lastName and phone_number)
+            .populate('doctorId', 'firstName lastName phone_number'); // Populate doctor details
 
         // Check if the appointment was found
         if (!appointment) {
@@ -406,20 +511,20 @@ const getAppointmentDetailsOfPatientByIdForPatient = async (req, res) => {
 
         // Construct the response object with the required fields
         const response = {
-            patientFirstName: patientId.first_name,
-            patientLastName: patientId.last_name,
-            patientIssues: appointment.patient_issue,
-            diseaseName: appointment.diseas_name,
-            startTime: appointment.startTime,
-            endTime: appointment.endTime,
-            appointmentDate: appointment.app_date,
-            doctorFirstName: doctorId.firstName,
-            doctorLastName: doctorId.lastName, // Added doctor last name
-            doctorPhoneNumber: doctorId.phone_number, // Added doctor's phone number
-            patientPhoneNumber: patientId.phone_number,
-            patientAge: patientId.age,
-            patientAddress: patientId.patient_address,
-            patientGender: patientId.gender,
+            patientFirstName: patientId.first_name || 'N/A', // Fallback if undefined
+            patientLastName: patientId.last_name || 'N/A',   // Fallback if undefined
+            patientIssues: appointment.patient_issue || 'N/A', // Fallback if undefined
+            diseaseName: appointment.diseas_name || 'N/A',     // Fallback if undefined
+            startTime: appointment.startTime || 'N/A',         // Fallback if undefined
+            endTime: appointment.endTime || 'N/A',             // Fallback if undefined
+            appointmentDate: appointment.app_date || 'N/A',    // Fallback if undefined
+            doctorFirstName: doctorId.firstName || 'N/A',      // Fallback if undefined
+            doctorLastName: doctorId.lastName || 'N/A',        // Fallback if undefined
+            doctorPhoneNumber: doctorId.phone_number || 'N/A',  // Fallback if undefined
+            patientPhoneNumber: patientId.phone_number || 'N/A', // Fallback if undefined
+            patientAge: patientId.age || 'N/A',                // Fallback if undefined
+            patientAddress: patientId.patient_address || 'N/A', // Fallback if undefined
+            patientGender: patientId.gender || 'N/A',          // Fallback if undefined
         };
 
         // Return the appointment details
@@ -444,8 +549,6 @@ module.exports = {
     getCanceledAppointmentsSearchForPatient,
     updateJoinCallForPatient,
     getAppointmentDetailsByIdForPatient,
-    getAppointmentDetailsOfPatientByIdForPatient
-
-
-
+    getAppointmentDetailsOfPatientByIdForPatient,getAppointmentsWithinDateRange,
+    cancelAppointment
 };

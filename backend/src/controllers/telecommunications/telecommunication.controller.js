@@ -240,7 +240,7 @@ const getCanceledAppointments = async (req, res) => {
     try {
         // Find all appointments where status is 'canceled'
         const canceledAppointments = await AppointmentBook.find({
-            status: 0
+            status: 1
         })
         .select('appointmentType app_date startTime  patient_issue diseas_name') // Adjust fields as needed
         // .populate('doctorId', 'firstName')
