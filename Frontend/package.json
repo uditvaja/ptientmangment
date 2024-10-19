@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.4",
+    "@mui/material": "^6.1.4",
     "@zegocloud/zego-uikit-prebuilt": "^2.10.2",
     "axios": "^1.7.7",
     "bootstrap-icons": "^1.11.3",
