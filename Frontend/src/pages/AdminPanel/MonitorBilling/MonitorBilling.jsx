@@ -1,22 +1,129 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
-import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import { Dropdown, Tab, Tabs } from "react-bootstrap";
+import Sidebar from "../../../components/Sidebar/Sidebar";
+import { useLocation, useNavigate } from "react-router-dom";
+import "./MonitorBilling.scss";
 
-const PatientChat = () => {
+const MonitorBilling = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [billingData, setBillingData] = useState([
+    {
+      billNumber: "5654",
+      patientName: "Alfredo Vaccaro",
+      diseaseName: "Colds and Flu",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Talan Press",
+      diseaseName: "Conjunctivitis",
+      phoneNumber: "89564 25462",
+      status: "Unpaid",
+      date: "25 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Alfredo Vaccaro",
+      diseaseName: "Allergies",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "5 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Giana Press",
+      diseaseName: "Colds and Flu",
+      phoneNumber: "89564 25462",
+      status: "Unpaid",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Nolan Botosh",
+      diseaseName: "Diarrhea",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "6 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Alfredo Vaccaro",
+      diseaseName: "Colds and Flu",
+      phoneNumber: "89564 25462",
+      status: "Unpaid",
+      date: "20 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Rayna Rosser",
+      diseaseName: "Mononucleosis",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "2 Jun, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Alfredo Vaccaro",
+      diseaseName: "Colds and Flu",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "11 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Alfredo Vaccaro",
+      diseaseName: "Stomach Aches",
+      phoneNumber: "89564 25462",
+      status: "Unpaid",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Alfredo Vaccaro",
+      diseaseName: "Stomach Aches",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "2 Jan, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Rayna Rosser",
+      diseaseName: "Mononucleosis",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "2 Jun, 2022",
+      time: "4:30 PM",
+    },
+    {
+      billNumber: "5654",
+      patientName: "Alfredo Vaccaro",
+      diseaseName: "Colds and Flu",
+      phoneNumber: "89564 25462",
+      status: "Paid",
+      date: "20 Jan, 2022",
+      time: "4:30 PM",
+    },
+    // Add more data as needed
+  ]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState(billingData);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -47,85 +154,6 @@ const PatientChat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
 
   const notifications = [
     {
@@ -160,10 +188,88 @@ const PatientChat = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
+  useEffect(() => {
+    const results = billingData.filter((bill) =>
+      bill.patientName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(results);
+  }, [searchTerm, billingData]);
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleInvoice = () => {
+    navigate("/billing/monitor-billing/invoice");
+  }
+
+  const renderTable = () => (
+    <div className="table-responsive">
+      <table className="table monitor_billing-table table-hover">
+        <thead>
+          <tr>
+            <th className="rounded-end-0">Bill Number</th>
+            <th className="rounded-end-0 rounded-start-0">Patient Name</th>
+            <th className="rounded-end-0 rounded-start-0">Disease Name</th>
+            <th className="rounded-end-0 rounded-start-0">Phone Number</th>
+            <th className="rounded-end-0 rounded-start-0">Status</th>
+            <th className="rounded-end-0 rounded-start-0">Date</th>
+            <th className="rounded-end-0 rounded-start-0">Time</th>
+            <th className="rounded-start-0">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredData.map((bill, index) => (
+            <tr key={index}>
+              <td>
+                <div className="monitor_billing-time">{bill.billNumber}</div>
+              </td>
+              <td>{bill.patientName}</td>
+              <td>{bill.diseaseName}</td>
+              <td>{bill.phoneNumber}</td>
+              <td>
+                <span
+                  className={`badge ${
+                    bill.status === "Paid" ? "bg-success" : "bg-danger"
+                  }`}
+                >
+                  {bill.status}
+                </span>
+              </td>
+              <td>{bill.date}</td>
+              <td>
+                <div className="monitor_billing-time">{bill.time}</div>
+              </td>
+              <td>
+                <button className="bg-transparent" onClick={handleInvoice}>
+                  <img
+                    src="/assets/images/view-icon-box.svg"
+                    alt="view-icon-box"
+                    className="img-fluid"
+                  />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const renderNoDataFound = () => (
+    <div className="text-center py-5">
+      <img
+        src="/assets/images/no_data_found.png"
+        alt="No data found"
+        className="mb-3 img-fluid"
+      />
+    </div>
+  );
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <PatientSidebar
+        <Sidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -185,8 +291,11 @@ const PatientChat = () => {
                         />
                       </a>
                     </li>
+                    <li className="breadcrumb-item" aria-current="page">
+                      Billing And Payments
+                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Monitor Billing
                     </li>
                   </ol>
                 </nav>
@@ -208,9 +317,9 @@ const PatientChat = () => {
                       All
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item href="#/action-1">All</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">Doctor</Dropdown.Item>
-                      <Dropdown.Item href="#/action-3">Patient</Dropdown.Item>
+                      <Dropdown.Item>All</Dropdown.Item>
+                      <Dropdown.Item>Doctor</Dropdown.Item>
+                      <Dropdown.Item>Patient</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
@@ -382,50 +491,43 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
-            >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
-              />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+        <div className="container-fluid monitor_billing_page py-4">
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <h1 className="monitor_billing-title mb-0">Monitor Billing</h1>
+            </div>
+            <div className="col-md-6 text-md-end text-center">
+              <div className="monitor_billing-search-container me-md-3 me-0 my-mb-0 my-3">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  placeholder="Search Patient"
+                  className="form-control"
+                />
+                <img
+                  src="/assets/images/search.svg"
+                  alt="search"
+                  className="search-icon"
+                />
+              </div>
+              <button className="edit-design-btn  me-md-3 me-0 mb-mb-0 mb-3">
+                <i className="bi bi-pencil"></i> Edit Design Invoice
+              </button>
+              <button className="create-bill-btn">
+                <i className="bi bi-plus"></i> Create Bills
+              </button>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              {filteredData.length > 0 ? renderTable() : renderNoDataFound()}
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientChat;
+export default MonitorBilling;

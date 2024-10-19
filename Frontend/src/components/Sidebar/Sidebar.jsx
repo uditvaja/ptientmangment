@@ -70,7 +70,7 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
                 <Link
                   to={"/billing/monitor-billing"}
                   className={`nav-link ${
-                    activeLink === "/billing/monitor-billing" || activeLink === "/billing/monitor-billing/invoice" ? "active" : ""
+                    activeLink === "/billing/monitor-billing" || activeLink === "/billing/pandingbills" || activeLink === "/billing/monitor-billing/invoice" || activeLink === "/billing/monitor-billing/pending-invoice" ? "active" : ""
                   }`}
                 >
                   Monitor Billing

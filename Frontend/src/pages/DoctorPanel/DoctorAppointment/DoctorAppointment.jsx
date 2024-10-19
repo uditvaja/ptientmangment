@@ -1,22 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
-import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import "./DoctorAppointment.scss";
+import { useLocation, useNavigate } from "react-router-dom";
+import DoctorSidebar from "../../../components/DoctorSidebar/DoctorSidebar";
+import { Button, Dropdown, Form, Modal, Tab, Tabs } from "react-bootstrap";
+import { Calendar, Clock } from "lucide-react";
+import CancelDoctorAppointment from "../../../components/modals/CancelDoctorAppointment/CancelDoctorAppointment";
+import DateRangeModal from "../../../components/modals/DateRangeModal/DateRangeModal";
 
-const PatientChat = () => {
+const DoctorAppointment = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
+  const [showModal, setShowModal] = useState(false);
+  const [showDateRangeModal, setShowDateRangeModal] = useState(false);
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -30,6 +28,10 @@ const PatientChat = () => {
     setIsSidebarOpen(false);
   };
 
+  const doctorAppointmentTableRidrect = () => {
+    navigate("/doctorAppointmentTimeSlot");
+  }
+
   const handleClickOutside = (event) => {
     if (
       isSidebarOpen &&
@@ -40,6 +42,14 @@ const PatientChat = () => {
     }
   };
 
+  const handleCancelAppointment = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -47,85 +57,6 @@ const PatientChat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
 
   const notifications = [
     {
@@ -160,10 +91,101 @@ const PatientChat = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
+  const [appointments, setAppointments] = useState([
+    {
+      id: 1,
+      patientName: "Marcus Philips",
+      dieseName: "Viral Infection",
+      patientIssue: "Stomach Ache",
+      appointmentDate: "2 Jan, 2022",
+      appointmentTime: "4:30 PM",
+      appointmentType: "Online",
+    },
+    {
+      id: 2,
+      patientName: "Julianna Warren",
+      dieseName: "Diabetes",
+      patientIssue: "Stomach Ache",
+      appointmentDate: "3 Jan, 2022",
+      appointmentTime: "2:40 PM",
+      appointmentType: "Onsite",
+    },
+  ]);
+
+  const renderAppointmentTable = () => {
+    if (appointments.length === 0) {
+      return (
+        <div className="text-center py-5">
+          <img
+            src="/assets/images/no-today-appointment.png"
+            alt="No appointments"
+            className="mb-3 img-fluid"
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div className="table-responsive">
+        <table className="table today-appoint-table table-hover">
+          <thead>
+            <tr>
+              <th>Patient Name</th>
+              <th>Dieses Name</th>
+              <th>Patient Issue</th>
+              <th>Appointment Date</th>
+              <th>Appointment Time</th>
+              <th>Appointment Type</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {appointments.map((appointment) => (
+              <tr key={appointment.id}>
+                <td>{appointment.patientName}</td>
+                <td>{appointment.dieseName}</td>
+                <td>{appointment.patientIssue}</td>
+                <td>{appointment.appointmentDate}</td>
+                <td className="appo-time">{appointment.appointmentTime}</td>
+                <td className="text-center appo-badge">
+                  <span
+                    className={`badge badge-${
+                      appointment.appointmentType === "Online"
+                        ? "warning"
+                        : "primary"
+                    }`}
+                  >
+                    {appointment.appointmentType}
+                  </span>
+                </td>
+                <td>
+                  <button className="me-3" onClick={handleCancelAppointment}>
+                    <img
+                      src="/assets/images/calendar-red-remove.svg"
+                      alt="calendar-red-remove"
+                      className="img-fluid"
+                    />
+                  </button>
+                  <button onClick={doctorAppointmentTableRidrect}>
+                    <img
+                      src="/assets/images/calendar-blue-tick.svg"
+                      alt="calendar-blue-tick"
+                      className="img-fluid"
+                    />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <PatientSidebar
+        <DoctorSidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -186,7 +208,7 @@ const PatientChat = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Appointment Booking
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +404,143 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
+        <div className="container-fluid doctor-apointment-page py-4">
+          <Tabs
+            defaultActiveKey="doctorscheduledappointment"
+            id="uncontrolled-tab-example"
+            className="mb-3"
+          >
+            <Tab
+              eventKey="doctorscheduledappointment"
+              title="Today Appointment"
             >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
-              />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
+              <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center mb-3">
+                <h2 className="doctorAppointment-title">Today Appointment</h2>
+                <div className="d-flex align-items-center flex-lg-row flex-column">
+                  <div className="today-search-container me-2 mt-lg-0 mt-2">
+                    <input
+                      type="text"
+                      placeholder="Search Patient"
+                      className="form-control"
+                    />
+                    <img
+                      src="/assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </div>
+                  <button type="button"  onClick={() => setShowDateRangeModal(true)} className="calendar-btn">
+                    <Calendar size={16} /> Any Date
+                  </button>
+                  <button type="button" className="clock-btn mt-lg-0 mt-2">
+                    <Clock size={16} /> Appointment Time Slot
+                  </button>
                 </div>
-              )}
-            </Col>
-          </Row>
+              </div>
+              {renderAppointmentTable()}
+            </Tab>
+            <Tab
+              eventKey="doctorupcomingappointment"
+              title="Upcoming Appointment"
+            >
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h2 className="doctorAppointment-title">
+                  Upcoming Appointment
+                </h2>
+                <div className="d-flex align-items-center">
+                  <div className="today-search-container me-2">
+                    <input
+                      type="text"
+                      placeholder="Search Patient"
+                      className="form-control"
+                    />
+                    <img
+                      src="/assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </div>
+                  <button type="button"  onClick={() => setShowDateRangeModal(true)} className="calendar-btn me-2">
+                    <Calendar size={16} /> Any Date
+                  </button>
+                  <button type="button" className="clock-btn">
+                    <Clock size={16} /> Appointment Time Slot
+                  </button>
+                </div>
+              </div>
+              {renderAppointmentTable()}
+            </Tab>
+            <Tab
+              eventKey="doctorpreviousappointment"
+              title="Previous Appointment"
+            >
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h2 className="doctorAppointment-title">
+                  Previous Appointment
+                </h2>
+                <div className="d-flex align-items-center">
+                  <div className="today-search-container me-2">
+                    <input
+                      type="text"
+                      placeholder="Search Patient"
+                      className="form-control"
+                    />
+                    <img
+                      src="/assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </div>
+                  <button type="button" onClick={() => setShowDateRangeModal(true)} className="calendar-btn me-2">
+                    <Calendar size={16} /> Any Date
+                  </button>
+                  <button type="button" className="clock-btn">
+                    <Clock size={16} /> Appointment Time Slot
+                  </button>
+                </div>
+              </div>
+              {renderAppointmentTable()}
+            </Tab>
+            <Tab eventKey="doctorcancelappointment" title="Cancel Appointment">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h2 className="doctorAppointment-title">Cancel Appointment</h2>
+                <div className="d-flex align-items-center">
+                  <div className="today-search-container me-2">
+                    <input
+                      type="text"
+                      placeholder="Search Patient"
+                      className="form-control"
+                    />
+                    <img
+                      src="/assets/images/search.svg"
+                      alt="search"
+                      className="search-icon"
+                    />
+                  </div>
+                  <button type="button" onClick={() => setShowDateRangeModal(true)} className="calendar-btn me-2">
+                    <Calendar size={16} /> Any Date
+                  </button>
+                  <button type="button" className="clock-btn">
+                    <Clock size={16} /> Appointment Time Slot
+                  </button>
+                </div>
+              </div>
+              {renderAppointmentTable()}
+            </Tab>
+          </Tabs>
         </div>
       </div>
+      <CancelDoctorAppointment show={showModal} handleClose={handleCloseModal} />
+      <DateRangeModal
+  show={showDateRangeModal}
+  handleClose={() => setShowDateRangeModal(false)}
+  handleApply={(startDate, endDate) => {
+    console.log("Date range selected:", startDate, endDate);
+    // Add your logic here to handle the selected date range
+  }}
+/>
     </div>
   );
 };
 
-export default PatientChat;
+export default DoctorAppointment;

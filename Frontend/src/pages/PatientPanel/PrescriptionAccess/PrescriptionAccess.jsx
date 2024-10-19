@@ -1,22 +1,127 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
+import "./PrescriptionAccess.scss";
 import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import html2canvas from "html2canvas";
+import PatientSidebar from "../../../components/PatientSidebar/PatientSidebar";
+import { Dropdown, Modal } from "react-bootstrap";
 
-const PatientChat = () => {
+const PrescriptionCard = ({
+  doctor,
+  hospital,
+  disease,
+  date,
+  time,
+  imageName,
+  imageSize,
+  handlePrescriptionPreview,
+}) => (
+  <div className="card mb-3">
+    <div className="card-body">
+      <div className="d-flex justify-content-between align-items-center prescrption-head mb-2">
+        <h5 className="mb-0">{doctor}</h5>
+        <div className="d-flex align-items-center">
+          <button className="btn p-0 me-2">
+            <img src="./assets/images/download-icon.svg" alt="Download" />
+          </button>
+          <button className="btn p-0" onClick={handlePrescriptionPreview}>
+            <img src="./assets/images/eye-gray.svg" alt="Print" />
+          </button>
+        </div>
+      </div>
+      <div className="prescrption-body">
+        <div className="d-flex align-items-center justify-content-between">
+          <strong>Hospital Name:</strong>
+          <span>{hospital}</span>
+        </div>
+        <div className="d-flex align-items-center justify-content-between">
+          <strong>Disease Name:</strong>
+          <span>{disease}</span>
+        </div>
+        <div className="d-flex align-items-center justify-content-between">
+          <strong>Date:</strong>
+          <span>{date}</span>
+        </div>
+        <div className="d-flex align-items-center justify-content-between">
+          <strong>Time:</strong>
+          <span>{time}</span>
+        </div>
+        <div className="prescription-images-box mt-3">
+          <img
+            src="./assets/images/prescription-placeholder.png"
+            alt="Prescription"
+            className="img-fluid"
+          />
+          <div>
+            <span>{imageName}</span>
+            <small className="d-block">{imageSize}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const CustomDateRangeSelector = ({
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
+}) => {
+  const formatDate = (date) => {
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const resetDates = () => {
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  return (
+    <div className="custom-date-selector">
+      <DatePicker
+        selectsRange={true}
+        startDate={startDate}
+        endDate={endDate}
+        onChange={(update) => {
+          const [start, end] = update;
+          setStartDate(start);
+          setEndDate(end);
+        }}
+        isClearable={false}
+        customInput={
+          <button className="form-control date-range-button">
+            {startDate && endDate
+              ? `${formatDate(startDate)} - ${formatDate(endDate)}`
+              : "Select Date Range"}
+          </button>
+        }
+      />
+      {startDate && endDate && (
+        <button className="btn reset-dates-btn" onClick={resetDates}>
+          <img src="./assets/images/cross-icon.svg" alt="Reset" />
+        </button>
+      )}
+    </div>
+  );
+};
+
+const PrescriptionAccess = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [startDate, setStartDate] = useState(new Date("2022-01-02"));
+  const [endDate, setEndDate] = useState(new Date("2022-01-13"));
+  const [prescriptionPreview, setPrescriptionPreview] = useState(false);
 
+  const modalRef = useRef(null);
   const sidebarRef = useRef(null);
   const location = useLocation();
+  //   const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -47,85 +152,6 @@ const PatientChat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
 
   const notifications = [
     {
@@ -160,6 +186,62 @@ const PatientChat = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
+  const prescriptions = [
+    {
+      doctor: "Dr. Ryan Vetrovs",
+      hospital: "Artemis Hospital",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+      imageName: "Prescription.JPG",
+      imageSize: "370 x 218",
+    },
+    {
+      doctor: "Marcus Septimus",
+      hospital: "Artemis Hospital",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+      imageName: "Prescription.JPG",
+      imageSize: "370 x 218",
+    },
+    {
+      doctor: "Ahmad Arcand",
+      hospital: "Artemis Hospital",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+      imageName: "Prescription.JPG",
+      imageSize: "370 x 218",
+    },
+    {
+      doctor: "Dr. Ryan Vetrovs",
+      hospital: "Artemis Hospital",
+      disease: "Viral Infection",
+      date: "2 Jan, 2022",
+      time: "10:10 AM",
+      imageName: "Prescription.JPG",
+      imageSize: "370 x 218",
+    },
+  ];
+
+  const handlePrescriptionPreview = () => {
+    setPrescriptionPreview(true);
+  };
+
+  const handlePrescriptionPreviewClose = () => setPrescriptionPreview(false);
+
+  const handleDownload = () => {
+    if (modalRef.current) {
+      html2canvas(modalRef.current).then((canvas) => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "prescription.png";
+        link.click();
+      });
+    }
+  };
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -186,7 +268,7 @@ const PatientChat = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Prescription Access
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +464,170 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
-            >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
+        <div className="container-fluid prescription-access-page py-4">
+          <div className="row mb-4 align-items-center">
+            <div className="col">
+              <h1 className="prescription-access-title">Prescription Access</h1>
+            </div>
+            <div className="col-auto">
+              <CustomDateRangeSelector
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
               />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+            </div>
+          </div>
+          <div className="row">
+            {prescriptions.map((prescription, index) => (
+              <div key={index} className="col-md-6 col-lg-3">
+                <PrescriptionCard
+                  {...prescription}
+                  handlePrescriptionPreview={handlePrescriptionPreview}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Prescription Preview Modal */}
+      <Modal
+        className="prescription-access-preview-modal"
+        show={prescriptionPreview}
+        onHide={handlePrescriptionPreviewClose}
+        centered
+      >
+        <Modal.Header closeButton>
+          <h2 className="prescription-access-preview-title">Prescription</h2>
+        </Modal.Header>
+        <div className="prescription-access-preview-box" ref={modalRef}>
+          <div className="prescription-preview-header">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <div className="d-flex align-items-center">
+                <img
+                  src="/assets/images/logo.png"
+                  alt="Hospital Logo"
+                  className="hospital-logo img-fluid"
+                />
+              </div>
+              <div className="text-end">
+                <h3 className="m-0 doctor-name">Dr. Bharat Patel</h3>
+                <p className="doctor-specialty">Obstetrics and gynecology</p>
+              </div>
+            </div>
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <p>
+                  <strong>Hospital Name:</strong> Medical Center
+                </p>
+                <p>
+                  <strong>Patient Name:</strong> Alabtrao Bhajirao
+                </p>
+                <p>
+                  <strong>Gender:</strong> Male
+                </p>
+                <p className="d-ruby">
+                  <strong>Address:</strong> B-105 Virat Bungalows Punagam
+                  Motavaracha Jamnagar.
+                </p>
+              </div>
+              <div className="col-md-6">
+                <p>
+                  <strong>Prescription Date:</strong>{" "}
+                  {new Date().toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Age:</strong> 36 Year
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="table-responsive">
+            <table className="table mb-4">
+              <thead>
+                <tr>
+                  <th>Medicine Name</th>
+                  <th>Strength</th>
+                  <th>Dose</th>
+                  <th>Duration</th>
+                  <th>When to take</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Calcium carbonate</td>
+                  <td>100 Mg</td>
+                  <td>1-0-1</td>
+                  <td className="duration">2 Day</td>
+                  <td className="whentotake">Before Food</td>
+                </tr>
+                <tr>
+                  <td>Cyclobenzaprine</td>
+                  <td>200 Mg</td>
+                  <td>1-1-1</td>
+                  <td className="duration">4 Day</td>
+                  <td className="whentotake">With Food</td>
+                </tr>
+                <tr>
+                  <td>Fluticasone Almeterol</td>
+                  <td>150 Mg</td>
+                  <td>0-1-0</td>
+                  <td className="duration">5 Day</td>
+                  <td className="whentotake">Before Food</td>
+                </tr>
+                <tr>
+                  <td>Hydrochlorothiazide</td>
+                  <td>250 Mg</td>
+                  <td>0-0-1</td>
+                  <td className="duration">2 Day</td>
+                  <td className="whentotake">After Food</td>
+                </tr>
+                <tr>
+                  <td>Flonase Allergy Relief</td>
+                  <td>100 Mg</td>
+                  <td>1-0-0</td>
+                  <td className="duration">1 Day</td>
+                  <td className="whentotake">Before Food</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="form-group additional-note mb-4">
+            <label>
+              <strong>Additional Note</strong>
+            </label>
+            <p>
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industry's standard dummy text
+              ever since the{" "}
+            </p>
+          </div>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="doctor-signature">
+              <img
+                src="/assets/images/doctor-sign.png"
+                alt="Doctor Signature"
+              />
+              <p>Doctor Signature</p>
+            </div>
+            <button
+              type="button"
+              className="download-btn"
+              onClick={handleDownload}
+            >
+              <img
+                src="/assets/images/arrow-down.svg"
+                alt="arrow-down"
+                className="img-fluid me-2"
+              />
+              Download
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
 
-export default PatientChat;
+export default PrescriptionAccess;

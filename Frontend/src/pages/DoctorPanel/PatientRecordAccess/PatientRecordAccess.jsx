@@ -1,22 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
-import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import "./PatientRecordAccess.scss";
+import { useLocation, useNavigate } from "react-router-dom";
+import DoctorSidebar from "../../../components/DoctorSidebar/DoctorSidebar";
+import { Dropdown, Form, Table } from "react-bootstrap";
 
-const PatientChat = () => {
+const PatientRecordAccess = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [patients, setPatients] = useState([]);
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTimeframe, setSelectedTimeframe] = useState("Month");
 
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -29,6 +27,10 @@ const PatientChat = () => {
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
+
+  const patientDetailsRidrect = () => {
+    navigate("/patientDetails");
+  }
 
   const handleClickOutside = (event) => {
     if (
@@ -49,82 +51,49 @@ const PatientChat = () => {
   }, [isSidebarOpen]);
 
   useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
+    const fetchPatients = async () => {
+      const data = [
+        {
+          id: 1,
+          name: "Marcus Philips",
+          disease: "Viral Infection",
+          issue: "Feeling Tired",
+          lastAppointmentDate: "2 Jan, 2022",
+          lastAppointmentTime: "4:30 PM",
+          age: 22,
+          gender: "Male",
+        },
+        {
+          id: 2,
+          name: "London Shaffer",
+          disease: "Diabetes",
+          issue: "Stomach Ache",
+          lastAppointmentDate: "5 Jan, 2022",
+          lastAppointmentTime: "5:00 PM",
+          age: 45,
+          gender: "Male",
+        },
+      ];
+      setPatients(data);
+      setFilteredPatients(data);
+    };
 
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    fetchPatients();
   }, []);
 
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
+  useEffect(() => {
+    const filtered = patients.filter((patient) =>
+      patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredPatients(filtered);
+  }, [searchTerm, selectedTimeframe, patients]);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
+  const handleTimeframeChange = (timeframe) => {
+    setSelectedTimeframe(timeframe);
   };
 
   const notifications = [
@@ -159,11 +128,10 @@ const PatientChat = () => {
   ];
 
   const noNotificationImage = "/assets/images/no-notification.png";
-
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <PatientSidebar
+        <DoctorSidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -186,7 +154,7 @@ const PatientChat = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Patient Record Access
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +350,87 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
-            >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
-              />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+        <div className="container-fluid doctor-record-page py-4">
+          <div className="d-flex flex-lg-row flex-column justify-content-between align-items-center mb-4">
+            <h1 className="doctor-record-title">Patient Record Access</h1>
+            <div className="d-flex mt-lg-0 mt-3">
+              <div className="doctor-record-search-container">
+                <input
+                  type="text"
+                  placeholder="Search Patient"
+                  className="form-control me-2"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+                <img
+                  src="/assets/images/search.svg"
+                  alt="search"
+                  className="search-icon"
+                />
+              </div>
+              <Dropdown className="doctor-record-dropdown">
+                <Dropdown.Toggle id="dropdown-timeframe">
+                  {selectedTimeframe}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleTimeframeChange("Day")}>
+                    Day
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleTimeframeChange("Week")}>
+                    Week
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleTimeframeChange("Month")}>
+                    Month
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
+          <Table responsive hover className="patient-table">
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>Dieses Name</th>
+                <th>Patient Issue</th>
+                <th>Last Appointment Date</th>
+                <th>Last Appointment Time</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPatients.map((patient) => (
+                <tr key={patient.id}>
+                  <td>{patient.name}</td>
+                  <td>{patient.disease}</td>
+                  <td>{patient.issue}</td>
+                  <td>{patient.lastAppointmentDate}</td>
+                  <td className="lastAppointmentTime">{patient.lastAppointmentTime}</td>
+                  <td>{patient.age} Years</td>
+                  <td>
+                    <img
+                      src={`/assets/images/${patient.gender.toLowerCase()}-gender.png`}
+                      alt="gender"
+                      className="img-fluid"
+                    />
+                  </td>
+                  <td>
+                    <button className="btn btn-link p-0" onClick={patientDetailsRidrect}>
+                      <img
+                        src="/assets/images/eye-blue.svg"
+                        alt="eye"
+                        className="img-fluid"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </div>
       </div>
     </div>
   );
 };
-
-export default PatientChat;
+export default PatientRecordAccess;

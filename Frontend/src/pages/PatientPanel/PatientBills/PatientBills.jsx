@@ -1,22 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./PatientChat.scss";
-import { useLocation } from "react-router-dom";
-import { Col, Dropdown, Row } from "react-bootstrap";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import MessageInput from "./MessageInput";
-import PatientSidebar from "../PatientSidebar/PatientSidebar";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Card, Dropdown, Tab, Tabs } from "react-bootstrap";
+import PatientSidebar from "../../../components/PatientSidebar/PatientSidebar";
+import "./PatientBills.scss";
 
-const PatientChat = () => {
+const PatientBills = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -47,85 +41,6 @@ const PatientChat = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
-
-  useEffect(() => {
-    // Fetch chats from an API
-    setChats([
-      {
-        id: 1,
-        name: "John Doe",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Hello, doctor!",
-        lastMessageTime: "10:30 AM",
-        time: "9: 00 PM",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        avatar: "/assets/images/Avatar-2.png",
-        lastMessage: "Thank you for your help.",
-        lastMessageTime: "Yesterday",
-        time: "9: 00 PM",
-      },
-    ]);
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleChatSelect = (chat) => {
-    setActiveChat(chat);
-    // Fetch messages for the selected chat
-    setMessages([
-      { sender: "You", content: "Hello, doctor!", time: "10:30 AM" },
-      {
-        sender: "doctor",
-        content: "Hi there! How can I help you today?",
-        time: "10:31 AM",
-      },
-    ]);
-  };
-
-  const handleNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      name: "New Chat",
-      avatar: "/assets/images/Avatar-2.png",
-      lastMessage: "",
-      lastMessageTime: "Just now",
-    };
-    setChats([newChat, ...chats]);
-    setActiveChat(newChat);
-    setMessages([]);
-  };
-
-  const handleSendMessage = (message) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleFileUpload = (file) => {
-    const newMessage = {
-      id: Date.now(),
-      sender: "doctor",
-      content: "File uploaded",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file,
-    };
-    setMessages([...messages, newMessage]);
-  };
 
   const notifications = [
     {
@@ -160,6 +75,206 @@ const PatientChat = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
+  const handleNavigation = () => {
+    navigate("/billInvoice");
+  };
+
+  const handlePaidNavigation = () => {
+    navigate("/paidBillInvoice");
+  };
+
+  const doctors = [
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+    {
+      name: "Dr. Nolan George",
+      hospitalname: "Shamuba Hospital",
+      appointmentType: "Onsite",
+      billCreatedTime: "10:20 AM",
+      totalBillAmount: "₹ 24,668",
+      billCreatedDate: "2 Jan, 2022",
+    },
+  ];
+
+  const UnpaidCard = ({ doctors, handleNavigation }) => {
+    return (
+      <>
+        {doctors?.map((doctor, index) => (
+          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
+            <Card className="mb-3">
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <h5 className="card-title">{doctor?.name}</h5>
+                  <button type="button" className="eyebtn">
+                    <img
+                      src="/assets/images/eye-blue-2.svg"
+                      alt="eye-blue"
+                      className="img-fluid eye-icon"
+                    />
+                  </button>
+                </div>
+                <div className="card-details">
+                  <div className="row mb-2">
+                    <div className="col-sm-6">
+                      <small>Hospital Name</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
+                    </div>
+                    <div className="col-sm-6">
+                      <small>Bill Created Date</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end">
+                        {doctor?.billCreatedDate} Years
+                      </p>
+                    </div>
+                    <div className="col-sm-6">
+                      <small>Bill Created Time</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
+                    </div>
+                    <div className="col-sm-6">
+                      <small>Total Bill Amount</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end total-amount">
+                        {doctor?.totalBillAmount}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="create-btn w-100"
+                    onClick={handleNavigation}
+                  >
+                    Pay Now
+                  </button>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        ))}
+      </>
+    );
+  };
+
+  const PaidBillCard = ({ doctors, handlePaidNavigation }) => {
+    return (
+      <>
+        {doctors?.map((doctor, index) => (
+          <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
+            <Card className="mb-3">
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <h5 className="card-title">{doctor?.name}</h5>
+                  <button
+                    type="button"
+                    className="eyebtn"
+                    onClick={handlePaidNavigation}
+                  >
+                    <img
+                      src="/assets/images/eye-blue-2.svg"
+                      alt="eye-blue"
+                      className="img-fluid eye-icon"
+                    />
+                  </button>
+                </div>
+                <div className="card-details">
+                  <div className="row mb-2">
+                    <div className="col-sm-6">
+                      <small>Hospital Name</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end">{doctor?.hospitalname}</p>
+                    </div>
+                    <div className="col-sm-6">
+                      <small>Bill Created Date</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end">
+                        {doctor?.billCreatedDate} Years
+                      </p>
+                    </div>
+                    <div className="col-sm-6">
+                      <small>Bill Created Time</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end">{doctor?.billCreatedTime}</p>
+                    </div>
+                    <div className="col-sm-6">
+                      <small>Total Bill Amount</small>
+                    </div>
+                    <div className="col-sm-6">
+                      <p className="mb-0 text-end total-amount-paid">
+                        {doctor?.totalBillAmount}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        ))}
+      </>
+    );
+  };
+
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
@@ -186,7 +301,7 @@ const PatientChat = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Chat
+                      Bills
                     </li>
                   </ol>
                 </nav>
@@ -382,50 +497,39 @@ const PatientChat = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid patientchat py-4">
-          <Row className="h-100">
-            <Col
-              md={4}
-              className={`chat-list-container ${
-                isMobile && activeChat ? "d-none" : ""
-              }`}
-            >
-              <ChatList
-                chats={chats}
-                activeChat={activeChat}
-                onChatSelect={handleChatSelect}
-                onNewChat={handleNewChat}
-              />
-            </Col>
-            <Col
-              md={8}
-              className={`chat-window-container ${
-                isMobile && !activeChat ? "d-none" : ""
-              }`}
-            >
-              {activeChat ? (
-                <>
-                  <ChatWindow chat={activeChat} messages={messages} />
-                  <MessageInput
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                  />
-                </>
-              ) : (
-                <div className="no-chat-selected">
-                  <img
-                    src="/assets/images/no-chat.png"
-                    alt="no-chat"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </Col>
-          </Row>
+        <div className="container-fluid patients-bills py-4">
+          <Tabs
+            defaultActiveKey="unpaidbills"
+            id="uncontrolled-tab-example"
+            className="mb-3"
+          >
+            <Tab eventKey="unpaidbills" title="Unpaid Bills">
+              <div className="my-3">
+                <h2 className="patients-bills-title">Unpaid Bills</h2>
+              </div>
+              <div className="row">
+                <UnpaidCard
+                  doctors={doctors}
+                  handleNavigation={handleNavigation}
+                />
+              </div>
+            </Tab>
+            <Tab eventKey="paidbills" title="Paid Bills">
+              <div className="my-3">
+                <h2 className="patients-bills-title">Paid Bills</h2>
+              </div>
+              <div className="row">
+                <PaidBillCard
+                  doctors={doctors}
+                  handlePaidNavigation={handlePaidNavigation}
+                />
+              </div>
+            </Tab>
+          </Tabs>
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientChat;
+export default PatientBills;
