@@ -61,6 +61,7 @@ import EditDoctor from "./pages/AdminPanel/DoctorManagement/EditDoctor";
 import PatientManagement from "./pages/AdminPanel/PatientManagement/PatientManagement";
 import MonitorBilling from "./pages/AdminPanel/MonitorBilling/MonitorBilling";
 import MonitorBillingInvoice from "./components/MonitorBillingInvoice/MonitorBillingInvoice";
+import CreateBill from "./pages/AdminPanel/MonitorBilling/CreateBill/CreateBill";
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
         <Route path="/edit-doctor/:id" element={<EditDoctor />} />
         <Route path="/billing/pandingbills" element={<PendingBills />} />
         <Route path="/billing/monitor-billing/pending-invoice" element={<BookingInvoice />} />
+        <Route path="/createBill" element={<CreateBill />} />
         <Route path="/analytics" element={<ReportingAndAnalytics />} />
         {/* Doctor */}
         <Route path="/doctor-login" element={<DoctorLogin />} />

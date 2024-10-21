@@ -1,140 +1,49 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dropdown, Tab, Tabs } from "react-bootstrap";
-import Sidebar from "../../../components/Sidebar/Sidebar";
-import { useLocation, useNavigate } from "react-router-dom";
-import "./MonitorBilling.scss";
+import { Dropdown } from "react-bootstrap";
+import Sidebar from "../../../../components/Sidebar/Sidebar";
+import { useLocation } from "react-router-dom";
+import { Calendar, Clock, Minus } from "lucide-react";
+import "./CreateBill.scss";
 
-const MonitorBilling = () => {
+const CreateBill = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [billingData, setBillingData] = useState([
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Talan Press",
-      diseaseName: "Conjunctivitis",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "25 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Allergies",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "5 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Giana Press",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Nolan Botosh",
-      diseaseName: "Diarrhea",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "6 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "20 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Rayna Rosser",
-      diseaseName: "Mononucleosis",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jun, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "11 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Stomach Aches",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Stomach Aches",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Rayna Rosser",
-      diseaseName: "Mononucleosis",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jun, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "20 Jan, 2022",
-      time: "4:30 PM",
-    },
-    // Add more data as needed
-  ]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(billingData);
+  const [formData, setFormData] = useState({
+    patientName: "",
+    phoneNumber: "",
+    gender: "",
+    age: "",
+    doctorName: "",
+    diseaseName: "",
+    description: "",
+    paymentType: "",
+    billDate: "",
+    billTime: "",
+    billNumber: "",
+    discount: "",
+    tax: "",
+    amount: "",
+    totalAmount: "",
+    address: "",
+    insuranceCompany: "",
+    insurancePlan: "",
+    claimAmount: "",
+    claimedAmount: "",
+  });
 
   const sidebarRef = useRef(null);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
   };
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
   };
 
   const handleClickOutside = (event) => {
@@ -188,87 +97,88 @@ const MonitorBilling = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  useEffect(() => {
-    const results = billingData.filter((bill) =>
-      bill.patientName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredData(results);
-  }, [searchTerm, billingData]);
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleInvoice = () => {
-    navigate("/billing/monitor-billing/invoice");
-  }
+  const handleRemoveField = (fieldName) => {
+    const newFormData = { ...formData };
+    delete newFormData[fieldName];
+    setFormData(newFormData);
+  };
 
-  const handleCreateBill = () => {
-    navigate("/createBill");
-  }
+  const handleSave = () => {
+    console.log("Form Data:", formData); // Log form data to the console
+  };
 
-  const renderTable = () => (
-    <div className="table-responsive">
-      <table className="table monitor_billing-table table-hover">
-        <thead>
-          <tr>
-            <th className="rounded-end-0">Bill Number</th>
-            <th className="rounded-end-0 rounded-start-0">Patient Name</th>
-            <th className="rounded-end-0 rounded-start-0">Disease Name</th>
-            <th className="rounded-end-0 rounded-start-0">Phone Number</th>
-            <th className="rounded-end-0 rounded-start-0">Status</th>
-            <th className="rounded-end-0 rounded-start-0">Date</th>
-            <th className="rounded-end-0 rounded-start-0">Time</th>
-            <th className="rounded-start-0">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((bill, index) => (
-            <tr key={index}>
-              <td>
-                <div className="monitor_billing-time">{bill.billNumber}</div>
-              </td>
-              <td>{bill.patientName}</td>
-              <td>{bill.diseaseName}</td>
-              <td>{bill.phoneNumber}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    bill.status === "Paid" ? "bg-success" : "bg-danger"
-                  }`}
-                >
-                  {bill.status}
-                </span>
-              </td>
-              <td>{bill.date}</td>
-              <td>
-                <div className="monitor_billing-time">{bill.time}</div>
-              </td>
-              <td>
-                <button className="bg-transparent" onClick={handleInvoice}>
-                  <img
-                    src="/assets/images/view-icon-box.svg"
-                    alt="view-icon-box"
-                    className="img-fluid"
-                  />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  const renderNoDataFound = () => (
-    <div className="text-center py-5">
-      <img
-        src="/assets/images/no_data_found.png"
-        alt="No data found"
-        className="mb-3 img-fluid"
-      />
-    </div>
-  );
+  const renderField = (key, value) => {
+    switch (key) {
+      case "gender":
+        return (
+          <select
+            className="form-select"
+            id={key}
+            name={key}
+            value={value}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        );
+      case "paymentType":
+        return (
+          <select
+            className="form-select"
+            id={key}
+            name={key}
+            value={value}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Payment Type</option>
+            <option value="Cash">Cash</option>
+            <option value="Online">Online</option>
+            <option value="Insurance">Insurance</option>
+          </select>
+        );
+      case "billDate":
+        return (
+          <input
+            type="date"
+            className="form-control"
+            id={key}
+            name={key}
+            value={value}
+            onChange={handleInputChange}
+          />
+        );
+      case "billTime":
+        return (
+          <input
+            type="time"
+            className="form-control"
+            id={key}
+            name={key}
+            value={value}
+            onChange={handleInputChange}
+          />
+        );
+      default:
+        return (
+          <input
+            type="text"
+            className="form-control"
+            id={key}
+            name={key}
+            value={value}
+            onChange={handleInputChange}
+          />
+        );
+    }
+  };
 
   return (
     <div className="d-flex">
@@ -321,9 +231,9 @@ const MonitorBilling = () => {
                       All
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item>All</Dropdown.Item>
-                      <Dropdown.Item>Doctor</Dropdown.Item>
-                      <Dropdown.Item>Patient</Dropdown.Item>
+                      <Dropdown.Item href="#/action-1">All</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Doctor</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Patient</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
@@ -495,38 +405,70 @@ const MonitorBilling = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid monitor_billing_page py-4">
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <h1 className="monitor_billing-title mb-0">Monitor Billing</h1>
-            </div>
-            <div className="col-md-6 text-md-end text-center">
-              <div className="monitor_billing-search-container me-md-3 me-0 my-mb-0 my-3">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                  placeholder="Search Patient"
-                  className="form-control"
-                />
-                <img
-                  src="/assets/images/search.svg"
-                  alt="search"
-                  className="search-icon"
-                />
+        <div className="container-fluid create-billing-page py-4">
+          <h1 className="create-billing-title mb-0">Create Bill</h1>
+          <div className="create-billing-border">
+            <form>
+              <div className="row">
+                {Object.entries(formData).map(([key, value]) => (
+                  <div className="col-lg-3 col-md-6 col-12 mb-5">
+                    <div className="form-floating position-relative" key={key}>
+                      {renderField(key, value)}
+                      <label htmlFor={key}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </label>
+                      <button
+                        type="button"
+                        className="minus-btn"
+                        onClick={() => handleRemoveField(key)}
+                        style={{ zIndex: 1 }}
+                      >
+                        <Minus size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <button className="edit-design-btn  me-md-3 me-0 mb-mb-0 mb-3">
-                <i className="bi bi-pencil"></i> Edit Design Invoice
-              </button>
-              <button className="create-bill-btn" onClick={handleCreateBill}>
-                <i className="bi bi-plus"></i> Create Bills
-              </button>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              {filteredData.length > 0 ? renderTable() : renderNoDataFound()}
-            </div>
+              {/* Insurance Details Section */}
+              <div className="create-insurance-billing-border">
+                <h4 className="create-billing-title">Insurance Details</h4>
+                <div className="row mt-4">
+                  {[
+                    "insuranceCompany",
+                    "insurancePlan",
+                    "claimAmount",
+                    "claimedAmount",
+                  ].map((key) => (
+                    <div className="col-lg-3 col-md-6 col-12 mb-5" key={key}>
+                      <div className="form-floating position-relative">
+                        {renderField(key, formData[key])}
+                        <label htmlFor={key}>
+                          {key === "insuranceCompany"
+                            ? "Insurance Company"
+                            : key === "insurancePlan"
+                            ? "Insurance Plan"
+                            : key === "claimAmount"
+                            ? "Claim Amount"
+                            : "Claimed Amount"}
+                        </label>
+                        <button
+                          type="button"
+                          className="minus-btn"
+                          onClick={() => handleRemoveField(key)}
+                        >
+                          <Minus size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="text-end">
+                <button type="submit" className="save-btn" onClick={handleSave}>
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -534,4 +476,4 @@ const MonitorBilling = () => {
   );
 };
 
-export default MonitorBilling;
+export default CreateBill;
