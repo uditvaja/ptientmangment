@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import Sidebar from "../../../../components/Sidebar/Sidebar";
 import { useLocation } from "react-router-dom";
-import { Calendar, Clock, Minus } from "lucide-react";
+import { Minus } from "lucide-react";
 import "./CreateBill.scss";
 
 const CreateBill = () => {
