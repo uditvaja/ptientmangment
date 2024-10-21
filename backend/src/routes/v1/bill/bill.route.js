@@ -14,7 +14,7 @@ router.post("/create-bill", billCreateController.createBill);
 
 router.get("/list-bill", billCreateController.monitorBill);
 router.get("/list-bill-search-patient", billCreateController.searchPatient);
-router.put("/hospital-bill-update",  singleFileUpload('/hospitalImg', 'hospital_logo'), billCreateController.updateHospitalAndBill);
+// router.put("/hospital-bill-update",  singleFileUpload('/hospitalImg', 'hospital_logo'), billCreateController.updateHospitalAndBill);
 
 
 

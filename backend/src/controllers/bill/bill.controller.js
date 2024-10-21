@@ -135,84 +135,98 @@ const monitorBill = async (req, res) => {
     }
   };
   
-  const updateHospitalAndBill = async (req, res) => {
-    try {
-      const { hospitalId, billId } = req.body; // Keep this
-      const updateBody = req.body; // Assuming the request body contains the updates for both models
-  
-      // Check if the hospital exists
-      const hospital = await Hospital.findById(hospitalId);
-      if (!hospital) {
-        return res.status(404).json({ success: false, message: "Hospital not found!" });
-      }
-  
-      // Check if the bill exists
-      const billExists = await Bill.findById(billId); // Use the Bill model
-      if (!billExists) {
-        return res.status(404).json({ success: false, message: "Bill not found!" });
-      }
-  
-      // If a file was uploaded, update the hospital logo URL
-      const uploadImage = async (file, folder) => {
-        if (file) {
-          // If the doctor has an existing image, delete it from Cloudinary
-          if (hospital[folder] && hospital[folder].public_id) {
-            await cloudinary.uploader.destroy(hospital[folder].public_id);
-          }
-  
-          // Upload the new image to Cloudinary
-          const uploadResponse = await cloudinary.uploader.upload(file.path, {
-            folder: folder, // Define the Cloudinary folder for the image
-          });
-  
-          // Return the new image details
-          return {
-            public_id: uploadResponse.public_id,
-            url: uploadResponse.secure_url,
-          };
-        }
-        return null; // Return null if no file is provided
-      };
-  
-      // Upload the doctor image if it exists
-      const newImage = await uploadImage(req.file, 'hospitalImg');
-      if (newImage) {
-        reqbody.hospital_logo = newImage; // Update reqbody with new image details
-      }
-      const fieldsToUpdate = {hospital_logo: reqbody.hospital_logo,}
   
 
-      // Update the hospital
-      const hospitalUpdate = await Hospital.findByIdAndUpdate(hospitalId, { $set: updateBody.hospital,fieldsToUpdate }, { new: true });
-  
-      // Update the bill
-      const bill = await Bill.findByIdAndUpdate(billId, { $set: updateBody.bill }, { new: true });
-  
-      res.status(200).json({
-        success: true,
-        message: "Hospital and bill details updated successfully!",
-        hospitalUpdate,
-        bill
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "An error occurred: " + error.message,
-      });
-    }
-  };
-  
-module.exports = {
-    updateHospitalAndBill,
-};
 
   
+  // updateHospitalAndBill = async (req, res) => {
+  //   try {
+  //     const { hospitalId, billId } = req.body; // Keep this
   
-
+  //     // Initialize an empty object for storing updates
+  //     let updateData = {};
+  
+  //     // Check if the hospital exists
+  //     const hospital = await Hospital.findById(hospitalId);
+  //     if (!hospital) {
+  //       return res.status(404).json({ success: false, message: "Hospital not found!" });
+  //     }
+  
+  //     // Check if the bill exists
+  //     const billExists = await Bill.findById(billId); // Use the Bill model
+  //     if (!billExists) {
+  //       return res.status(404).json({ success: false, message: "Bill not found!" });
+  //     }
+  
+  //     // Check if there is a new file uploaded (hospital logo)
+  //     if (req.file) {
+  //       // If the hospital already has an image, delete it from Cloudinary
+  //       if (hospital.hospital_logo && hospital.hospital_logo.public_id) {
+  //         await cloudinary.uploader.destroy(hospital.hospital_logo.public_id);
+  //       }
+  
+  //       // Upload the new image to Cloudinary
+  //       const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
+  //         folder: 'hospital_images', // Optional folder to organize images on Cloudinary
+  //         resource_type: 'image',   // Ensure the resource type is set to 'image'
+  //       });
+  
+  //       // Update image field in updateData
+  //       updateData.hospital_logo = {
+  //         public_id: uploadResponse.public_id,
+  //         url: uploadResponse.secure_url,
+  //       };
+  //     }
+  
+  //     // Add other fields from req.body.hospital to updateData
+  //     if (req.body.hospital) {
+  //       for (let key in req.body.hospital) {
+  //         if (req.body.hospital[key]) {
+  //           updateData[key] = req.body.hospital[key];
+  //         }
+  //       }
+  //     }
+  
+  //     // Update the hospital with the new data
+  //     const hospitalUpdate = await Hospital.findByIdAndUpdate(
+  //       hospitalId,
+  //       { $set: updateData }, // Set the updated fields, including the image
+  //       { new: true } // Return the updated document
+  //     );
+  
+  //     // Update the bill fields from req.body.bill
+  //     const billUpdateData = req.body.bill || {}; // Ensure there's an object for bill updates
+  //     const bill = await Bill.findByIdAndUpdate(
+  //       billId,
+  //       { $set: billUpdateData }, // Update the bill fields
+  //       { new: true }
+  //     );
+  
+  //     // Respond with success and updated documents
+  //     res.status(200).json({
+  //       success: true,
+  //       message: "Hospital and bill details updated successfully!",
+  //       hospitalUpdate,
+  //       bill,
+  //     });
+  
+  //     // Optional: Remove the file from the server after upload
+  //     if (req.file && req.file.path) {
+  //       fs.unlinkSync(req.file.path); // Delete the file from local storage
+  //     }
+  
+  //   } catch (error) {
+  //     console.error('Error updating hospital and bill:', error.message);
+  //     res.status(500).json({
+  //       success: false,
+  //       message: "An error occurred: " + error.message,
+  //     });
+  //   }
+  // };
   
 module.exports = {
     createBill,
     monitorBill,
     searchPatient,
-    updateHospitalAndBill
+    // updateHospitalAndBill
   };
