@@ -430,39 +430,46 @@ const CreateBill = () => {
                 ))}
               </div>
               {/* Insurance Details Section */}
-              <div className="create-insurance-billing-border">
-                <h4 className="create-billing-title">Insurance Details</h4>
-                <div className="row mt-4">
-                  {[
-                    "insuranceCompany",
-                    "insurancePlan",
-                    "claimAmount",
-                    "claimedAmount",
-                  ].map((key) => (
-                    <div className="col-lg-3 col-md-6 col-12 mb-5" key={key}>
-                      <div className="form-floating position-relative">
-                        {renderField(key, formData[key])}
-                        <label htmlFor={key}>
-                          {key === "insuranceCompany"
-                            ? "Insurance Company"
-                            : key === "insurancePlan"
-                            ? "Insurance Plan"
-                            : key === "claimAmount"
-                            ? "Claim Amount"
-                            : "Claimed Amount"}
-                        </label>
-                        <button
-                          type="button"
-                          className="minus-btn"
-                          onClick={() => handleRemoveField(key)}
+              {formData.paymentType === "Insurance" && (
+                <>
+                  <div className="create-insurance-billing-border">
+                    <h4 className="create-billing-title">Insurance Details</h4>
+                    <div className="row mt-4">
+                      {[
+                        "insuranceCompany",
+                        "insurancePlan",
+                        "claimAmount",
+                        "claimedAmount",
+                      ].map((key) => (
+                        <div
+                          className="col-lg-3 col-md-6 col-12 mb-5"
+                          key={key}
                         >
-                          <Minus size={16} />
-                        </button>
-                      </div>
+                          <div className="form-floating position-relative">
+                            {renderField(key, formData[key])}
+                            <label htmlFor={key}>
+                              {key === "insuranceCompany"
+                                ? "Insurance Company"
+                                : key === "insurancePlan"
+                                ? "Insurance Plan"
+                                : key === "claimAmount"
+                                ? "Claim Amount"
+                                : "Claimed Amount"}
+                            </label>
+                            <button
+                              type="button"
+                              className="minus-btn"
+                              onClick={() => handleRemoveField(key)}
+                            >
+                              <Minus size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                </>
+              )}
               <div className="text-end">
                 <button type="submit" className="save-btn" onClick={handleSave}>
                   Save
