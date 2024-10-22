@@ -1,125 +1,72 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dropdown, Tab, Tabs } from "react-bootstrap";
-import Sidebar from "../../../components/Sidebar/Sidebar";
+import { Dropdown } from "react-bootstrap";
+import Sidebar from "../../../../components/Sidebar/Sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./MonitorBilling.scss";
+import { Minus } from "lucide-react";
+import "./EditInvoiceDesign.scss";
 
-const MonitorBilling = () => {
+const EditInvoiceDesign = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [billingData, setBillingData] = useState([
+  const [logo, setLogo] = useState("/assets/images/health-logo.png");
+  const [fields, setFields] = useState([
+    { id: 1, label: "Name", value: "Jenny Wilson", type: "text" },
     {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
+      id: 2,
+      label: "Other Text",
+      value: "Lorem ipsum dolor sit amet, consectetur",
+      type: "text",
     },
+    { id: 3, label: "Email", value: "Slivermedical@gamil.com", type: "email" },
+    { id: 4, label: "Bill Date", value: "2 Jan, 2022", type: "date" },
+    { id: 5, label: "Bill Time", value: "12:19 PM", type: "time" },
+    { id: 6, label: "Bill Number", value: "102", type: "number" },
     {
-      billNumber: "5654",
-      patientName: "Talan Press",
-      diseaseName: "Conjunctivitis",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "25 Jan, 2022",
-      time: "4:30 PM",
+      id: 7,
+      label: "Phone Number",
+      value: "9913023830",
+      type: "text",
+      pattern: "\\d{5} \\d{5}",
+      title: "Format: 99130 23830",
     },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Allergies",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "5 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Giana Press",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Nolan Botosh",
-      diseaseName: "Diarrhea",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "6 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "20 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Rayna Rosser",
-      diseaseName: "Mononucleosis",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jun, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "11 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Stomach Aches",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Stomach Aches",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Rayna Rosser",
-      diseaseName: "Mononucleosis",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jun, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "20 Jan, 2022",
-      time: "4:30 PM",
-    },
-    // Add more data as needed
+    { id: 8, label: "Address", value: "501,Shamruddh Avenyu", type: "text" },
   ]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(billingData);
+  const [patientfields, setPatientFields] = useState([
+    { id: 1, label: "Name", value: "Jenny Wilson", type: "text" },
+    {
+      id: 2,
+      label: "Disease Name",
+      value: "Meningococcal Disease",
+      type: "text",
+    },
+    { id: 3, label: "Doctor Name", value: "Dr. Marcus Philips", type: "text" },
+    {
+      id: 4,
+      label: "Description",
+      value: "Lorem ipsum dolor sit amet, consectetur",
+      type: "text",
+    },
+    { id: 5, label: "Discount (%)", value: "10", type: "number" },
+    { id: 6, label: "Tax", value: "256", type: "number" },
+    { id: 7, label: "Amount", value: "2520", type: "number" },
+    { id: 8, label: "Total Amount", value: "2520", type: "number" },
+    {
+      id: 9,
+      label: "Payment Type",
+      value: "Online",
+      type: "select",
+      options: ["Cash", "Online", "Card"],
+    },
+    { id: 10, label: "Age", value: "22", type: "number" },
+    {
+      id: 11,
+      label: "Gender",
+      value: "Male",
+      type: "select",
+      options: ["Male", "Female", "Other"],
+    },
+    { id: 12, label: "Address", value: "501,Shamruddh Avenyu", type: "text" },
+  ]);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -129,12 +76,12 @@ const MonitorBilling = () => {
     setIsSidebarOpen((prevState) => !prevState);
   };
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
   };
 
   const handleClickOutside = (event) => {
@@ -188,91 +135,66 @@ const MonitorBilling = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  useEffect(() => {
-    const results = billingData.filter((bill) =>
-      bill.patientName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredData(results);
-  }, [searchTerm, billingData]);
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+  const handleLogoUpload = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogo(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleInvoice = () => {
-    navigate("/billing/monitor-billing/invoice");
-  }
+  const handleRemoveField = (id) => {
+    setFields(fields.filter((field) => field.id !== id));
+  };
 
-  const handleCreateBill = () => {
-    navigate("/billing/monitor-billing/createBill");
-  }
+  const handlePatientRemoveField = (id) => {
+    setPatientFields(patientfields.filter((field) => field.id !== id));
+  };
 
-  const handleEditInvoiceDesign = () => {
-    navigate("/billing/monitor-billing/editInvoice");
-  }
+  // Function to clone all hospital fields
+  const handleCloneHospitalFields = () => {
+    const clonedFields = fields.map((field) => ({
+      ...field,
+      id: fields.length + Math.random(),
+      value: "",
+    }));
+    setFields([...fields, ...clonedFields]);
+  };
 
-  const renderTable = () => (
-    <div className="table-responsive">
-      <table className="table monitor_billing-table table-hover">
-        <thead>
-          <tr>
-            <th className="rounded-end-0">Bill Number</th>
-            <th className="rounded-end-0 rounded-start-0">Patient Name</th>
-            <th className="rounded-end-0 rounded-start-0">Disease Name</th>
-            <th className="rounded-end-0 rounded-start-0">Phone Number</th>
-            <th className="rounded-end-0 rounded-start-0">Status</th>
-            <th className="rounded-end-0 rounded-start-0">Date</th>
-            <th className="rounded-end-0 rounded-start-0">Time</th>
-            <th className="rounded-start-0">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((bill, index) => (
-            <tr key={index}>
-              <td>
-                <div className="monitor_billing-time">{bill.billNumber}</div>
-              </td>
-              <td>{bill.patientName}</td>
-              <td>{bill.diseaseName}</td>
-              <td>{bill.phoneNumber}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    bill.status === "Paid" ? "bg-success" : "bg-danger"
-                  }`}
-                >
-                  {bill.status}
-                </span>
-              </td>
-              <td>{bill.date}</td>
-              <td>
-                <div className="monitor_billing-time">{bill.time}</div>
-              </td>
-              <td>
-                <button className="bg-transparent" onClick={handleInvoice}>
-                  <img
-                    src="/assets/images/view-icon-box.svg"
-                    alt="view-icon-box"
-                    className="img-fluid"
-                  />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  // Function to clone all patient fields
+  const handleClonePatientFields = () => {
+    const clonedPatientFields = patientfields.map((field) => ({
+      ...field,
+      id: patientfields.length + Math.random(),
+      value: "",
+    }));
+    setPatientFields([...patientfields, ...clonedPatientFields]);
+  };
 
-  const renderNoDataFound = () => (
-    <div className="text-center py-5">
-      <img
-        src="/assets/images/no_data_found.png"
-        alt="No data found"
-        className="mb-3 img-fluid"
-      />
-    </div>
-  );
+  const handleInputChange = (id, value) => {
+    setFields((prevFields) =>
+      prevFields.map((field) => (field.id === id ? { ...field, value } : field))
+    );
+  };
+
+  const handlePatientInputChange = (id, value) => {
+    setPatientFields((prevFields) =>
+      prevFields.map((field) => (field.id === id ? { ...field, value } : field))
+    );
+  };
+
+  const handleDropdownChange = (id, value) => {
+    setPatientFields((prevFields) =>
+      prevFields.map((field) => (field.id === id ? { ...field, value } : field))
+    );
+  };
+
+  const handleChangeInvoiceTheme = () => {
+    navigate("/billing/monitor-billing/selectInvoiceTheme");
+  };
 
   return (
     <div className="d-flex">
@@ -325,9 +247,9 @@ const MonitorBilling = () => {
                       All
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item>All</Dropdown.Item>
-                      <Dropdown.Item>Doctor</Dropdown.Item>
-                      <Dropdown.Item>Patient</Dropdown.Item>
+                      <Dropdown.Item href="#/action-1">All</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Doctor</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Patient</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
@@ -499,38 +421,191 @@ const MonitorBilling = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid monitor_billing_page py-4">
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <h1 className="monitor_billing-title mb-0">Monitor Billing</h1>
-            </div>
-            <div className="col-md-6 text-md-end text-center">
-              <div className="monitor_billing-search-container me-md-3 me-0 my-mb-0 my-3">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                  placeholder="Search Patient"
-                  className="form-control"
-                />
+        <div className="container-fluid edit-invoice-page py-4">
+          <div className="d-flex align-items-center justify-content-between">
+            <h1 className="edit-invoice-title mb-0">Edit Invoice Design</h1>
+            <button
+              type="button"
+              className="change_design-btn"
+              onClick={handleChangeInvoiceTheme}
+            >
+              <img
+                src="/assets/images/add.svg"
+                alt="add"
+                className="img-fluid me-md-3 me-0"
+              />
+              <span className="d-md-inline-flex d-none">
+                Change Invoice Theme
+              </span>
+            </button>
+          </div>
+          {/* Hospital Details Section */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-heading-title">Hospital Details</h2>
+              <button
+                type="button"
+                className="change_design-btn"
+                onClick={handleCloneHospitalFields}
+              >
                 <img
-                  src="/assets/images/search.svg"
-                  alt="search"
-                  className="search-icon"
+                  src="/assets/images/add.svg"
+                  alt="add"
+                  className="img-fluid me-md-3 me-0"
                 />
+                <span className="d-md-inline-flex d-none">Add New Field</span>
+              </button>
+            </div>
+
+            <div className="row">
+              <div className="col-lg-3 col-12 mb-lg-0 mb-4">
+                <div className="logo-upload">
+                  <img src={logo} alt="Health Logo" className="logo" />
+                  <input
+                    type="file"
+                    onChange={handleLogoUpload}
+                    className="d-none"
+                    accept="image/*"
+                  />
+                  <div
+                    className="overlay"
+                    onClick={() =>
+                      document.querySelector('input[type="file"]').click()
+                    }
+                  >
+                    <img
+                      src="/assets/images/upload-img-icon.svg"
+                      alt="upload-img-icon"
+                      className="img-fluid me-2"
+                    />
+                    <span className="change-logo-text">Change Logo</span>
+                  </div>
+                </div>
               </div>
-              <button className="edit-design-btn  me-md-3 me-0 mb-mb-0 mb-3" onClick={handleEditInvoiceDesign}>
-                <i className="bi bi-pencil"></i> Edit Design Invoice
-              </button>
-              <button className="create-bill-btn" onClick={handleCreateBill}>
-                <i className="bi bi-plus"></i> Create Bills
-              </button>
+              <div className="col-lg-9 col-12">
+                <div className="row">
+                  {fields.map((field) => (
+                    <div
+                      key={field.id}
+                      className="col-lg-4 col-md-6 col-12 mb-5"
+                    >
+                      <div className="form-floating position-relative">
+                        {field.type === "select" ? (
+                          <select
+                            className="form-control"
+                            id={`field-${field.id}`}
+                            value={field.value}
+                            onChange={(e) =>
+                              handleInputChange(field.id, e.target.value)
+                            }
+                          >
+                            <option value="">Select</option>
+                            {field.options.map((option, index) => (
+                              <option key={index} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type={field.type}
+                            className="form-control"
+                            id={`field-${field.id}`}
+                            value={field.value}
+                            onChange={(e) =>
+                              handleInputChange(field.id, e.target.value)
+                            }
+                            pattern={field.pattern}
+                            title={field.title}
+                          />
+                        )}
+                        <label htmlFor={`field-${field.id}`}>
+                          {field.label}
+                        </label>
+
+                        {/* Minus icon for removing the field */}
+                        <button
+                          type="button"
+                          className="minus-btn"
+                          onClick={() => handleRemoveField(field.id)}
+                        >
+                          <Minus size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-12">
-              {filteredData.length > 0 ? renderTable() : renderNoDataFound()}
+
+          {/* Patient Details Section */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-heading-title">Patient Details</h2>
+              <button
+                type="button"
+                className="change_design-btn"
+                onClick={handleClonePatientFields}
+              >
+                <img
+                  src="/assets/images/add.svg"
+                  alt="add"
+                  className="img-fluid me-md-3 me-0"
+                />
+                <span className="d-md-inline-flex d-none">Add New Field</span>
+              </button>
             </div>
+            <div className="row">
+              {patientfields.map((field) => (
+                <div key={field.id} className="col-lg-4 col-md-6 col-12 mb-5">
+                  <div className="form-floating position-relative">
+                    {field.type === "select" ? (
+                      <select
+                        className="form-control"
+                        id={`patient-field-${field.id}`}
+                        value={field.value}
+                        onChange={(e) =>
+                          handleDropdownChange(field.id, e.target.value)
+                        }
+                      >
+                        <option value="">Select</option>
+                        {field.options.map((option, index) => (
+                          <option key={index} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        className="form-control"
+                        id={`patient-field-${field.id}`}
+                        value={field.value}
+                        onChange={(e) =>
+                          handlePatientInputChange(field.id, e.target.value)
+                        }
+                      />
+                    )}
+                    <label htmlFor={`patient-field-${field.id}`}>
+                      {field.label}
+                    </label>
+
+                    <button
+                      type="button"
+                      className="minus-btn"
+                      onClick={() => handlePatientRemoveField(field.id)}
+                    >
+                      <Minus size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Save Button */}
+          <div className="save-section">
+            <button className="save-btn">Save</button>
           </div>
         </div>
       </div>
@@ -538,4 +613,4 @@ const MonitorBilling = () => {
   );
 };
 
-export default MonitorBilling;
+export default EditInvoiceDesign;

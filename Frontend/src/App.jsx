@@ -61,6 +61,10 @@ import EditDoctor from "./pages/AdminPanel/DoctorManagement/EditDoctor";
 import PatientManagement from "./pages/AdminPanel/PatientManagement/PatientManagement";
 import MonitorBilling from "./pages/AdminPanel/MonitorBilling/MonitorBilling";
 import MonitorBillingInvoice from "./components/MonitorBillingInvoice/MonitorBillingInvoice";
+import CreateBill from "./pages/AdminPanel/MonitorBilling/CreateBill/CreateBill";
+import EditInvoiceDesign from "./pages/AdminPanel/MonitorBilling/EditInvoiceDesign/EditInvoiceDesign";
+import SelectInvoiceTheme from "./pages/AdminPanel/MonitorBilling/SelectInvoiceTheme/SelectInvoiceTheme";
+import InvoiceCreateBill from "./pages/AdminPanel/MonitorBilling/InvoiceCreateBill/InvoiceCreateBill";
 
 function App() {
   return (
@@ -83,6 +87,10 @@ function App() {
         <Route path="/edit-doctor/:id" element={<EditDoctor />} />
         <Route path="/billing/pandingbills" element={<PendingBills />} />
         <Route path="/billing/monitor-billing/pending-invoice" element={<BookingInvoice />} />
+        <Route path="/billing/monitor-billing/createBill" element={<CreateBill />} />
+        <Route path="/billing/monitor-billing/invoice-create-bill/:templateId" element={<InvoiceCreateBill />} />
+        <Route path="/billing/monitor-billing/editInvoice" element={<EditInvoiceDesign />} />
+        <Route path="/billing/monitor-billing/selectInvoiceTheme" element={<SelectInvoiceTheme />} />
         <Route path="/analytics" element={<ReportingAndAnalytics />} />
         {/* Doctor */}
         <Route path="/doctor-login" element={<DoctorLogin />} />

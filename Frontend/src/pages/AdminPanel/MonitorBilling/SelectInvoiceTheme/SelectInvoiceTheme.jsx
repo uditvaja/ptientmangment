@@ -1,125 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dropdown, Tab, Tabs } from "react-bootstrap";
-import Sidebar from "../../../components/Sidebar/Sidebar";
+import { Dropdown } from "react-bootstrap";
+import Sidebar from "../../../../components/Sidebar/Sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./MonitorBilling.scss";
+import "./SelectInvoiceTheme.scss";
 
-const MonitorBilling = () => {
+const SelectInvoiceTheme = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [billingData, setBillingData] = useState([
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Talan Press",
-      diseaseName: "Conjunctivitis",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "25 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Allergies",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "5 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Giana Press",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Nolan Botosh",
-      diseaseName: "Diarrhea",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "6 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "20 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Rayna Rosser",
-      diseaseName: "Mononucleosis",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jun, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "11 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Stomach Aches",
-      phoneNumber: "89564 25462",
-      status: "Unpaid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Stomach Aches",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jan, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Rayna Rosser",
-      diseaseName: "Mononucleosis",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "2 Jun, 2022",
-      time: "4:30 PM",
-    },
-    {
-      billNumber: "5654",
-      patientName: "Alfredo Vaccaro",
-      diseaseName: "Colds and Flu",
-      phoneNumber: "89564 25462",
-      status: "Paid",
-      date: "20 Jan, 2022",
-      time: "4:30 PM",
-    },
-    // Add more data as needed
-  ]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(billingData);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [hoveredTemplate, setHoveredTemplate] = useState(null);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
@@ -129,12 +18,12 @@ const MonitorBilling = () => {
     setIsSidebarOpen((prevState) => !prevState);
   };
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
   };
 
   const handleClickOutside = (event) => {
@@ -188,91 +77,323 @@ const MonitorBilling = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  useEffect(() => {
-    const results = billingData.filter((bill) =>
-      bill.patientName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredData(results);
-  }, [searchTerm, billingData]);
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSelectTemplate = (templateId) => {
+    navigate(`/billing/monitor-billing/invoice-create-bill/${templateId}`);
+    setSelectedTemplate(templateId);
   };
 
-  const handleInvoice = () => {
-    navigate("/billing/monitor-billing/invoice");
-  }
-
-  const handleCreateBill = () => {
-    navigate("/billing/monitor-billing/createBill");
-  }
-
-  const handleEditInvoiceDesign = () => {
-    navigate("/billing/monitor-billing/editInvoice");
-  }
-
-  const renderTable = () => (
-    <div className="table-responsive">
-      <table className="table monitor_billing-table table-hover">
+  const TemplateOne = () => (
+    <div className="invoice-template image-theme">
+      <div className="templete-header">
+        <div className="templet-spacing">
+          <h2>Terry Vaccaro - Manager</h2>
+          <h1>Billing Invoice</h1>
+        </div>
+      </div>
+      <div className="sub-header">
+        <span>Invoice No. 111</span>
+        <span>Jan 01, 2022</span>
+      </div>
+      <table className="templete-table">
         <thead>
           <tr>
-            <th className="rounded-end-0">Bill Number</th>
-            <th className="rounded-end-0 rounded-start-0">Patient Name</th>
-            <th className="rounded-end-0 rounded-start-0">Disease Name</th>
-            <th className="rounded-end-0 rounded-start-0">Phone Number</th>
-            <th className="rounded-end-0 rounded-start-0">Status</th>
-            <th className="rounded-end-0 rounded-start-0">Date</th>
-            <th className="rounded-end-0 rounded-start-0">Time</th>
-            <th className="rounded-start-0">Action</th>
+            <th>Qty.</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Amount</th>
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((bill, index) => (
-            <tr key={index}>
-              <td>
-                <div className="monitor_billing-time">{bill.billNumber}</div>
-              </td>
-              <td>{bill.patientName}</td>
-              <td>{bill.diseaseName}</td>
-              <td>{bill.phoneNumber}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    bill.status === "Paid" ? "bg-success" : "bg-danger"
-                  }`}
-                >
-                  {bill.status}
-                </span>
-              </td>
-              <td>{bill.date}</td>
-              <td>
-                <div className="monitor_billing-time">{bill.time}</div>
-              </td>
-              <td>
-                <button className="bg-transparent" onClick={handleInvoice}>
-                  <img
-                    src="/assets/images/view-icon-box.svg"
-                    alt="view-icon-box"
-                    className="img-fluid"
-                  />
-                </button>
-              </td>
-            </tr>
-          ))}
+          <tr>
+            <td>01</td>
+            <td>Payment transferred</td>
+            <td>$ 50</td>
+            <td>$ 70</td>
+          </tr>
+          <tr>
+            <td>01</td>
+            <td>Payment transferred</td>
+            <td>$ 50</td>
+            <td>$ 70</td>
+          </tr>
         </tbody>
       </table>
+      <div className="totals">
+        <div className="d-flex align-items-center justify-content-between">
+          <span>Sub Total</span>
+          <span>$ 1545414</span>
+        </div>
+        <div className="d-flex align-items-center justify-content-between">
+          <span>Discount 5%</span>
+          <span>$ 1545414</span>
+        </div>
+        <div className="d-flex align-items-center justify-content-between">
+          <strong>Total</strong>
+          <strong>$ 215611554</strong>
+        </div>
+      </div>
+      <div className="notes">
+        <h3>Notes</h3>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mattis
+          turpis nulla, finibus sodales erat porta eu. Ut eu dolor diam.
+          Pellentesque quis mollis nulla. Suspendisse blandit odio in odio porta
+          euismod.
+        </p>
+      </div>
+      <div className="footer">
+        <div>
+          <h3>Bank Details</h3>
+          <p>PLK Madhuvan Bank</p>
+        </div>
+        <div>
+          <h3>Account Number</h3>
+          <p>123-456-7890</p>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>123 Anywhere Street, Any City</p>
+        <p>Hello@Gmail.com</p>
+      </div>
     </div>
   );
 
-  const renderNoDataFound = () => (
-    <div className="text-center py-5">
-      <img
-        src="/assets/images/no_data_found.png"
-        alt="No data found"
-        className="mb-3 img-fluid"
-      />
+  const TemplateTwo = () => (
+    <div className="invoice-template blue-theme">
+      <div className="header">
+        <div className="logo">
+          <img src="/assets/images/logo-white.png" alt="logo-white" />
+        </div>
+        <div className="title">
+          <h4>Invoice</h4>
+          <p>Invoice No : 1234</p>
+        </div>
+      </div>
+      <div className="content">
+        <div className="billed-to">
+          <h6>Invoice To :</h6>
+          <div className="d-flex align-items-center justify-content-between flex-wrap">
+            <h3>PLK Madhavan Bank</h3>
+            <p className="invoice-date">
+              <span className="me-2">Invoice Date :</span>30 May, 2020
+            </p>
+          </div>
+          <div className="d-flex align-items-center justify-content-between flex-wrap">
+            <div className="d-flex align-items-center">
+              <img
+                src="/assets/images/call-calling-2.svg"
+                alt="call-calling-2"
+                className="img-fluid me-2"
+              />
+              <p>+1-234-567-8900</p>
+            </div>
+            <h5>Total Due: </h5>
+          </div>
+          <div className="d-flex align-items-center justify-content-between flex-wrap">
+            <div className="d-flex align-items-center">
+              <img
+                src="/assets/images/direct-normal.svg"
+                alt="direct-normal"
+                className="img-fluid me-2"
+              />
+              <p>email@gmail.com</p>
+            </div>
+            <h6 className="total-count">$ 1,251</h6>
+          </div>
+          <div className="d-flex align-items-center">
+            <img
+              src="/assets/images/location.svg"
+              alt="location"
+              className="img-fluid me-2"
+            />
+            <p>123 Anywhere Street, Any City</p>
+          </div>
+        </div>
+        <table className="blue_theme-table">
+          <thead>
+            <tr>
+              <th className="rounded-end-0">Description</th>
+              <th className="rounded-start-0 rounded-end-0">Qty</th>
+              <th className="rounded-start-0 rounded-end-0">Price</th>
+              <th className="rounded-start-0">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Payment transferred</td>
+              <td>1</td>
+              <td>$260</td>
+              <td>$260</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>1</td>
+              <td>$260</td>
+              <td>$260</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>1</td>
+              <td>$260</td>
+              <td>$260</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>1</td>
+              <td>$260</td>
+              <td>$260</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>1</td>
+              <td>$260</td>
+              <td>$260</td>
+            </tr>
+            {/* Add more rows as needed */}
+          </tbody>
+        </table>
+        <div className="total text-end">
+          <p className="mb-2">
+            <strong>Sub Total:</strong> $2,110.00
+          </p>
+          <p className="mb-2">
+            <strong>Tax (5%):</strong> $14.00
+          </p>
+          <p className="final-total-count">
+            <strong>Total:</strong> $2,124.00
+          </p>
+        </div>
+        <div className="term_condition">
+          <div className="d-flex align-items-center justify-content-between flex-wrap">
+            <div className="d-block">
+              <h4>Term and Conditions</h4>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+                mattis turpis nulla, finibus sodales erat porta eu.
+              </p>
+            </div>
+            <h4 className="sign">Signature</h4>
+          </div>
+        </div>
+      </div>
     </div>
   );
+
+  const TemplateThree = () => (
+    <div className="invoice-template white-theme">
+      <div className="header">
+        <div className="logo">
+          <img src="/assets/images/logo.png" alt="logo" />
+        </div>
+        <div className="title">Invoice</div>
+      </div>
+      <div className="content">
+        <div className="billed-to">
+          <div className="d-flex align-items-center justify-content-between flex-wrap">
+            <h4>Billing To :</h4>
+            <p className="invoice-date">
+              <span className="me-2">Invoice No :</span>1234
+            </p>
+          </div>
+          <div className="d-flex align-items-center justify-content-between flex-wrap">
+            <h4>Adeline Palmerston</h4>
+            <p className="invoice-date">
+              <span className="me-2">Invoice Date :</span>20 June, 2020
+            </p>
+          </div>
+          <div className="d-flex align-items-center justify-content-between flex-wrap">
+            <p className="address-text">
+              123 Anywhere St..., Any City, St 012345
+            </p>
+            <p className="invoice-date">
+              <span className="me-2">Due Date :</span>30 june, 2020
+            </p>
+          </div>
+        </div>
+        <table className="white_theme-table">
+          <thead>
+            <tr>
+              <th className="rounded-end-0">Item</th>
+              <th className="rounded-start-0 rounded-end-0">Price.</th>
+              <th className="rounded-start-0 rounded-end-0">Qty.</th>
+              <th className="rounded-start-0">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Payment transferred</td>
+              <td>$180.00</td>
+              <td>2</td>
+              <td>$360.00</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>$180.00</td>
+              <td>2</td>
+              <td>$360.00</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>$180.00</td>
+              <td>2</td>
+              <td>$360.00</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>$180.00</td>
+              <td>2</td>
+              <td>$360.00</td>
+            </tr>
+            <tr>
+              <td>Payment transferred</td>
+              <td>$180.00</td>
+              <td>2</td>
+              <td>$360.00</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="d-flex align-items-center justify-content-between flex-wrap pay-spacing">
+          <div className="payment-method">
+            <h4>Payment Method</h4>
+            <p>
+              Bank Name : <span>State Bank Of India</span>
+            </p>
+            <p>
+              Account No : <span>1234567890</span>
+            </p>
+          </div>
+          <div className="total">
+            <p>
+              <strong>Sub Total:</strong> $ 2110.00
+            </p>
+            <p>
+              <strong>Discount 5%:</strong> $25.00
+            </p>
+            <p className="final-total-count">
+              <strong>Total:</strong> $ 2254.00
+            </p>
+          </div>
+        </div>
+        <div className="term_condition">
+          <h4>Term and Conditions</h4>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+            mattis turpis nulla, finibus sodales erat porta eu.
+          </p>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>Call : +90854 22354</p>
+        <p>Email : Hello@Gmail.com</p>
+      </div>
+    </div>
+  );
+
+  const templates = [
+    { id: 1, name: "Template 1", component: TemplateOne },
+    { id: 2, name: "Template 2", component: TemplateTwo },
+    { id: 3, name: "Template 3", component: TemplateThree },
+  ];
 
   return (
     <div className="d-flex">
@@ -325,9 +446,9 @@ const MonitorBilling = () => {
                       All
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item>All</Dropdown.Item>
-                      <Dropdown.Item>Doctor</Dropdown.Item>
-                      <Dropdown.Item>Patient</Dropdown.Item>
+                      <Dropdown.Item href="#/action-1">All</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Doctor</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Patient</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
@@ -499,43 +620,44 @@ const MonitorBilling = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid monitor_billing_page py-4">
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <h1 className="monitor_billing-title mb-0">Monitor Billing</h1>
-            </div>
-            <div className="col-md-6 text-md-end text-center">
-              <div className="monitor_billing-search-container me-md-3 me-0 my-mb-0 my-3">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                  placeholder="Search Patient"
-                  className="form-control"
-                />
-                <img
-                  src="/assets/images/search.svg"
-                  alt="search"
-                  className="search-icon"
-                />
+        <div className="container-fluid select-invoice-page py-4">
+          <div className="template-selector row">
+            {templates.map((template) => (
+              <div className="col-lg-4 col-md-6 col-12" key={template.id}>
+                <div
+                  className="template-option"
+                  onMouseEnter={() => setHoveredTemplate(template.id)}
+                  onMouseLeave={() => setHoveredTemplate(null)}
+                >
+                  {React.createElement(template.component)}
+                  {hoveredTemplate === template.id && (
+                    <div className="template-overlay">
+                      <button
+                        className="btn-choose-template"
+                        onClick={() => handleSelectTemplate(template.id)}
+                      >
+                        Choose Template
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-              <button className="edit-design-btn  me-md-3 me-0 mb-mb-0 mb-3" onClick={handleEditInvoiceDesign}>
-                <i className="bi bi-pencil"></i> Edit Design Invoice
-              </button>
-              <button className="create-bill-btn" onClick={handleCreateBill}>
-                <i className="bi bi-plus"></i> Create Bills
+            ))}
+          </div>
+          {selectedTemplate && (
+            <div className="flex justify-center mt-8">
+              <button
+                className="select-btn"
+                onClick={() => navigate("/create-bill")}
+              >
+                Select {selectedTemplate.name}
               </button>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              {filteredData.length > 0 ? renderTable() : renderNoDataFound()}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default MonitorBilling;
+export default SelectInvoiceTheme;
