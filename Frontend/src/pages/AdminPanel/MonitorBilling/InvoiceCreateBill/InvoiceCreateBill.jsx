@@ -2,42 +2,43 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import Sidebar from "../../../../components/Sidebar/Sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { Minus, X, Upload } from "lucide-react";
 import "./InvoiceCreateBill.scss";
-import { Minus } from "lucide-react";
 
 const InvoiceCreateBill = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [file, setFile] = useState(null);
+  const [currentFile, setCurrentFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [preview, setPreview] = useState(null);
+
   const [hospitalDetails, setHospitalDetails] = useState([
-    {
-      name: "",
-      otherText: "",
-      email: "",
-      billDate: "",
-      billTime: "",
-      billNumber: "",
-      phoneNumber: "",
-      address: "",
-    },
+    { id: uuidv4(), name: "name", value: "" },
+    { id: uuidv4(), name: "otherText", value: "" },
+    { id: uuidv4(), name: "email", value: "" },
+    { id: uuidv4(), name: "billDate", value: "" },
+    { id: uuidv4(), name: "billTime", value: "" },
+    { id: uuidv4(), name: "billNumber", value: "" },
+    { id: uuidv4(), name: "phoneNumber", value: "" },
+    { id: uuidv4(), name: "address", value: "" },
   ]);
   const [patientDetails, setPatientDetails] = useState([
-    {
-      name: "",
-      diseaseName: "",
-      doctorName: "",
-      description: "",
-      discount: "",
-      tax: "",
-      amount: "",
-      totalAmount: "",
-      paymentType: "",
-      age: "",
-      gender: "",
-      address: "",
-    },
+    { id: uuidv4(), name: "patientName", value: "" },
+    { id: uuidv4(), name: "diseaseName", value: "" },
+    { id: uuidv4(), name: "doctorName", value: "" },
+    { id: uuidv4(), name: "description", value: "" },
+    { id: uuidv4(), name: "discount", value: "" },
+    { id: uuidv4(), name: "tax", value: "" },
+    { id: uuidv4(), name: "amount", value: "" },
+    { id: uuidv4(), name: "totalAmount", value: "" },
+    { id: uuidv4(), name: "paymentType", value: "" },
+    { id: uuidv4(), name: "age", value: "" },
+    { id: uuidv4(), name: "gender", value: "" },
+    { id: uuidv4(), name: "address", value: "" },
   ]);
 
+  const fileInputRef = useRef(null);
   const sidebarRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -105,89 +106,143 @@ const InvoiceCreateBill = () => {
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
-  // Handle file upload
-  const handleFileUpload = (event) => setFile(event.target.files[0]);
+  const simulateUploadProgress = () => {
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      setUploadProgress(Math.min(progress, 100));
+
+      if (progress >= 100) {
+        clearInterval(interval);
+      }
+    }, 200);
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Clean up previous preview
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+
+      const newPreview = URL.createObjectURL(file);
+      setPreview(newPreview);
+
+      setCurrentFile({
+        name: file.name,
+        size: (file.size / (1024 * 1024)).toFixed(2),
+      });
+
+      setUploadProgress(0);
+      simulateUploadProgress();
+    }
+  };
+
+  const removeFile = () => {
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+    setCurrentFile(null);
+    setPreview(null);
+    setUploadProgress(0);
+  };
 
   const handleDragOver = (event) => {
     event.preventDefault();
+    event.currentTarget.classList.add("border-primary");
+  };
+
+  const handleDragLeave = (event) => {
+    event.preventDefault();
+    event.currentTarget.classList.remove("border-primary");
   };
 
   const handleDrop = (event) => {
     event.preventDefault();
-    setFile(event.dataTransfer.files[0]);
+    event.currentTarget.classList.remove("border-primary");
+
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      // Clean up previous preview
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+
+      const newPreview = URL.createObjectURL(file);
+      setPreview(newPreview);
+
+      setCurrentFile({
+        name: file.name,
+        size: (file.size / (1024 * 1024)).toFixed(2),
+      });
+
+      setUploadProgress(0);
+      simulateUploadProgress();
+    }
   };
 
   // Handle dynamic hospital details change
-  const handleHospitalDetailChange = (index, e) => {
-    const { name, value } = e.target;
-    const updatedHospitalDetails = [...hospitalDetails];
-    updatedHospitalDetails[index][name] = value;
-    setHospitalDetails(updatedHospitalDetails);
+  const handleHospitalDetailChange = (id, e) => {
+    const { value } = e.target;
+    setHospitalDetails(
+      hospitalDetails.map((detail) =>
+        detail.id === id ? { ...detail, value: value } : detail
+      )
+    );
   };
 
-  // Add new hospital detail row
+  // Handle patient field changes dynamically
+  const handlePatientDetailChange = (id, e) => {
+    const { value } = e.target;
+    setPatientDetails(
+      patientDetails.map((detail) =>
+        detail.id === id ? { ...detail, value: value } : detail
+      )
+    );
+  };
+
+  // Add new field to Hospital Details
   const addHospitalDetail = () => {
-    setHospitalDetails([
-      ...hospitalDetails,
-      {
-        name: "",
-        otherText: "",
-        email: "",
-        billDate: "",
-        billTime: "",
-        billNumber: "",
-        phoneNumber: "",
-        address: "",
-      },
-    ]);
+    const newHospitalDetailSet = hospitalDetails.map((detail) => ({
+      id: uuidv4(),
+      name: detail.name,
+      value: "",
+    }));
+    setHospitalDetails([...hospitalDetails, ...newHospitalDetailSet]);
   };
 
-  // Remove hospital detail row
-  const removeHospitalDetail = (index) => {
-    const updatedHospitalDetails = [...hospitalDetails];
-    updatedHospitalDetails.splice(index, 1);
-    setHospitalDetails(updatedHospitalDetails);
-  };
-
-  // Handle dynamic patient detail change
-  const handlePatientDetailChange = (index, e) => {
-    const { name, value } = e.target;
-    const updatedPatientDetails = [...patientDetails];
-    updatedPatientDetails[index][name] = value;
-    setPatientDetails(updatedPatientDetails);
-  };
-
-  // Add new patient detail row
   const addPatientDetail = () => {
-    setPatientDetails([
-      ...patientDetails,
-      {
-        name: "",
-        diseaseName: "",
-        doctorName: "",
-        description: "",
-        discount: "",
-        tax: "",
-        amount: "",
-        totalAmount: "",
-        paymentType: "",
-        age: "",
-        gender: "",
-        address: "",
-      },
-    ]);
+    const newPatientDetailSet = patientDetails.map((detail) => ({
+      id: uuidv4(),
+      name: detail.name,
+      diseaseName: detail.diseaseName,
+      doctorName: detail.doctorName,
+      description: detail.description,
+      discount: detail.discount,
+      tax: detail.tax,
+      amount: detail.amount,
+      totalAmount: detail.totalAmount,
+      paymentType: detail.paymentType,
+      age: detail.age,
+      gender: detail.gender,
+      address: detail.address,
+    }));
+    setPatientDetails([...patientDetails, ...newPatientDetailSet]);
   };
 
-  // Remove patient detail row
-  const removePatientDetail = (index) => {
-    const updatedPatientDetails = [...patientDetails];
-    updatedPatientDetails.splice(index, 1);
-    setPatientDetails(updatedPatientDetails);
+  // Remove a specific field from Hospital Details using ID
+  const removeHospitalDetail = (id) => {
+    setHospitalDetails(hospitalDetails.filter((detail) => detail.id !== id));
+  };
+
+  // Remove patient detail row using ID
+  const removePatientDetail = (id) => {
+    setPatientDetails(patientDetails.filter((detail) => detail.id !== id));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Now you have `hospitalDetails` and `patientDetails` states with all the form data.
     console.log("Hospital Details:", hospitalDetails);
     console.log("Patient Details:", patientDetails);
   };
@@ -421,7 +476,7 @@ const InvoiceCreateBill = () => {
           <h1 className="invoice-create-bill-title mb-0">Create Bill</h1>
           <div className="card mb-4">
             <div className="card-body">
-              <h5 className="card-title d-flex justify-content-between align-items-center">
+              <h5 className="card-title d-flex justify-content-between align-items-center mb-4">
                 Hospital Details
                 <button
                   type="button"
@@ -436,92 +491,148 @@ const InvoiceCreateBill = () => {
                   <span className="d-md-inline-flex d-none">Add New Field</span>
                 </button>
               </h5>
-              {hospitalDetails.map((hospitalDetail, index) => (
-                <div key={index} className="row">
-                  <div className="col-md-3">
-                    <div
-                      className="upload-area"
-                      onDragOver={handleDragOver}
-                      onDrop={handleDrop}
-                    >
-                      {file ? (
-                        <div>
-                          <img
-                            src={URL.createObjectURL(file)}
-                            alt="Uploaded file"
-                            className="img-fluid"
-                          />
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-danger mt-2"
-                            onClick={() => setFile(null)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <i className="bi bi-cloud-upload"></i>
-                          <p>Upload a file or drag and drop</p>
-                          <small>PNG, JPG, GIF up to 10MB</small>
-                          <input
-                            type="file"
-                            className="form-control"
-                            onChange={handleFileUpload}
-                          />
-                        </>
-                      )}
-                    </div>
+              <div className="row">
+                <div className="col-md-3">
+                  <h6 className="upload-text">Upload Logo</h6>
+                  <div
+                    className={`upload-area rounded p-4 mb-3 ${
+                      uploadProgress !== 100
+                        ? "border border-2 border-dashed"
+                        : ""
+                    }`}
+                    style={{ cursor: "pointer" }}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      className="d-none"
+                      onChange={handleFileUpload}
+                      accept="image/*"
+                    />
+
+                    {uploadProgress === 100 && preview ? (
+                      <div className="text-center position-relative">
+                        <img
+                          src={preview}
+                          alt="Uploaded"
+                          className="img-fluid rounded"
+                          style={{ maxHeight: "200px" }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted">
+                        <Upload className="mb-2 text-primary" size={32} />
+                        <p className="text-primary mb-1">Upload a file</p>
+                        <p className="small">or drag and drop</p>
+                        <p className="small text-muted mt-2">
+                          PNG, JPG, GIF up to 10MB
+                        </p>
+                      </div>
+                    )}
                   </div>
-                  <div className="col-md-9">
-                    <div className="row">
-                      {Object.entries(hospitalDetail).map(([key, value]) => (
-                        <div
-                          key={key}
-                          className="col-lg-4 col-md-6 col-12 mb-3"
-                        >
-                          <div className="form-floating position-relative">
-                            <input
-                              type={
-                                key.includes("Date")
-                                  ? "date"
-                                  : key.includes("Time")
-                                  ? "time"
-                                  : "text"
-                              }
-                              className="form-control"
-                              placeholder={`Enter ${key}`}
-                              name={key}
-                              value={value}
-                              onChange={(e) =>
-                                handleHospitalDetailChange(index, e)
-                              }
+
+                  {currentFile && uploadProgress < 100 && (
+                    <div className="bg-light rounded p-3 mb-2">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <div className="d-flex align-items-center">
+                          <div className="bg-primary bg-opacity-10 rounded p-2 me-2">
+                            <img
+                              src={preview}
+                              alt={currentFile.name}
+                              width="16"
+                              height="16"
+                              className="rounded"
                             />
-                            <label>
-                              {key
-                                .replace(/([A-Z])/g, " $1")
-                                .replace(/^./, (str) => str.toUpperCase())}
-                            </label>
+                          </div>
+                          <div>
+                            <p className="mb-0 small fw-medium">
+                              {currentFile.name}
+                            </p>
+                            <small className="text-muted">
+                              {currentFile.size} MB
+                            </small>
+                          </div>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFile();
+                          }}
+                          className="btn btn-link text-muted p-0 border-0"
+                          style={{ lineHeight: 0 }}
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                      <div className="progress" style={{ height: "4px" }}>
+                        <div
+                          className="progress-bar"
+                          role="progressbar"
+                          style={{ width: `${uploadProgress}%` }}
+                          aria-valuenow={uploadProgress}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        />
+                      </div>
+                      <small className="text-muted mt-1 d-block">
+                        {uploadProgress}% Upload
+                      </small>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    {hospitalDetails.map((detail) => (
+                      <div
+                        key={detail.id}
+                        className="col-lg-4 col-md-6 col-12 mb-3"
+                      >
+                        <div className="form-floating position-relative">
+                          <input
+                            type={
+                              detail.name === "billDate"
+                                ? "date"
+                                : detail.name === "billTime"
+                                ? "time"
+                                : "text"
+                            }
+                            className="form-control"
+                            placeholder={`Enter ${detail.name}`}
+                            value={detail.value}
+                            onChange={(e) =>
+                              handleHospitalDetailChange(detail.id, e)
+                            }
+                          />
+                          <label>
+                            {detail.name
+                              .replace(/([A-Z])/g, " $1")
+                              .replace(/^./, (str) => str.toUpperCase())}
+                          </label>
+                          {hospitalDetails.length > 1 && (
                             <button
                               type="button"
                               className="minus-btn"
-                              onClick={() => removeHospitalDetail(index)}
+                              onClick={() => removeHospitalDetail(detail.id)}
                             >
                               <Minus size={16} />
                             </button>
-                          </div>
+                          )}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
 
           <div className="card mb-4">
             <div className="card-body">
-              <h5 className="card-title d-flex justify-content-between align-items-center">
+              <h5 className="card-title d-flex justify-content-between align-items-center mb-4">
                 Patient Details
                 <button
                   type="button"
@@ -536,51 +647,45 @@ const InvoiceCreateBill = () => {
                   <span className="d-md-inline-flex d-none">Add New Field</span>
                 </button>
               </h5>
-              {patientDetails.map((patientDetail, index) => (
-                <div key={index} className="row">
-                  {Object.entries(patientDetail).map(([key, value]) => (
-                    <div key={key} className="col-lg-3 col-md-6 col-12 mb-3">
-                      <div className="form-floating position-relative">
-                        <input
-                          type={
-                            key.includes("Amount") ||
-                            key.includes("Age") ||
-                            key.includes("Tax")
-                              ? "number"
-                              : "text"
-                          }
-                          className="form-control"
-                          placeholder={`Enter ${key}`}
-                          name={key}
-                          value={value}
-                          onChange={(e) => handlePatientDetailChange(index, e)}
-                        />
-                        <label>
-                          {key
-                            .replace(/([A-Z])/g, " $1")
-                            .replace(/^./, (str) => str.toUpperCase())}
-                        </label>
-                        <button
-                          type="button"
-                          className="minus-btn"
-                          onClick={() => removePatientDetail(index)}
-                        >
-                          <Minus size={16} />
-                        </button>
-                      </div>
+
+              <div className="row">
+                {patientDetails.map((detail) => (
+                  <div
+                    key={detail.id}
+                    className="col-lg-3 col-md-6 col-12 mb-3"
+                  >
+                    <div className="form-floating position-relative">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder={`Enter ${detail.name}`}
+                        value={detail.value}
+                        onChange={(e) =>
+                          handlePatientDetailChange(detail.id, e)
+                        }
+                      />
+                      <label>
+                        {detail.name
+                          .replace(/([A-Z])/g, " $1")
+                          .replace(/^./, (str) => str.toUpperCase())}
+                      </label>
+
+                      <button
+                        type="button"
+                        className="minus-btn"
+                        onClick={() => removePatientDetail(detail.id)}
+                      >
+                        <Minus size={16} />
+                      </button>
                     </div>
-                  ))}
-                </div>
-              ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
           <div className="text-end">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={handleSubmit}
-            >
+            <button type="submit" className="save-btn" onClick={handleSubmit}>
               Save
             </button>
           </div>
