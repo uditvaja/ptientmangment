@@ -1,63 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Dropdown } from "react-bootstrap";
+import Sidebar from "../../../components/Sidebar/Sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
-import DoctorSidebar from "../../../components/DoctorSidebar/DoctorSidebar";
-import {
-  Dropdown,
-  Card,
-} from "react-bootstrap";
-import { CalendarDays } from "lucide-react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "./PrescriptionTools.scss";
+import "./InsuranceClaims.scss";
 
-const PrescriptionTools = () => {
+const InsuranceClaims = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const sidebarRef = useRef(null);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prevState) => !prevState);
-  };
-
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
-
-  const handleClickOutside = (event) => {
-    if (
-      isSidebarOpen &&
-      sidebarRef.current &&
-      !sidebarRef.current.contains(event.target)
-    ) {
-      closeSidebar();
-    }
-  };
-
-  const handleNavigation = () => {
-    navigate("/prescription-tools/create/details");
-  }
-
-  const handleCreatePrescription = () => {
-    navigate("/prescription-tools/create");
-  }
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isSidebarOpen]);
-
+  const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -89,144 +39,203 @@ const PrescriptionTools = () => {
     },
   ]);
 
+  const sidebarRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prevState) => !prevState);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      isSidebarOpen &&
+      sidebarRef.current &&
+      !sidebarRef.current.contains(event.target)
+    ) {
+      closeSidebar();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSidebarOpen]);
+
   const noNotificationImage = "/assets/images/no-notification.png";
 
   const clearNotifications = () => {
     setNotifications([]); // Clear the notifications array
   };
 
-  const patients = [
+  const claims = [
     {
-      name: "Jaydon Philips",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 36,
-      gender: "Male",
-      time: "10:10 AM",
+      billNo: "5654",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Marcus Philips",
+      patientName: "Internal Medicine",
+      diseaseName: "Kadin Saris",
+      insuranceCompany: "HDFC Life Insurance",
+      insurancePlan: "Maternity",
+      billDate: "2 Jun, 2024",
     },
     {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
+      billNo: "5655",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Haylie Schleifer",
+      patientName: "Jaxson Bergson",
+      diseaseName: "Charlie Rosser",
+      insuranceCompany: "LIC Life Insurance",
+      insurancePlan: "Health",
+      billDate: "3 Jun, 2024",
     },
     {
-      name: "Charlie Herwitz",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
+      billNo: "5660",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Jaxson Levin",
+      patientName: "Emerson Levin",
+      diseaseName: "Justin Dokidis",
+      insuranceCompany: "Aegon Life Insurance",
+      insurancePlan: "Medical",
+      billDate: "4 Jun, 2024",
     },
     {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
+      billNo: "5654",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Roger Carder",
+      patientName: "Brandon Lipshitz",
+      diseaseName: "Terry Dokidis",
+      insuranceCompany: "HDFC Life Insurance",
+      insurancePlan: "Medical",
+      billDate: "5 Jun, 2024",
     },
     {
-      name: "Charlie Herwitz",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
+      billNo: "5662",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Corey Siphron",
+      patientName: "Ruben Dokidis",
+      diseaseName: "Phillip Donin",
+      insuranceCompany: "LIC Life Insurance",
+      insurancePlan: "Health",
+      billDate: "6 Jun, 2024",
     },
     {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
+      billNo: "5668",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Roger Carder",
+      patientName: "Kadin Saris",
+      diseaseName: "Kadin Philips",
+      insuranceCompany: "Aegon Life Insurance",
+      insurancePlan: "Medical",
+      billDate: "7 Jun, 2024",
     },
     {
-      name: "Charlie Herwitz",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
+      billNo: "5663",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Jaxson Levin",
+      patientName: "Ryan Schleifer",
+      diseaseName: "Emerson Dokidis",
+      insuranceCompany: "HDFC Life Insurance",
+      insurancePlan: "Health",
+      billDate: "8 Jun, 2024",
     },
     {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
+      billNo: "2254",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Chance Vaccaro",
+      patientName: "Zaire Mango",
+      diseaseName: "Marcus Ekstrom",
+      insuranceCompany: "LIC Life Insurance",
+      insurancePlan: "Medical",
+      billDate: "9 Jun, 2022",
     },
+    {
+      billNo: "2353",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Marcus Philips",
+      patientName: "Alfonso Mango",
+      diseaseName: "Kadin Botosh",
+      insuranceCompany: "Aegon Life Insurance",
+      insurancePlan: "Health",
+      billDate: "10 Jun, 2024",
+    },
+    {
+      billNo: "5663",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Jaxson Levin",
+      patientName: "Marcus Levin",
+      diseaseName: "Charlie Vaccaro",
+      insuranceCompany: "HDFC Life Insurance",
+      insurancePlan: "Medical",
+      billDate: "11 Jun, 2024",
+    },
+    {
+      billNo: "5662",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Marcus Philips",
+      patientName: "Cooper Dias",
+      diseaseName: "Zain Passaquindici",
+      insuranceCompany: "LIC Life Insurance",
+      insurancePlan: "Maternity",
+      billDate: "12 Jun, 2024",
+    },
+    {
+      billNo: "5662",
+      doctorImg: "/assets/images/profile.png",
+      doctorName: "Dr. Marcus Philips",
+      patientName: "Cooper Dias",
+      diseaseName: "Zain Passaquindici",
+      insuranceCompany: "LIC Life Insurance",
+      insurancePlan: "Health",
+      billDate: "12 Jun, 2024",
+    }
   ];
 
-  const AppointmentCard = ({ patient }) => (
-    <Card className="mb-3">
-      <Card.Body>
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <h5 className="card-title">{patient.name}</h5>
-          <div className="d-flex align-items-center">
-          <span
-            className={`badge ${
-              patient.status === "New"
-                ? "bage-info"
-                : patient.status === "Old"
-                ? "bage-success"
-                : "bage-info"
-            }`}
-          >
-            {patient.status}
-          </span>
-          <button type="button" className="eyebtn" onClick={handleNavigation} >
-          <img src="/assets/images/eye-blue-2.svg" alt="eye-blue" className="img-fluid eye-icon" />
-          </button>
-          </div>
-        </div>
-        <div className="card-details">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <small>Appointment Type</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end appo-type">{patient.appointmentType}</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Patient Age</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.age} Years</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Patient Gender</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.gender}</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Appointment Time</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.time}</p>
-            </div>
-          </div>
-          <button type="button" className="create-btn w-100" onClick={handleCreatePrescription}>
-            Create Prescription
-          </button>
-        </div>
-      </Card.Body>
-    </Card>
-  );
+  const filteredClaims = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    
+    if (!query) return claims;
 
-  const filteredPatients = patients.filter((patient) =>
-    patient.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    return claims.filter(claim => 
+      claim.billNo.toLowerCase().includes(query) ||
+      claim.doctorName.toLowerCase().includes(query) ||
+      claim.patientName.toLowerCase().includes(query) ||
+      claim.diseaseName.toLowerCase().includes(query) ||
+      claim.insuranceCompany.toLowerCase().includes(query) ||
+      claim.insurancePlan.toLowerCase().includes(query) ||
+      claim.billDate.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+
+  const handleInsuranceClaimsDetails = () => {
+    navigate("/billing/insurance-claims/Invoice");
+  }
 
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <DoctorSidebar
+        <Sidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -248,11 +257,8 @@ const PrescriptionTools = () => {
                         />
                       </a>
                     </li>
-                    <li className="breadcrumb-item" aria-current="page">
-                      Prescription Tools
-                    </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Create
+                      Billing And Payments
                     </li>
                   </ol>
                 </nav>
@@ -448,52 +454,106 @@ const PrescriptionTools = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid doctor-prescription-page py-4">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h4 className="doctor-prescription-title">
-              Today Appointment
-            </h4>
-            <div className="d-flex align-items-center">
-              <div className="doctor-prescription-search-container me-3">
-                <input
-                  type="text"
-                  placeholder="Search Patient"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <img
-                  src="/assets/images/search.svg"
-                  alt="search"
-                  className="search-icon"
-                />
-              </div>
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                customInput={
-                  <button type="button">
-                    <CalendarDays size={20} />{" "}
-                    {selectedDate.toLocaleDateString("en-US", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </button>
-                }
+        <div className="container-fluid insurance-claims-page py-4">
+          <div className="d-flex align-items-center justify-content-between flex-md-row flex-column">
+            <h1 className="insurance-claims-title mb-md-0 mb-3">Insurance Claims</h1>
+            <div className="insurance-claims-search-container">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search Patient"
+                className="form-control"
+              />
+              {searchQuery && (
+              <button 
+                className="clear-search-btn"
+                onClick={handleClearSearch}
+                title="Clear search"
+              >
+                ×
+              </button>
+            )}
+              <img
+                src="/assets/images/search.svg"
+                alt="search"
+                className="search-icon"
               />
             </div>
           </div>
-          <div className="row">
-            {filteredPatients.map((patient, index) => (
-              <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-                <AppointmentCard patient={patient} />
+          <div className="table-responsive">
+          {filteredClaims.length > 0 ? (
+          <table className="table insurance-claims-table">
+            <thead>
+              <tr>
+                <th>Bill No</th>
+                <th>Doctor Name</th>
+                <th>Patient Name</th>
+                <th>Disease Name</th>
+                <th>Insurance Company</th>
+                <th>Insurance Plan</th>
+                <th>Bill Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredClaims.map((claim, index) => (
+                <tr key={`${claim.billNo}-${index}`}>
+                  <td><span className="bill-no">{claim.billNo}</span></td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <div className="doctor-img-wrapper me-2">
+                        <img
+                          src={claim.doctorImg}
+                          alt={claim.doctorName}
+                          className="doctor-img"
+                        />
+                      </div>
+                      <span>{claim.doctorName}</span>
+                    </div>
+                  </td>
+                  <td>{claim.patientName}</td>
+                  <td>{claim.diseaseName}</td>
+                  <td>{claim.insuranceCompany}</td>
+                  <td>
+                    <span className="insurance-plan" data-plan={claim.insurancePlan}>
+                      {claim.insurancePlan}
+                    </span>
+                  </td>
+                  <td>{claim.billDate}</td>
+                  <td>
+                    <button className="btn action-btn" onClick={handleInsuranceClaimsDetails}>
+                      <img
+                        src="/assets/images/eye-gray-2.svg"
+                        alt="actions"
+                        className="action-icon"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+           ) : (
+            <div className="no-results">
+              <div className="text-center py-5">
+                <img 
+                  src="/assets/images/no-results.svg" 
+                  alt="No results found" 
+                  className="no-results-img img-fluid mb-3"
+                />
+                <h3>No Results Found</h3>
+                <p>
+                  No matches found for "{searchQuery}". Try adjusting your search.
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+        </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default PrescriptionTools;
+export default InsuranceClaims;

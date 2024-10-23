@@ -65,6 +65,8 @@ import CreateBill from "./pages/AdminPanel/MonitorBilling/CreateBill/CreateBill"
 import EditInvoiceDesign from "./pages/AdminPanel/MonitorBilling/EditInvoiceDesign/EditInvoiceDesign";
 import SelectInvoiceTheme from "./pages/AdminPanel/MonitorBilling/SelectInvoiceTheme/SelectInvoiceTheme";
 import InvoiceCreateBill from "./pages/AdminPanel/MonitorBilling/InvoiceCreateBill/InvoiceCreateBill";
+import InsuranceClaims from "./pages/AdminPanel/InsuranceClaims/InsuranceClaims";
+import InsuranceClaimsInvoice from "./pages/AdminPanel/InsuranceClaims/InsuranceClaimsInvoice/InsuranceClaimsInvoice";
 
 function App() {
   return (
@@ -91,6 +93,8 @@ function App() {
         <Route path="/billing/monitor-billing/invoice-create-bill/:templateId" element={<InvoiceCreateBill />} />
         <Route path="/billing/monitor-billing/editInvoice" element={<EditInvoiceDesign />} />
         <Route path="/billing/monitor-billing/selectInvoiceTheme" element={<SelectInvoiceTheme />} />
+        <Route path="/billing/insurance-claims" element={<InsuranceClaims />} />
+        <Route path="/billing/insurance-claims/Invoice" element={<InsuranceClaimsInvoice />} />
         <Route path="/analytics" element={<ReportingAndAnalytics />} />
         {/* Doctor */}
         <Route path="/doctor-login" element={<DoctorLogin />} />
