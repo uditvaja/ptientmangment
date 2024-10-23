@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Modal, Button } from "react-bootstrap";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./MonitorBilling.scss";
+import "./PaymentProcess.scss";
 
-const MonitorBilling = () => {
+const PaymentProcess = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [billingData, setBillingData] = useState([
@@ -148,6 +148,13 @@ const MonitorBilling = () => {
       icon: "payment-cancelled-icon.svg",
     },
   ]);
+  const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState(billingData);
+
+  const sidebarRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const noNotificationImage = "/assets/images/no-notification.png";
 
@@ -155,12 +162,8 @@ const MonitorBilling = () => {
     setNotifications([]); // Clear the notifications array
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(billingData);
-
-  const sidebarRef = useRef(null);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -193,8 +196,12 @@ const MonitorBilling = () => {
   }, [isSidebarOpen]);
 
   useEffect(() => {
-    const results = billingData.filter((bill) =>
-      bill.patientName.toLowerCase().includes(searchTerm.toLowerCase())
+    const results = billingData.filter(
+      (bill) =>
+        bill.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bill.diseaseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bill.phoneNumber.toLowerCase().includes(searchTerm) ||
+        bill.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(results);
   }, [searchTerm, billingData]);
@@ -203,21 +210,21 @@ const MonitorBilling = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
+
   const handleInvoice = () => {
-    navigate("/billing/monitor-billing/invoice");
-  }
+    navigate("/billing/payment-process/invoice");
+  };
 
-  const handleCreateBill = () => {
-    navigate("/billing/monitor-billing/createBill");
-  }
-
-  const handleEditInvoiceDesign = () => {
-    navigate("/billing/monitor-billing/editInvoice");
-  }
+  const handleEditBill = () => {
+    navigate("/billing/payment-process/edit");
+  };
 
   const renderTable = () => (
     <div className="table-responsive">
-      <table className="table monitor_billing-table table-hover">
+      <table className="table payment_process-table table-hover">
         <thead>
           <tr>
             <th className="rounded-end-0">Bill Number</th>
@@ -234,7 +241,7 @@ const MonitorBilling = () => {
           {filteredData.map((bill, index) => (
             <tr key={index}>
               <td>
-                <div className="monitor_billing-time">{bill.billNumber}</div>
+                <div className="payment_process-time">{bill.billNumber}</div>
               </td>
               <td>{bill.patientName}</td>
               <td>{bill.diseaseName}</td>
@@ -250,13 +257,27 @@ const MonitorBilling = () => {
               </td>
               <td>{bill.date}</td>
               <td>
-                <div className="monitor_billing-time">{bill.time}</div>
+                <div className="payment_process-time">{bill.time}</div>
               </td>
-              <td>
-                <button className="bg-transparent" onClick={handleInvoice}>
+              <td className="d-flex align-items-center flex-md-row flex-column">
+                <button className="bg-transparent" onClick={handleEditBill}>
+                  <img
+                    src="/assets/images/edit-icon-box.svg"
+                    alt="edit-icon-box"
+                    className="img-fluid"
+                  />
+                </button>
+                <button className="bg-transparent mx-md-3 mx-0 my-md-0 my-3" onClick={handleInvoice}>
                   <img
                     src="/assets/images/view-icon-box.svg"
                     alt="view-icon-box"
+                    className="img-fluid"
+                  />
+                </button>
+                <button className="bg-transparent" onClick={handleShow}>
+                  <img
+                    src="/assets/images/money-pay-icon.svg"
+                    alt="money-pay-icon"
                     className="img-fluid"
                   />
                 </button>
@@ -307,7 +328,7 @@ const MonitorBilling = () => {
                       Billing And Payments
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Monitor Billing
+                      Payment Process
                     </li>
                   </ol>
                 </nav>
@@ -372,7 +393,12 @@ const MonitorBilling = () => {
                       <Dropdown.Menu className="notification-menu">
                         <div className="notification-header d-flex justify-content-between align-items-center">
                           <span>Notification</span>
-                          <button className="close-btn" onClick={clearNotifications}>&times;</button>
+                          <button
+                            className="close-btn"
+                            onClick={clearNotifications}
+                          >
+                            &times;
+                          </button>
                         </div>
                         {notifications.length > 0 ? (
                           notifications.map((notification) => (
@@ -445,7 +471,12 @@ const MonitorBilling = () => {
                     <Dropdown.Menu className="notification-menu">
                       <div className="notification-header d-flex justify-content-between align-items-center">
                         <span>Notification</span>
-                        <button className="close-btn" onClick={clearNotifications}>&times;</button>
+                        <button
+                          className="close-btn"
+                          onClick={clearNotifications}
+                        >
+                          &times;
+                        </button>
                       </div>
                       {notifications.length > 0 ? (
                         notifications.map((notification) => (
@@ -503,32 +534,33 @@ const MonitorBilling = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid monitor_billing_page py-4">
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <h1 className="monitor_billing-title mb-0">Monitor Billing</h1>
-            </div>
-            <div className="col-md-6 text-md-end text-center">
-              <div className="monitor_billing-search-container me-md-3 me-0 my-mb-0 my-3">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                  placeholder="Search Patient"
-                  className="form-control"
-                />
-                <img
-                  src="/assets/images/search.svg"
-                  alt="search"
-                  className="search-icon"
-                />
-              </div>
-              <button className="edit-design-btn  me-md-3 me-0 mb-mb-0 mb-3" onClick={handleEditInvoiceDesign}>
-                <i className="bi bi-pencil"></i> Edit Design Invoice
-              </button>
-              <button className="create-bill-btn" onClick={handleCreateBill}>
-                <i className="bi bi-plus"></i> Create Bills
-              </button>
+        <div className="container-fluid payment_process_page py-4">
+          <div className="d-flex align-items-center justify-content-between flex-md-row flex-column mb-3">
+            <h1 className="payment_process-title mb-md-0 mb-3">
+              Billing Details
+            </h1>
+            <div className="payment_process-search-container">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Quick Search"
+                className="form-control"
+              />
+              {searchTerm && (
+                <button
+                  className="clear-search-btn"
+                  onClick={handleClearSearch}
+                  title="Clear search"
+                >
+                  ×
+                </button>
+              )}
+              <img
+                src="/assets/images/search.svg"
+                alt="search"
+                className="search-icon"
+              />
             </div>
           </div>
           <div className="row">
@@ -538,8 +570,39 @@ const MonitorBilling = () => {
           </div>
         </div>
       </div>
+      <Modal
+        show={showModal}
+        onHide={handleClose}
+        centered
+        className="cash-payment-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Cash Payment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="payment-summary">
+            <div className="form-floating position-relative">
+              <input
+                type="text"
+                id="cashpay"
+                className="form-control"
+                placeholder="₹ 00000"
+              />
+              <label htmlFor="cashpay">Enter Amount</label>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="cancel-btn" onClick={handleClose}>
+            Cancel
+          </button>
+          <button className="pay-btn" onClick={handleClose}>
+            Pay
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
 
-export default MonitorBilling;
+export default PaymentProcess;

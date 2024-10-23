@@ -78,7 +78,8 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
                     activeLink === "/billing/pandingbills" ||
                     activeLink === "/billing/monitor-billing/invoice" ||
                     activeLink === "/billing/monitor-billing/pending-invoice" ||
-                    activeLink === "/billing/monitor-billing/invoice-create-bill/:templateId" ||
+                    activeLink ===
+                      "/billing/monitor-billing/invoice-create-bill/:templateId" ||
                     activeLink === "/billing/monitor-billing/createBill" ||
                     activeLink === "/billing/monitor-billing/editInvoice" ||
                     activeLink === "/billing/monitor-billing/selectInvoiceTheme"
@@ -93,7 +94,10 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
                 <Link
                   to={"/billing/insurance-claims"}
                   className={`nav-link ${
-                    activeLink === "/billing/insurance-claims" || activeLink === "/billing/insurance-claims/Invoice" ? "active" : ""
+                    activeLink === "/billing/insurance-claims" ||
+                    activeLink === "/billing/insurance-claims/Invoice"
+                      ? "active"
+                      : ""
                   }`}
                 >
                   Insurance Claims
@@ -103,7 +107,11 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
                 <Link
                   to={"/billing/payment-process"}
                   className={`nav-link ${
-                    activeLink === "/billing/payment-process" ? "active" : ""
+                    activeLink === "/billing/payment-process" ||
+                    activeLink === "/billing/payment-process/edit" ||
+                    activeLink === "/billing/payment-process/invoice"
+                      ? "active"
+                      : ""
                   }`}
                 >
                   Payment Process
