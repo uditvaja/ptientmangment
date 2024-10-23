@@ -175,16 +175,17 @@ const monitorBill = async (req, res) => {
 //   }
 // };
 
-// const billView = async(req,res)=>{
-
-// }
-
-// in this code i want Bill 
 
 
-const billView = async(req,res)=>{
 
-}
+const billView = async (req, res) => {
+  try {
+    const bills = await Bill.find(); // Fetch all records from the Bill collection
+    res.status(200).json(bills); // Send the bills data as a JSON response
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching bills' });
+  }
+};
 
   // const updateDocProfile = async (req, res) => {
   //   try {
@@ -321,7 +322,8 @@ const billView = async(req,res)=>{
 module.exports = {
     createBill,
     monitorBill,
-    searchPatient,
+    searchPatient,billView
+    
     // updateBill,updateHospital,updateHospitalLogo
     // updateHospitalAndBill
   };
