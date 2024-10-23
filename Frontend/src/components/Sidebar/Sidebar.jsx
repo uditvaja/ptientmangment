@@ -93,7 +93,7 @@ const Sidebar = ({ isOpen, sidebarRef, activeLink }) => {
                 <Link
                   to={"/billing/insurance-claims"}
                   className={`nav-link ${
-                    activeLink === "/billing/insurance-claims" ? "active" : ""
+                    activeLink === "/billing/insurance-claims" || activeLink === "/billing/insurance-claims/Invoice" ? "active" : ""
                   }`}
                 >
                   Insurance Claims

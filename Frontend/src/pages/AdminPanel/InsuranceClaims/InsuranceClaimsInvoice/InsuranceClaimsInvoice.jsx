@@ -1,63 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import DoctorSidebar from "../../../components/DoctorSidebar/DoctorSidebar";
-import {
-  Dropdown,
-  Card,
-} from "react-bootstrap";
-import { CalendarDays } from "lucide-react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "./PrescriptionTools.scss";
+import { Dropdown } from "react-bootstrap";
+import "./InsuranceClaimsInvoice.scss";
+import Sidebar from "../../../../components/Sidebar/Sidebar";
+import { useLocation } from "react-router-dom";
 
-const PrescriptionTools = () => {
+const InsuranceClaimsInvoice = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const sidebarRef = useRef(null);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prevState) => !prevState);
-  };
-
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
-
-  const handleClickOutside = (event) => {
-    if (
-      isSidebarOpen &&
-      sidebarRef.current &&
-      !sidebarRef.current.contains(event.target)
-    ) {
-      closeSidebar();
-    }
-  };
-
-  const handleNavigation = () => {
-    navigate("/prescription-tools/create/details");
-  }
-
-  const handleCreatePrescription = () => {
-    navigate("/prescription-tools/create");
-  }
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isSidebarOpen]);
-
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -95,138 +44,43 @@ const PrescriptionTools = () => {
     setNotifications([]); // Clear the notifications array
   };
 
-  const patients = [
-    {
-      name: "Jaydon Philips",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 36,
-      gender: "Male",
-      time: "10:10 AM",
-    },
-    {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
-    },
-    {
-      name: "Charlie Herwitz",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
-    },
-    {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
-    },
-    {
-      name: "Charlie Herwitz",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
-    },
-    {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
-    },
-    {
-      name: "Charlie Herwitz",
-      status: "New",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
-    },
-    {
-      name: "Charlie Herwitz",
-      status: "Old",
-      appointmentType: "Onsite",
-      age: 25,
-      gender: "Female",
-      time: "10:10 AM",
-    },
-  ];
+  const sidebarRef = useRef(null);
+  const location = useLocation();
 
-  const AppointmentCard = ({ patient }) => (
-    <Card className="mb-3">
-      <Card.Body>
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <h5 className="card-title">{patient.name}</h5>
-          <div className="d-flex align-items-center">
-          <span
-            className={`badge ${
-              patient.status === "New"
-                ? "bage-info"
-                : patient.status === "Old"
-                ? "bage-success"
-                : "bage-info"
-            }`}
-          >
-            {patient.status}
-          </span>
-          <button type="button" className="eyebtn" onClick={handleNavigation} >
-          <img src="/assets/images/eye-blue-2.svg" alt="eye-blue" className="img-fluid eye-icon" />
-          </button>
-          </div>
-        </div>
-        <div className="card-details">
-          <div className="row mb-2">
-            <div className="col-sm-6">
-              <small>Appointment Type</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end appo-type">{patient.appointmentType}</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Patient Age</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.age} Years</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Patient Gender</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.gender}</p>
-            </div>
-            <div className="col-sm-6">
-              <small>Appointment Time</small>
-            </div>
-            <div className="col-sm-6">
-              <p className="mb-0 text-end">{patient.time}</p>
-            </div>
-          </div>
-          <button type="button" className="create-btn w-100" onClick={handleCreatePrescription}>
-            Create Prescription
-          </button>
-        </div>
-      </Card.Body>
-    </Card>
-  );
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prevState) => !prevState);
+  };
 
-  const filteredPatients = patients.filter((patient) =>
-    patient.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      isSidebarOpen &&
+      sidebarRef.current &&
+      !sidebarRef.current.contains(event.target)
+    ) {
+      closeSidebar();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSidebarOpen]);
 
   return (
     <div className="d-flex">
       <div className="w-15 w-md-0">
-        <DoctorSidebar
+        <Sidebar
           isOpen={isSidebarOpen}
           sidebarRef={sidebarRef}
           activeLink={location.pathname}
@@ -249,10 +103,10 @@ const PrescriptionTools = () => {
                       </a>
                     </li>
                     <li className="breadcrumb-item" aria-current="page">
-                      Prescription Tools
+                      Billing And Payments
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Create
+                      Insurance Claims
                     </li>
                   </ol>
                 </nav>
@@ -448,47 +302,191 @@ const PrescriptionTools = () => {
             </div>
           </div>
         </div>
-        <div className="container-fluid doctor-prescription-page py-4">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h4 className="doctor-prescription-title">
-              Today Appointment
-            </h4>
-            <div className="d-flex align-items-center">
-              <div className="doctor-prescription-search-container me-3">
-                <input
-                  type="text"
-                  placeholder="Search Patient"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+        <div className="container-fluid insurance-claims-invoice-page py-4">
+          <div className="invoice-container">
+            <div className="invoice-header">
+              <div className="logo">
                 <img
-                  src="/assets/images/search.svg"
-                  alt="search"
-                  className="search-icon"
+                  src="/assets/images/logo.png"
+                  alt="logo"
+                  className="img-fluid"
                 />
               </div>
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                customInput={
-                  <button type="button">
-                    <CalendarDays size={20} />{" "}
-                    {selectedDate.toLocaleDateString("en-US", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </button>
-                }
-              />
+              <h2 className="invoice-title">Invoice</h2>
             </div>
-          </div>
-          <div className="row">
-            {filteredPatients.map((patient, index) => (
-              <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
-                <AppointmentCard patient={patient} />
+
+            <div className="insurance-claims-doctor-info">
+              <div className="row align-items-center justify-content-between">
+                <div className="col-md-6">
+                  <h3>Dr. Bharat Patel</h3>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Proin mattis turpis nisl, viverra scelerisque porta eu.
+                  </p>
+                </div>
+                <div className="col-md-6 text-lg-end mt-lg-0 mt-4">
+                  <p className="doctor-info-contentbox">
+                    <strong className="doctor-info-title">Bill No</strong>
+                    <span className="doctor-info-dot">:</span> 1234
+                  </p>
+                  <p className="doctor-info-contentbox">
+                    <strong className="doctor-info-title">Bill Date</strong>
+                    <span className="doctor-info-dot">:</span> 20 June, 2020
+                  </p>
+                  <p className="doctor-info-contentbox">
+                    <strong className="doctor-info-title">Bill Time</strong>
+                    <span className="doctor-info-dot">:</span> 10:45 PM
+                  </p>
+                </div>
               </div>
-            ))}
+            </div>
+
+            <div className="insurance-claims-invoice-details insurance-claims-invoice-details-spacing">
+              <div className="row">
+                <div className="col-md-6">
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">Name</strong>
+                    <span className="invoice-details-dot">:</span> Miracle
+                    Kenter
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">Gender</strong>
+                    <span className="invoice-details-dot">:</span> Male
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">Age</strong>
+                    <span className="invoice-details-dot">:</span> 36 Years
+                  </p>
+                  <p className="invoice-details-contentbox text-lg-nowrap">
+                    <strong className="invoice-details-title">Address</strong>
+                    <span className="invoice-details-dot">:</span> B-105 Vimal
+                    Bungalows Purnaam Mogavira, Jamalpur
+                  </p>
+                </div>
+                <div className="col-md-6">
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">
+                      Disease Name
+                    </strong>
+                    <span className="invoice-details-dot">:</span> Jasuam Saris
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">
+                      Phone Number
+                    </strong>
+                    <span className="invoice-details-dot">:</span> 9757766557
+                  </p>
+                  <p className="invoice-details-contentbox">
+                    <strong className="invoice-details-title">
+                      Payment Type
+                    </strong>
+                    <span className="invoice-details-dot">:</span>{" "}
+                    <span className="text-blue">Insurance</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="table-responsive">
+              <table className="table align-middle insurance-claims-invoice-table">
+                <thead>
+                  <tr>
+                    <th className="rounded-end-0">Description</th>
+                    <th className="rounded-0">Amount</th>
+                    <th className="rounded-0">Qty.</th>
+                    <th className="rounded-start-0 text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Neuromuscular blockers</td>
+                    <td>₹ 13,000.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 26,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>Neuromuscular blockers</td>
+                    <td>₹ 800.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 1,600.00</td>
+                  </tr>
+                  <tr>
+                    <td>Levocarvin with high dose methoxarate (HDMTX)</td>
+                    <td>₹ 1000.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 2000.00</td>
+                  </tr>
+                  <tr>
+                    <td>Hydroxyurea for sickle cell disease</td>
+                    <td>₹ 20.00</td>
+                    <td className="qty">2</td>
+                    <td className="total">₹ 40.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="insurance-claims-details">
+              <div className="row">
+                <div className="col-md-6">
+                  <p className="insurance-claims-contentbox">
+                    <strong className="insurance-details-title">
+                      Insurance Company
+                    </strong>
+                    <span className="insurance-details-dot">:</span> HDFC life
+                    Insurance
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Insurance Plan
+                    </strong>
+                    <span className="insurance-details-dot">:</span> Health
+                    Insurance
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Claim Amount
+                    </strong>
+                    <span className="insurance-details-dot">:</span> ₹ 2,000.00
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Claimed Amount
+                    </strong>
+                    <span className="insurance-details-dot">:</span> ₹ 2,500.00
+                  </p>
+                </div>
+                <div className="col-md-6 text-lg-end mt-lg-0 mt-4">
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">Amount</strong>
+                    <span className="insurance-details-dot">:</span> ₹ 25,840.00
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">
+                      Discount 5%
+                    </strong>
+                    <span className="insurance-details-dot">:</span> ₹ 1,292.00
+                  </p>
+                  <p className="insurance-details-contentbox">
+                    <strong className="insurance-details-title">Tax</strong>
+                    <span className="insurance-details-dot">:</span> ₹ 120.00
+                  </p>
+                  <p className="insurance-total-contentbox">
+                    <strong className="insurance-total-title">
+                      Total Amount
+                    </strong>
+                    <span className="insurance-total-dot">:</span> ₹ 24,668.00
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="insurance-claims-footer">
+              <div className="contact-info">
+                <p>Call: +91604 22394</p>
+                <p>Email: Hello@Gmail.com</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -496,4 +494,4 @@ const PrescriptionTools = () => {
   );
 };
 
-export default PrescriptionTools;
+export default InsuranceClaimsInvoice;
