@@ -5,104 +5,35 @@ import "./AdminProfile.scss";
 import { useLocation } from "react-router-dom";
 
 const AdminProfile = () => {
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
   const [activeSection, setActiveSection] = useState("profile");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showPassword2, setShowPassword2] = useState(false);
-  const [showPassword3, setShowPassword3] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const token = localStorage.getItem("token");
   const [profileData, setProfileData] = useState({
-    firstName: "Lincoln",
-    lastName: "Philips",
-    emailAddress: "Lincoln@gmail.com",
-    phoneNumber: "99130 53222",
-    hospitalName: "Silver Park Medical Center",
-    gender: "Male",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    country: "India",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    hospitalId: "", // Store hospitalId here
+    gender: "",
+    city: "",
+    state: "",
+    country: "",
+    _id: "",
   });
-  const [profileImage, setProfileImage] = useState(
-    "./assets/images/profile-2.png"
-  );
-  const [imagePreview, setImagePreview] = useState(null);
+
+  const [hospitalName, setHospitalName] = useState(""); // State to hold hospital name
   const [isEditable, setIsEditable] = useState(false);
-
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "Change Invoice Theme",
-      description: "Lincoln Philips changed the Invoice Theme.",
-      time: "5 min ago",
-      icon: "theme-icon.svg",
-    },
-    {
-      id: 2,
-      title: "Dr.Bharat",
-      description: "Created a bill by Dr. Bharat.",
-      time: "5 min ago",
-      icon: "theme-icon.svg",
-    },
-    {
-      id: 3,
-      title: "Payment Received",
-      description: "24,668 is the payment done of Miracle Canter.",
-      time: "1:52PM",
-      icon: "payment-received-icon.svg",
-    },
-    {
-      id: 4,
-      title: "Payment Cancelled",
-      description: "24,668 is the payment cancelled of Miracle Canter.",
-      time: "1:52PM",
-      icon: "payment-cancelled-icon.svg",
-    },
-  ]);
-
-  const noNotificationImage = "/assets/images/no-notification.png";
-
-  const clearNotifications = () => {
-    setNotifications([]); // Clear the notifications array
-  };
-
   const sidebarRef = useRef(null);
-  const location = useLocation();
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const togglePasswordVisibility2 = () => {
-    setShowPassword2(!showPassword2);
-  };
-
-  const togglePasswordVisibility3 = () => {
-    setShowPassword3(!showPassword3);
-  };
-
-  const toggleSection = (section) => {
-    setActiveSection(activeSection === section ? "" : section);
-  };
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prevState) => !prevState);
-  };
-
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
-
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
 
   const handleClickOutside = (event) => {
-    if (
-      isSidebarOpen &&
-      sidebarRef.current &&
-      !sidebarRef.current.contains(event.target)
-    ) {
-      closeSidebar();
+    if (isSidebarOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      setIsSidebarOpen(false);
     }
   };
 
@@ -118,32 +49,98 @@ const AdminProfile = () => {
     });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setProfileImage(file);
+  const handleSaveProfile = () => {
+    setIsEditable(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (newPass !== confirmPass) {
+      alert("New password and confirm password do not match.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:9500/v1/admin/change-password",
+        {
+          oldpass: oldPass,
+          newpass: newPass,
+          confirmpass: confirmPass,
+          adminId: profileData._id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+
+      if (response?.data?.success) {
+        alert("Password changed successfully!");
+      } else {
+        alert("Failed to change password: " + (response?.data?.message || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+      alert("Error changing password: " + (error.response?.data?.message || error.message));
     }
   };
 
-  const handleSaveProfile = () => {
-    setIsEditable(false);
-    if (imagePreview) {
-      setProfileImage(imagePreview);
+  // Fetch hospital data
+  const fetchHospitalData = async (hospitalId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:9500/v1/hospital/get-hospital-by-id",
+        { id: hospitalId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+
+      if (response?.data?.success) {
+        setHospitalName(response.data.hospitalName); // Assuming the response contains a hospitalName
+      } else {
+        console.error("Failed to fetch hospital data: " + (response?.data?.message || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Error fetching hospital data:", error);
     }
   };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
+    const storedData = localStorage.getItem("user");
+    if (storedData) {
+      const data = JSON.parse(storedData);
+      setProfileData({
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
+        phone_number: data.phone_number || "",
+        hospitalId: data.hospitalId || "", // Ensure this matches your data
+        gender: data.gender || "",
+        city: data.city || "",
+        state: data.state || "",
+        country: data.country || "",
+        _id: data._id || "",
+      });
+
+      // Fetch hospital name using hospitalId
+      if (data.hospitalId) {
+        fetchHospitalData(data.hospitalId);
+      }
+    }
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
+
 
   return (
     <>
@@ -494,16 +491,16 @@ const AdminProfile = () => {
                               <div className="row">
                                 <div className="col-lg-4 col-md-6 mb-3">
                                   <div className="form-floating mb-3">
-                                    <input
-                                      type="text"
-                                      name="firstName"
-                                      className={"form-control"}
-                                      id="FirstName"
-                                      placeholder="First Name"
-                                      value={profileData.firstName}
-                                      onChange={handleInputChange}
-                                      disabled={!isEditable}
-                                    />
+                                  <input
+                    type="text"
+                    name="first_name"
+                    className={"form-control"}
+                    id="FirstName"
+                    placeholder="First Name"
+                    value={profileData.first_name}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
                                     <label htmlFor="FirstName">
                                       First Name
                                     </label>
@@ -511,16 +508,16 @@ const AdminProfile = () => {
                                 </div>
                                 <div className="col-lg-4 col-md-6 mb-3">
                                   <div className="form-floating mb-3">
-                                    <input
-                                      type="text"
-                                      name="lastName"
-                                      className={"form-control"}
-                                      id="LastName"
-                                      placeholder="Last Name"
-                                      value={profileData.lastName}
-                                      onChange={handleInputChange}
-                                      disabled={!isEditable}
-                                    />
+                                  <input
+                    type="text"
+                    name="last_name"
+                    className={"form-control"}
+                    id="LastName"
+                    placeholder="Last Name"
+                    value={profileData.last_name}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
                                     <label htmlFor="LastName">Last Name</label>
                                   </div>
                                 </div>

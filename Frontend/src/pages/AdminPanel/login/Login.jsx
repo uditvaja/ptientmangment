@@ -32,6 +32,10 @@ const Login = () => {
        
         const token = response.data.token;
         localStorage.setItem('token', token); 
+        localStorage.setItem('adminId', response.data.adminId);
+        localStorage.setItem('admin', JSON.stringify(response.data.data));
+        console.log("Login successful:", response.data);
+        
         setError(null); // Clear error state
         navigate('/'); 
       }

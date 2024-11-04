@@ -96,52 +96,63 @@ const login = async (req, res) => {
       success: false,
       message: error.message || "Internal Server Error",
     });
-  }
+  }[y[tfghfhttu]]
 };
 
 
 // //   /* -------------------------- LOGIN WITH PHONE NUMBER WITH OTP  -------------------------- */
+/* -------------------------- LOGIN WITH PHONE NUMBER WITH OTP  -------------------------- */
 const forgotPass = async (req, res) => {
   try {
     const { phoneNumber, first_name } = req.body;
-    let email = req.body.email;  // Change to let to allow reassignment
+    let email = req.body.email;
 
-     // Ensure that only one field is provided
-     if (email && phoneNumber) {
-      throw new Error("Please provide either email or phone number, not both");
+    // Ensure only one field is provided
+    if (email && phoneNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide either email or phone number, not both"
+      });
     }
 
-    // Ensure that either email or phone number is provided
+    // Ensure either email or phone number is provided
     if (!email && !phoneNumber) {
-      throw new Error("Please provide either email or phone number");
+      return res.status(400).json({
+        success: false,
+        message: "Please provide either email or phone number"
+      });
     }
 
     let findDoctor;
 
-    // If phone number is provided, find the admin and retrieve the email
+    // If phone number is provided, find the doctor and retrieve the email
     if (phoneNumber) {
       findDoctor = await doctorService.findDoctorByPhoneNumber(phoneNumber);
       if (!findDoctor) {
-        throw new Error("doctor Not Found");
+        return res.status(404).json({
+          success: false,
+          message: "Doctor not found"
+        });
       }
-      // Use the found admin's email for sending the OTP
-      email = findDoctor.email; // Retrieve the email from the admin object
-    } else if(email) {
-      // email = req.body.email; // Get the email directly if it is provided
+      email = findDoctor.email;
+    } else {
       findDoctor = await doctorService.findDoctorByEmail(email);
       if (!findDoctor) {
-        throw new Error("Admin Not Found");
+        return res.status(404).json({
+          success: false,
+          message: "Doctor not found"
+        });
       }
     }
 
-    // Generate a random OTP (6 digits)
+    // Generate a random OTP (6 digits) and set expiration
     const otp = ("0".repeat(6) + Math.floor(Math.random() * 10 ** 6)).slice(-6);
     findDoctor.otp = otp;
+    findDoctor.otpGeneratedAt = Date.now(); // Timestamp for OTP generation
     await findDoctor.save();
 
     // Send OTP via email
     if (email) {
-      // Render the OTP email template and send email
       ejs.renderFile(
         path.join(__dirname, "../../views/otp-template.ejs"),
         {
@@ -151,7 +162,10 @@ const forgotPass = async (req, res) => {
         },
         async (err, data) => {
           if (err) {
-            throw new Error("Error rendering email template");
+            return res.status(500).json({
+              success: false,
+              message: "Error rendering email template"
+            });
           } else {
             await emailService.sendMail(email, data, "Verify Email");
           }
@@ -159,80 +173,83 @@ const forgotPass = async (req, res) => {
       );
     }
 
-    // Send a success response
+    // Send a success response with OTP for testing
     res.status(200).json({
       success: true,
       message: `OTP has been sent via email`,
-      data: `Admin OTP is ${otp}`,
-      adminId: findDoctor._id,
+      data: `Doctor OTP is ${otp}`,
+      doctorId: findDoctor._id,
       status: 200,
     });
   } catch (error) {
-    // Send error response
     res.status(400).json({ success: false, message: error.message });
   }
 };
 
 
-// // /* ------------------------------- VERIFY OTP ------------------------------- */
+/* ------------------------------- VERIFY OTP ------------------------------- */
 const verifyOtp = async (req, res) => {
-    try {
-      const { otp, email, phoneNumber } = req.body;
-  
-      // Ensure that either email or phone number is provided
-      if (!email && !phoneNumber) {
-        return res.status(400).json({
-          status: 400,
-          success: false,
-          message: "Please provide either email or phone number",
-        });
-      }
-  
-      // Find the doctor based on either email or phone_number
-      let doctor;
-      if (email) {
-        doctor = await Doctor.findOne({ email });
-      } else if (phoneNumber) {
-        doctor = await Doctor.findOne({ phoneNumber });
-      }
-  
-      // Check if the doctor exists
-      if (!doctor) {
-        return res.status(404).json({
-          status: 404,
-          success: false,
-          message: "Doctor Not Found",
-        });
-      }
-  
-      // Check if OTP is expired using expireOtpTime
-      if (new Date(doctor.expireOtpTime).toTimeString() <= new Date(Date.now()).toTimeString()) {
-        return res.status(400).json({
-          status: 400,
-          success: false,
-          message: "OTP has expired",
-        });
-      }
-  
-      // Compare OTP
-      if (doctor.otp === otp) {
-        return res.status(200).json({
-          status: 200,
-          success: true,
-          message: "OTP Verification Successful",
-        });
-      } else {
-        return res.status(400).json({
-          status: 400,
-          success: false,
-          message: "Invalid OTP",
-        });
-      }
-    } catch (error) {
-      // Handle error and send a 500 response
-      res.status(500).json({ error: error.message });
+  try {
+    const { otp, email, phoneNumber } = req.body;
+
+    // Ensure OTP is provided
+    if (!otp) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Please provide OTP for verification",
+      });
     }
-  };
+
+    // Find the doctor based on either email or phone number
+    let doctor;
+    if (email) {
+      doctor = await Doctor.findOne({ email });
+    } else if (phoneNumber) {
+      doctor = await Doctor.findOne({ phoneNumber });
+    }
+
+    // Check if doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: "Doctor not found",
+      });
+    }
+
+    // Check if OTP has expired (5 seconds expiration)
+    const otpGeneratedAt = doctor.otpGeneratedAt;
+    const currentTime = Date.now();
+    const otpExpiryTime = 5000; // 5 seconds in milliseconds
+
+    if (currentTime - otpGeneratedAt > otpExpiryTime) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "OTP has expired",
+      });
+    }
+
+    // Compare OTP
+    if (doctor.otp === otp) {
+      return res.status(200).json({
+        status: 200,
+        success: true,
+        message: "OTP Verification Successful",
+      });
+    } else {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
   
 
 
@@ -326,7 +343,36 @@ const changePassword = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getAllDoctors = async (req, res) => {
+  try {
+    // Retrieve all doctors from the database
+    const doctors = await Doctor.find();
 
+    // Check if doctors exist
+    if (!doctors || doctors.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        success: false,
+        message: "No doctors found",
+      });
+    }
+
+    // Respond with the list of doctors
+    res.status(200).json({
+      status: 200,
+      success: true,
+      message: "Doctors retrieved successfully",
+      data: doctors,
+    });
+  } catch (error) {
+    // Handle error and send a 500 response
+    res.status(500).json({
+      status: 500,
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
 
 module.exports = {
     login,
@@ -335,5 +381,5 @@ module.exports = {
   verifyOtp,
   resetPassword,
   changePassword,
-
+  getAllDoctors,
 };

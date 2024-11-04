@@ -31,41 +31,48 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    agree: false,
+    agree: true,
   };
 
+  
   const handleSubmit = async (values) => {
     try {
       console.log("Form values:", values);
-
-      // Send a POST request to your API endpoint
+  
       const response = await axios.post(
         "http://localhost:9500/v1/admin/create-admin",
         {
-          first_name: values.first_name, // <-- Match with backend
-          last_name: values.last_name, // <-- Match with backend
-          phone_number: values.phone_number, // <-- Match with backend
+          first_name: values.first_name,
+          last_name: values.last_name,
+          phone_number: values.phone_number,
           email: values.email,
           password: values.password,
           confirmPassword: values.confirmPassword,
           country: values.country,
           state: values.state,
           city: values.city,
-          hospitalId: values.hospitalId, // <-- Match with backend
+          hospitalId: values.hospitalId,
           agree: values.agree,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
-
-      // Handle success response
-      if (response.status === 201) {
+      
+     
         alert("Registration successful");
         navigate("/login");
-      }
+      
     } catch (error) {
       console.error("Error during registration:", error);
-      alert("Registration failed. Please try again.");
+      
+      // Detailed error message from response (if available)
+     
     }
   };
+  
 
   // Fetch countries and states on component mount
   useEffect(() => {
@@ -124,11 +131,22 @@ const Register = () => {
           <div className="col-md-6 d-flex justify-content-center">
             <div className="register-card p-4">
               <h2 className="mb-4 register-title">Registration</h2>
+
               <Formik
                 initialValues={initialValues}
                 validationSchema={registerValidationSchema}
-                onSubmit={handleSubmit}
+                onSubmit={async (values, { setSubmitting }) => {
+                  try {
+                    setSubmitting(true); // Indicate form is submitting
+                    await handleSubmit(values); // Submit form
+                  } catch (error) {
+                    console.error("Form submission error:", error);
+                  } finally {
+                    setSubmitting(false); // Reset the submitting state
+                  }
+                }}
               >
+
                 {({ errors, touched, values, setFieldValue }) => (
                   <Form>
                     {/* First Name and Last Name */}
@@ -137,17 +155,14 @@ const Register = () => {
                         <div className="form-floating">
                           <Field
                             type="text"
-                            name="firstName"
-                            className={`form-control ${
-                              errors.firstName && touched.firstName
-                                ? "is-invalid"
-                                : ""
-                            }`}
+                            name="first_name" // Updated to first_name
+                            className={`form-control ${errors.first_name && touched.first_name ? "is-invalid" : ""
+                              }`}
                             placeholder="First Name"
                           />
-                          <label htmlFor="firstName">Enter First Name</label>
+                          <label htmlFor="first_name">Enter First Name</label>
                           <ErrorMessage
-                            name="firstName"
+                            name="first_name"
                             component="div"
                             className="invalid-feedback"
                           />
@@ -157,24 +172,20 @@ const Register = () => {
                         <div className="form-floating">
                           <Field
                             type="text"
-                            name="lastName"
-                            className={`form-control ${
-                              errors.lastName && touched.lastName
-                                ? "is-invalid"
-                                : ""
-                            }`}
+                            name="last_name" // Updated to last_name
+                            className={`form-control ${errors.last_name && touched.last_name ? "is-invalid" : ""
+                              }`}
                             placeholder="Last Name"
                           />
-                          <label htmlFor="lastName">Enter Last Name</label>
+                          <label htmlFor="last_name">Enter Last Name</label>
                           <ErrorMessage
-                            name="lastName"
+                            name="last_name"
                             component="div"
                             className="invalid-feedback"
                           />
                         </div>
                       </div>
                     </div>
-
                     {/* Email and Phone Number */}
                     <div className="row">
                       <div className="col-md-6 mb-3">
@@ -182,9 +193,8 @@ const Register = () => {
                           <Field
                             type="email"
                             name="email"
-                            className={`form-control ${
-                              errors.email && touched.email ? "is-invalid" : ""
-                            }`}
+                            className={`form-control ${errors.email && touched.email ? "is-invalid" : ""
+                              }`}
                             placeholder="Email Address"
                           />
                           <label htmlFor="email">Email Address</label>
@@ -199,35 +209,32 @@ const Register = () => {
                         <div className="form-floating">
                           <Field
                             type="text"
-                            name="phoneNumber"
-                            className={`form-control ${
-                              errors.phoneNumber && touched.phoneNumber
+                            name="phone_number" // Updated to phone_number
+                            className={`form-control ${errors.phone_number && touched.phone_number
                                 ? "is-invalid"
                                 : ""
-                            }`}
+                              }`}
                             placeholder="Phone Number"
                           />
-                          <label htmlFor="phoneNumber">Phone Number</label>
+                          <label htmlFor="phone_number">Phone Number</label>
                           <ErrorMessage
-                            name="phoneNumber"
+                            name="phone_number"
                             component="div"
                             className="invalid-feedback"
                           />
                         </div>
                       </div>
                     </div>
-
                     {/* Country, State, and City */}
                     <div className="row">
                       <div className="col-md-4 mb-3">
                         <Field
                           as="select"
                           name="country"
-                          className={`form-select ${
-                            errors.country && touched.country
-                              ? "is-invalid"
-                              : ""
-                          }`}
+                          className={`form-select ${errors.country && touched.country
+                            ? "is-invalid"
+                            : ""
+                            }`}
                           onChange={(e) => {
                             const selectedCountry = e.target.value;
                             setFieldValue("country", selectedCountry);
@@ -255,9 +262,8 @@ const Register = () => {
                         <Field
                           as="select"
                           name="state"
-                          className={`form-select ${
-                            errors.state && touched.state ? "is-invalid" : ""
-                          }`}
+                          className={`form-select ${errors.state && touched.state ? "is-invalid" : ""
+                            }`}
                           onChange={(e) => {
                             const selectedState = e.target.value;
                             setFieldValue("state", selectedState);
@@ -282,9 +288,8 @@ const Register = () => {
                         <Field
                           as="select"
                           name="city"
-                          className={`form-select ${
-                            errors.city && touched.city ? "is-invalid" : ""
-                          }`}
+                          className={`form-select ${errors.city && touched.city ? "is-invalid" : ""
+                            }`}
                         >
                           <option value="">Select City</option>
                           {cities.map((city, index) => (
@@ -305,12 +310,9 @@ const Register = () => {
                     <div className="form-floating mb-3">
                       <Field
                         as="select"
-                        name="hospital"
-                        className={`form-select ${
-                          errors.hospital && touched.hospital
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        name="hospitalId" // Updated to hospitalId
+                        className={`form-select ${errors.hospitalId && touched.hospitalId ? "is-invalid" : ""
+                          }`}
                       >
                         <option value="">Select Hospital</option>
                         {hospitals.map((hospital) => (
@@ -320,7 +322,7 @@ const Register = () => {
                         ))}
                       </Field>
                       <ErrorMessage
-                        name="hospital"
+                        name="hospitalId" // Updated to hospitalId
                         component="div"
                         className="invalid-feedback"
                       />
@@ -331,11 +333,10 @@ const Register = () => {
                       <Field
                         type={showPassword ? "text" : "password"}
                         name="password"
-                        className={`form-control ${
-                          errors.password && touched.password
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-control ${errors.password && touched.password
+                          ? "is-invalid"
+                          : ""
+                          }`}
                         placeholder="Password"
                       />
                       <label htmlFor="password">Password</label>
@@ -370,11 +371,10 @@ const Register = () => {
                       <Field
                         type={showConfirmPassword ? "text" : "password"}
                         name="confirmPassword"
-                        className={`form-control ${
-                          errors.confirmPassword && touched.confirmPassword
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-control ${errors.confirmPassword && touched.confirmPassword
+                          ? "is-invalid"
+                          : ""
+                          }`}
                         placeholder="Confirm Password"
                       />
                       <label htmlFor="confirmPassword">Confirm Password</label>
@@ -409,11 +409,10 @@ const Register = () => {
                       <Field
                         type="checkbox"
                         name="agreeToTerms"
-                        className={`form-check-input ${
-                          errors.agreeToTerms && touched.agreeToTerms
-                            ? "is-invalid"
-                            : ""
-                        }`}
+                        className={`form-check-input ${errors.agreeToTerms && touched.agreeToTerms
+                          ? "is-invalid"
+                          : ""
+                          }`}
                       />
                       <label
                         htmlFor="agreeToTerms"

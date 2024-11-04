@@ -12,7 +12,9 @@ const authenticAdmin = require("../../../../middlewares/adminAuth");
 
 // DOCTOR MANAGEMENT PANNEL
 router.get("/doctor-list",authenticAdmin, dashboardController.allDoctorList);
-router.get("/doctor-list-id",authenticAdmin, dashboardController.allDoctorListId);
+// Update the route to POST method
+router.post("/doctor-list-id", authenticAdmin, dashboardController.allDoctorListId);
+
 router.get("/doctor-list-search-doctor",authenticAdmin, dashboardController.searchDoctor);
 router.delete("/doctor-list-delete",authenticAdmin, dashboardController.deleteDoctor);
 
